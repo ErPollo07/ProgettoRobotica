@@ -1,6 +1,6 @@
 # ANALISI FUNZIONALE
 
-## **Descrizione della linea di produzione
+## Descrizione della linea di produzione
 
 ## Componenti hardware della linea di produzione
 
@@ -27,4 +27,5 @@ Ogni robot ha il suo pc collegato e il programma per spedire i dati al server th
 - Il PC successivamente lo inserisce nel database.
 
 Il sistema garantisce il tracciamento completo di ogni fase produttiva, dal prelievo alla classificazione finale.
+
 
