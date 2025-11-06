@@ -2,6 +2,8 @@
 
 ## Code editor used
 
+VS code
+
 ## Extension
 
 These are the used extension:
@@ -12,3 +14,7 @@ These are the used extension:
 - Code spell checker: for checking the grammar in the code
 - LanguageTool: to use Code spell checker
 - Markdownlint: for error in markdown
+
+## Useful sites
+
+- [Python documentation](https://realpython.com/documenting-python-code/)
