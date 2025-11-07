@@ -7,7 +7,9 @@ magicbox.set_infrared_sensor(port=2, enable=True, version=1) # type: ignore
 magician.motion_params(100, 100) # type: ignore
 
 class Point():
-  def __init__(self, x, y, z):
+  """Represents a point in the system of the robot"""
+  
+  def __init__(self, x: float, y: float, z: float):
     self.x = x
     self.y = y
     self.z = z
@@ -19,9 +21,9 @@ def get_sensor_status() -> int:
 
   Returns
   ------
-  status: int
-    It's 0 if the sensor doesn't detect anything
-    It's 1 if the sensor detect anything
+  int
+    0 if the sensor doesn't detect anything
+    1 if the sensor detect anything
   """
   return magicbox.get_infrared_sensor(port=2)["status"] # type: ignore
 
@@ -31,9 +33,9 @@ def move_to_point(p: Point, mode: int = 0):
 
   Params
   ------
-  p: Point
+  p : Point
     The destination Point
-  mode: int
+  mode : int
     Specify the mode of movement:
       - 0: make a "jump" from the current position of the robot and the destination point
       - 1: go strait to the destination point
@@ -41,19 +43,19 @@ def move_to_point(p: Point, mode: int = 0):
   magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
 
 
-def move_to_offpoint(p: Point, off_x: int, off_y: int, off_z: int, mode: int = 0):
+def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
   """
   Move the robot to the coordinate of the Point and the offset with a mode.
 
   Params
   ------
-  p: Point
+  p : Point
     The destination Point
-  off_x: int
+  off_x : float
     The offset to apply to the x of the destination point
-  off_y: int
+  off_y : float
     The offset to apply to the y of the destination point
-  off_z: int
+  off_z : float
     The offset to apply to the z of the destination point
   mode: int
     Specify the mode of movement:
@@ -69,7 +71,7 @@ def set_conv_speed(speed: int):
 
   Params
   ------
-  speed: int
+  speed : int
     The speed to set to the conveyor.
   """
   magicbox.set_converyor(index=magicbox.STP1,enable=True,speed=speed) # type: ignore
@@ -81,25 +83,25 @@ def suck(state: bool):
 
   Params
   ------
-  state: bool
+  state : bool
     The state that needs to be applied to the suction cup.
   """
   magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
 
-'''
+"""
 # Un comment these lines and comment all the line below to stop the conveyor and the suctioncup
 set_conv_speed(0)
 suck(False)
-'''
+"""
 
 # Variables
-conv_speed: int = 100
+CONV_SPEED: int = 100
 
 # Define the collection point and the drop point
 # If the drop point is not perfectly alined the block will move farther way every iteration
 # so adjust the x coordinate of the drop point to be more precise
-collectionPoint: Point = Point(136, -201, 14)
+collectionPoint: Point = Point(136.0, -201.0, 14.0)
 dropPoint: Point = Point(collectionPoint.x - 3, collectionPoint.y + 150, collectionPoint.z + 5)
 
 try:
@@ -109,7 +111,7 @@ try:
 
   # Get up to speed  the conveyor
   print("[INFO] - Take the conveyor app to speed")
-  set_conv_speed(conv_speed)
+  set_conv_speed(CONV_SPEED)
 
   # Take the block while the conveyor is moving]
   # When the infrared sensor detect something the robot:

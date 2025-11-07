@@ -2,11 +2,11 @@
 
 ## Code editor used
 
-VS code
+[VS code](https://code.visualstudio.com/)
 
 ## Extension
 
-These are the used extension:
+These are the used extension for the development of this project:
 
 - Pylance: for linting and error detection in python
 - EditorConfig for VS Code: for configuration file

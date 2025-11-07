@@ -1,3 +1,8 @@
+07/11/2025:
+  - Changed the documentation in the file ./code/test/robot_cycle.py
+  - Changed the docs files ./docs/RobotSetup.md, ./docs/Workspace.md
+  - Add a blank ./README.md file
+
 06/11/2025:
   - CREATE the file ./code/test/robot_ciclico.py
   - CREATE the ./docs/setup folder with documentation files
