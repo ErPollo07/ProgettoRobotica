@@ -23,7 +23,7 @@ def move_to_point(p: Point, mode: int = 0):
       - 0: make a "jump" from the current position of the robot and the destination point
       - 1: go strait to the destination point
   """
-  magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
+  m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r=0)# type: ignore
 
 
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
@@ -45,7 +45,7 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
       - 0: make a "jump" from the current position of the robot and the destination point
       - 1: go strait to the destination point
   """
-  magician.ptp(mode, p.x + off_x, p.y + off_y, p.z + off_z, 0) # type: ignore
+  m_lite.set_ptpcmd(ptp_mode=mode, x=p.x + off_x, y=p.y + off_y, z=p.z + off_z, r=0) # type: ignore
 
 
 def suck(state: bool):
@@ -57,4 +57,18 @@ def suck(state: bool):
   state : bool
     The state that needs to be applied to the suction cup.
   """
-  magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
+  m_lite.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
+  
+def main():
+  print("[INFO] - Executing main()")
+  point_1 = Point(0,0,0)
+  move_to_point(point_1)
+  suck(True)
+  point_2 = Point(0,0,0)
+  move_to_point(point_2)
+  suck(False)
+
+
+
+
+main()
