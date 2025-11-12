@@ -118,3 +118,7 @@ def suck(state: bool):
 
 Il server è implementato come web server locale all’interno della rete.
 La sua funzione principale è ricevere le richieste HTTP inviate dai robot, elaborare i payload JSON e inoltrarli a ThingsBoard o ad altri endpoint interni.
+
+Torna all'[analisi funzionale](./analisi_funzionale.md)
+
+Torna al [README](../../README.md)

@@ -27,3 +27,8 @@ Ogni robot ha il suo pc collegato e il programma per spedire i dati al server th
 - Il PC successivamente lo inserisce nel database.
 
 Il sistema garantisce il tracciamento completo di ogni fase produttiva, dal prelievo alla classificazione finale.
+
+Torna all'[analisi dei requisiti](./analisi_requisiti.md)
+Continua con l'[analisi tecnica](./analisi_tecnica.md)
+
+Torna al [README](../../README.md)
