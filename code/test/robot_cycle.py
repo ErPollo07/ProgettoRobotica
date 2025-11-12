@@ -132,7 +132,7 @@ try:
       suck(False)
       move_to_offpoint(collectionPoint, 0, 0, 4, 1)
 except Exception as e:
-  print(f"[ERROR] - : {e}")
+  print(f"[ERROR] - {e}")
 finally:
   set_conv_speed(0)
   suck(False)
