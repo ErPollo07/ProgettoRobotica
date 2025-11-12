@@ -10,4 +10,3 @@ def api_test():
     print("Received message:", message['data'])
 
     return jsonify({"status": "success", "message": "Message received"}), 200
-
