@@ -1,4 +1,4 @@
-# **ANALISI DEI REQUISITI**
+# ANALISI DEI REQUISITI
 
 ## Obiettivo principale
 

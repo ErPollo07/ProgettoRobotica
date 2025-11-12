@@ -3,11 +3,14 @@
     "converyor",
     "Dobot",
     "endeffector",
+    "hostato",
+    "jsonify",
     "magicbox",
     "offpoint",
+    "ptpcmd",
     "Pylance",
     "suctioncup",
-    "withl",
-    "jsonify",
+    "thingsboard",
+    "withl"
   ]
 }
