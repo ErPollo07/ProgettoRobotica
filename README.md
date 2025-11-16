@@ -6,4 +6,4 @@ Lista dei file utili:
 
 - [Workspace.md](./docs/Setup/Workspace.md)
 - [RobotSetup.md](./docs/Setup/RobotSetup.md)
-- [Analisi dei requisiti](./docs/Analysis/analisi_requisiti.md)
+- [Analisi](./docs/Analysis/Analysis.md)

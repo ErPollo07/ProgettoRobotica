@@ -15,4 +15,4 @@ Simulare una linea di produzione automatizzata utilizzando robot e salvare in un
 
 Continua con l'[analisi funzionale](./analisi_funzionale.md)
 
-Torna al [README](../../README.md)
+Torna all'[indice](./Analysis.md.md)

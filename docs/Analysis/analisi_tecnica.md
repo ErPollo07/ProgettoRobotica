@@ -121,4 +121,4 @@ La sua funzione principale è ricevere le richieste HTTP inviate dai robot, elab
 
 Torna all'[analisi funzionale](./analisi_funzionale.md)
 
-Torna al [README](../../README.md)
+Torna all'[indice](./Analysis.md.md)

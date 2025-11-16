@@ -31,4 +31,4 @@ Il sistema garantisce il tracciamento completo di ogni fase produttiva, dal prel
 Torna all'[analisi dei requisiti](./analisi_requisiti.md)
 Continua con l'[analisi tecnica](./analisi_tecnica.md)
 
-Torna al [README](../../README.md)
+Torna all'[indice](./Analysis.md.md)
