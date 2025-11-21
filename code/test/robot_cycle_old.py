@@ -102,11 +102,12 @@ CONV_SPEED: int = 100
 # If the drop point is not perfectly alined the block will move farther way every iteration
 # so adjust the x coordinate of the drop point to be more precise
 collectionPoint: Point = Point(136.0, -201.0, 14.0)
+dropPoint: Point = Point(collectionPoint.x - 3, collectionPoint.y + 150, collectionPoint.z + 5)
 
 try:
   # Go above the collection point
   print("[INFO] - Move above the collection point")
-  move_to_offpoint(collectionPoint, 0, 0, 5)
+  move_to_offpoint(collectionPoint, 0, 0, 4)
 
   # Get up to speed  the conveyor
   print("[INFO] - Take the conveyor app to speed")
@@ -125,20 +126,11 @@ try:
     sensor = get_sensor_status()
     if sensor == 1:
       suck(True)
-
-      # Get the block on the fly
-      move_to_offpoint(collectionPoint, 0, 0, 0, 1) # movimento 1
-      move_to_offpoint(collectionPoint, 0, 0, 20, 1) # movimento 2
-
-      # Go to the drop point
-      move_to_offpoint(collectionPoint, 80, 0, 10, 1) # movimento 3
-      move_to_offpoint(collectionPoint, 80, 300, 10, 1) # movimento 4
-      move_to_offpoint(collectionPoint, 0, 300, 5, 1) # movimento 5
-  
+      move_to_offpoint(collectionPoint, 0, -7, 0, 1)
+      move_to_offpoint(collectionPoint, 0, -7, 20, 1)
+      move_to_point(dropPoint, 1)
       suck(False)
-
-      # Return to the 
-      move_to_offpoint(collectionPoint, 0, 0, 5)
+      move_to_offpoint(collectionPoint, 0, 0, 4, 1)
 except Exception as e:
   print(f"[ERROR] - {e}")
 finally:

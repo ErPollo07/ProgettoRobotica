@@ -5,6 +5,10 @@
 # ╚██████╗██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗███████╗╚██████╔╝╚██████╔╝
 #  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝ 
 
+21/11/2025:
+  - MODIFY the file ./code/test/robot_cycle.py
+  - ADD ./code/test/robot_cycle_old.py
+
 16/11/2025:
   - CREATE the file ./docs/Database/Database.md and ./docs/Analysis/Analysis.md
 
