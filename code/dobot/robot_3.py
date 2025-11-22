@@ -31,8 +31,13 @@ def move_to_point(p: Point, mode: int = 0):
   magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
 
 
-def get_cl_sensor(color):
-  return magicbox.get_color_sensor()[str(color)]
+def get_color_sensor():
+  return magicbox.get_color_sensor()
+
+
+def get_color(color: str):
+  get_color_sensor()[color]
+
 
 def suck(state: bool):
   """
@@ -49,11 +54,11 @@ def main():
   point_color_sensor = Point(229.51, -144.94, 34.4)
   # print(magician.get_color_sensor())
   while True:
-    colors = magician.get_color_sensor()
+    colors = get_color_sensor()
     print(colors)
-    if colors['green'] == 1:
-       point_1 = Point(229.51,51.14,63.51)
-       move_to_point(point_1)
+    if get_color("green") == 1:
+      point_1 = Point(229.51,51.14,63.51)
+      move_to_point(point_1)
       
   
 

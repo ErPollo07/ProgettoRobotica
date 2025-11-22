@@ -41,7 +41,7 @@ This is require to keep track of mechanical wear that can produce degradation ov
 #### Robot 2
 
 - Infrared sensor event: when a block has been detected passing in front of the infrared sensor.
-- Error: if no block passes within a predefined interval, an error event is logged to indicate a possible flow interruption
+- Infrared sensor error: if no block passes within a predefined interval, an error event is logged to indicate a possible flow interruption
 
 #### Robot 3
 
