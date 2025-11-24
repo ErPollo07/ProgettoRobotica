@@ -1,21 +1,21 @@
-# ANALISI TECNICA
+# TECHNICAL ANALYSIS
 
-## Comunicazione robot <-> pc
+## Robot <-> PC Communication
 
-Per realizzare la comunicazione tra il robot e il PC è stato implementato un server HTTP hostato in locale sul computer.
-Il robot, a ogni evento significativo della linea di produzione, effettua una richiesta HTTP POST verso il server, inviando un payload in formato JSON contenente i dati dell’operazione eseguita (ad esempio stato sensori, coordinate o esito delle azioni).
+To establish communication between the robot and the PC, an HTTP server has been implemented, hosted locally on the computer.  
+The robot sends an HTTP POST request to the server at each significant event in the production line, sending a JSON payload containing the data of the executed operation (e.g., sensor status, coordinates, or action outcomes).
 
-Il server riceve questi dati e li inoltra immediatamente alla piattaforma ThingsBoard mediante una richiesta HTTP, permettendo così il monitoraggio in tempo reale del sistema tramite dashboard IoT.
+The server receives this data and immediately forwards it to the ThingsBoard platform via an HTTP request, allowing real-time monitoring of the system through IoT dashboards.
 
-## Codice robot
+## Robot Code
 
-Il software a bordo dei robot è progettato per:
+The software running on the robots is designed to:
 
-1. Gestire le operazioni del robot sui materiali della linea di produzione.
-2. Eseguire il reporting automatico delle azioni completate al server locale.
+1. Handle the robot's operations on the production line materials.
+2. Automatically report completed actions to the local server.
 
-Per ogni robot abbiamo creato delle funzioni che aiutano alla programmazione.
-Per il dobot magician:
+For each robot, we have created functions to assist with programming.  
+For the Dobot Magician:
 
 ```python
 def get_sensor_status() -> int:
@@ -26,7 +26,7 @@ def get_sensor_status() -> int:
   ------
   int
     0 if the sensor doesn't detect anything
-    1 if the sensor detect anything
+    1 if the sensor detects anything
   """
   return magicbox.get_infrared_sensor(port=2)["status"] # type: ignore
 ```
@@ -43,7 +43,7 @@ def move_to_point(p: Point, mode: int = 0):
   mode : int
     Specify the mode of movement:
       - 0: make a "jump" from the current position of the robot and the destination point
-      - 1: go strait to the destination point
+      - 1: go straight to the destination point
   """
   magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
 ```
@@ -66,7 +66,7 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
   mode: int
     Specify the mode of movement:
       - 0: make a "jump" from the current position of the robot and the destination point
-      - 1: go strait to the destination point
+      - 1: go straight to the destination point
   """
   magician.ptp(mode, p.x + off_x, p.y + off_y, p.z + off_z, 0) # type: ignore
 ```
@@ -81,7 +81,7 @@ def set_conv_speed(speed: int):
   speed : int
     The speed to set to the conveyor.
   """
-  magicbox.set_converyor(index=magicbox.STP1,enable=True,speed=speed) # type: ignore
+  magicbox.set_converyor(index=magicbox.STP1, enable=True, speed=speed) # type: ignore
 ```
 
 ```python
@@ -114,11 +114,11 @@ def suck(state: bool):
   m_lite.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 ```
 
-## Codice server
+## Server Code
 
-Il server è implementato come web server locale all’interno della rete.
-La sua funzione principale è ricevere le richieste HTTP inviate dai robot, elaborare i payload JSON e inoltrarli a ThingsBoard o ad altri endpoint interni.
+The server is implemented as a local web server within the network.  
+Its main function is to receive the HTTP requests sent by the robots, process the JSON payloads, and forward them to ThingsBoard or other internal endpoints.
 
-Torna all'[analisi funzionale](./analisi_funzionale.md)
+Go back to the [functional analysis](./Functional_Analysis.md)
 
-Torna all'[indice](./Analysis.md.md)
+Go back to the [index](./Analysis.md.md)
