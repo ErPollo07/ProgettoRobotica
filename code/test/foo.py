@@ -121,88 +121,91 @@ def send_movement_executed(timeOfExecution: float, robot_id: int):
     "time": timeOfExecution,
   }
   requests.post("http://localhost:8080/robot/movement_executed", json=message)
-  
 
-"""
-# Un comment these lines and comment all the line below to stop the conveyor and the suctioncup
-set_conv_speed(0)
-suck(False)
-"""
 
-# Variables
-CONV_SPEED: int = 100
-ROBOT_ID = 2
-
-timeOfExecution: float = 0 # seconds
-timeStart: float ; timeEnd: float
-lastCheck: float
-
-# Define the collection point and the drop point
-# If the drop point is not perfectly alined the block will move farther way every iteration
-# so adjust the x coordinate of the drop point to be more precise
-collectionPoint: Point = Point(129.51, -199.44, 20.71)
-
-try:
-  # Go above the collection point
-  print("[INFO] - Move above the collection point")
-  move_to_offpoint(collectionPoint, 0, 0, 5)
-
-  # Get up to speed  the conveyor
-  print("[INFO] - Take the conveyor up to speed")
-  set_conv_speed(CONV_SPEED)
-
-  # Take the block while the conveyor is moving]
-  # When the infrared sensor detect something the robot:
-  # - start the suctioncup
-  # - go to the collectionPoint
-  # - take the block 
-  # - go to dropPoint
-  # - release the block
-  # - return above the collectionPoint
-  print("[INFO] - Enter main cycle")
-  while True:
-    sensor = get_sensor_status()
-    if sensor == 1:
-      lastCheck = time.time()
-      # Send a infrared_sensor_event to the server
-      send_ir_event()
-
-      timeStart = time.time()
-      suck(True)
-
-      # Get the block on the fly
-      move_to_offpoint(collectionPoint, 0, 0, 0, 1) # MOV 1
-      move_to_offpoint(collectionPoint, 0, 0, 20, 1) # MOV 2
-
-      # Go to the drop point
-      move_to_offpoint(collectionPoint, 80, 0, 10, 1) # MOV 3
-      move_to_offpoint(collectionPoint, 80, 300, 10, 1) # MOV 4
-      move_to_offpoint(collectionPoint, 0, 300, 5, 1) # MOV 5
-
-      suck(False)
-
-      # Return to the collection point
-      move_to_offpoint(collectionPoint, 80, 300, 10, 1) # MOV 6
-      move_to_offpoint(collectionPoint, 80, 0, 10, 1) # MOV 7
-      move_to_offpoint(collectionPoint, 0, 0, 5, 1) # MOV 8
-      timeEnd = time.time()
-
-      timeOfExecution = timeEnd - timeStart
-      print(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
-
-      # Send the time of execution to the server
-      send_movement_executed(timeOfExecution, ROBOT_ID)
-      
-    # If the sensor doesn't get triggered, check how much time has passed between now and the last block.
-    # If the time is less than 20, send a infrared sensor error to the local server
-    else:
-      # Check how long the sensor is idle
-      # If more than 30 seconds, send a infrared_sensor_error
-      if time.time() - lastCheck > 20:
-        print("[INFO] - No block has passed")
-        send_ir_error(ROBOT_ID)
-except Exception as e:
-  print(f"[ERROR] - {e}")
-finally:
+def reset():
   set_conv_speed(0)
   suck(False)
+
+
+def main():
+  # Variables
+  CONV_SPEED: int = 100
+  ROBOT_ID = 2
+
+  timeOfExecution: float = 0 # seconds
+  timeStart: float ; timeEnd: float
+  lastCheck: float
+
+  # Define the collection point and the drop point
+  # If the drop point is not perfectly alined the block will move farther way every iteration
+  # so adjust the x coordinate of the drop point to be more precise
+  collectionPoint: Point = Point(129.51, -199.44, 20.71)
+
+  try:
+    # Go above the collection point
+    print("[INFO] - Move above the collection point")
+    move_to_offpoint(collectionPoint, 0, 0, 5)
+
+    # Get up to speed  the conveyor
+    print("[INFO] - Take the conveyor up to speed")
+    set_conv_speed(CONV_SPEED)
+
+    # Take the block while the conveyor is moving]
+    # When the infrared sensor detect something the robot:
+    # - start the suctioncup
+    # - go to the collectionPoint
+    # - take the block 
+    # - go to dropPoint
+    # - release the block
+    # - return above the collectionPoint
+    print("[INFO] - Enter main cycle")
+    while True:
+      sensor = get_sensor_status()
+      if sensor == 1:
+        lastCheck = time.time()
+        # Send a infrared_sensor_event to the server
+        send_ir_event()
+
+        timeStart = time.time()
+        suck(True)
+
+        # Get the block on the fly
+        move_to_offpoint(collectionPoint, 0, 0, 0, 1) # MOV 1
+        move_to_offpoint(collectionPoint, 0, 0, 20, 1) # MOV 2
+
+        # Go to the drop point
+        move_to_offpoint(collectionPoint, 80, 0, 10, 1) # MOV 3
+        move_to_offpoint(collectionPoint, 80, 300, 10, 1) # MOV 4
+        move_to_offpoint(collectionPoint, 0, 300, 5, 1) # MOV 5
+
+        suck(False)
+
+        # Return to the collection point
+        move_to_offpoint(collectionPoint, 80, 300, 10, 1) # MOV 6
+        move_to_offpoint(collectionPoint, 80, 0, 10, 1) # MOV 7
+        move_to_offpoint(collectionPoint, 0, 0, 5, 1) # MOV 8
+        timeEnd = time.time()
+
+        timeOfExecution = timeEnd - timeStart
+        print(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
+
+        # Send the time of execution to the server
+        send_movement_executed(timeOfExecution, ROBOT_ID)
+
+      # If the sensor doesn't get triggered, check how much time has passed between now and the last block.
+      # If the time is less than 20, send a infrared sensor error to the local server
+      else:
+        # Check how long the sensor is idle
+        # If more than 30 seconds, send a infrared_sensor_error
+        if time.time() - lastCheck > 20:
+          print("[INFO] - No block has passed")
+          send_ir_error(ROBOT_ID)
+  except Exception as e:
+    print(f"[ERROR] - {e}")
+  finally:
+    set_conv_speed(0)
+    suck(False)
+
+
+main()
