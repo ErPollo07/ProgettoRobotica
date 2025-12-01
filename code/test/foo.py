@@ -93,6 +93,26 @@ def suck(state: bool):
   magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
 
+def send_ir_event():
+  raise NotImplementedError("Function send_ir_event is not implemented yet")
+
+
+def send_ir_error():
+  raise NotImplementedError("Function send_ir_error is not implemented yet")
+
+def send_movement_executed(timeOfExecution: int):
+  """
+  Send the movement_executed event to the server.
+  """
+  message = {
+    "ts": datetime.datetime.now(),
+    "robot_id": 2,
+    "completed": True,
+    "time": timeOfExecution,
+  }
+  requests.post("http://localhost:8080/robot/movement_executed", json=message)
+  
+
 """
 # Un comment these lines and comment all the line below to stop the conveyor and the suctioncup
 set_conv_speed(0)
@@ -101,6 +121,8 @@ suck(False)
 
 # Variables
 CONV_SPEED: int = 100
+timeOfExecution: int = 0 # seconds
+timeStart: int ; timeEnd: int
 
 # Define the collection point and the drop point
 # If the drop point is not perfectly alined the block will move farther way every iteration
@@ -128,23 +150,38 @@ try:
   while True:
     sensor = get_sensor_status()
     if sensor == 1:
+      # Send a infrared_sensor_event to the server
+      send_ir_event()
+
+      timeStart = time.time()
       suck(True)
 
       # Get the block on the fly
-      move_to_offpoint(collectionPoint, 0, 0, 0, 1) # movimento 1
-      move_to_offpoint(collectionPoint, 0, 0, 20, 1) # movimento 2
+      move_to_offpoint(collectionPoint, 0, 0, 0, 1) # MOV 1
+      move_to_offpoint(collectionPoint, 0, 0, 20, 1) # MOV 2
 
       # Go to the drop point
-      move_to_offpoint(collectionPoint, 80, 0, 10, 1) # movimento 3
-      move_to_offpoint(collectionPoint, 80, 300, 10, 1) # movimento 4
-      move_to_offpoint(collectionPoint, 0, 300, 5, 1) # movimento 5
+      move_to_offpoint(collectionPoint, 80, 0, 10, 1) # MOV 3
+      move_to_offpoint(collectionPoint, 80, 300, 10, 1) # MOV 4
+      move_to_offpoint(collectionPoint, 0, 300, 5, 1) # MOV 5
 
       suck(False)
 
       # Return to the collection point
-      move_to_offpoint(collectionPoint, 80, 300, 10, 1) # movimento 6
-      move_to_offpoint(collectionPoint, 80, 0, 10, 1) # movimento 7
-      move_to_offpoint(collectionPoint, 0, 0, 5, 1) # movimento 8
+      move_to_offpoint(collectionPoint, 80, 300, 10, 1) # MOV 6
+      move_to_offpoint(collectionPoint, 80, 0, 10, 1) # MOV 7
+      move_to_offpoint(collectionPoint, 0, 0, 5, 1) # MOV 8
+      timeEnd = time.time()
+
+      timeOfExecution = int(timeEnd - timeStart)
+      print(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
+
+      # Send the time of execution to the server
+      send_movement_executed(timeOfExecution)
+    else:
+      # Check how long the sensor is idle
+      # If more than 30 seconds, send a infrared_sensor_error
+      ...
 except Exception as e:
   print(f"[ERROR] - {e}")
 finally:

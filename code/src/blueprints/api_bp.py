@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 
 
-bp = Blueprint('api', __name__, url_prefix='/api')
+bp = Blueprint('robot', __name__, url_prefix='/api')
 
 @bp.route("/test", methods=['POST'])
 def api_test():
@@ -23,15 +23,12 @@ def movement_executed():
     and logged for tracking and debugging purposes.
 
     Expected JSON example:
-        {
-            "robot_id": <robot_identifier>,
-            "completed": <true/false>,
-            "position": {
-                "x": <x>,
-                "y": <y>,
-                "z": <z>
-            }
-        }
+    {
+        "ts": <timestamp>,
+        "robot_id": <robot_identifier>,
+        "completed": <true/false>,
+        "time": <timeOfExecution>
+    }
 
     Returns
     ------
@@ -62,13 +59,11 @@ def infrared_sensor_event():
     """
     Handle infrared sensor event notifications from the robot.
 
-    This endpoint receives a POST request containing a JSON payload that
-
-
-    Returns
-    ------
-    response : dict
-        A JSON response with status and sensor_status
+    The payload:
+    {
+        "ts": <timestamp>,
+        "robot_id": <robot_identifier>
+    }
     """
     # TODO complete the implementation and documentation
 

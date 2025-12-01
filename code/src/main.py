@@ -1,6 +1,5 @@
 from flask import Flask, request, Request, jsonify
 
-
 # Import blueprints
 from blueprints import api_bp
 
