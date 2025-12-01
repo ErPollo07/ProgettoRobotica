@@ -5,6 +5,10 @@
 # ╚██████╗██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗███████╗╚██████╔╝╚██████╔╝
 #  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝ 
 
+01/12/2025:
+  - ADD control to check if the block doesn't trigger the infrared sensor
+  - ADD the methods to send the message to the local server
+
 21/11/2025:
   - MODIFY the file ./code/test/robot_cycle.py
   - ADD ./code/test/robot_cycle_old.py

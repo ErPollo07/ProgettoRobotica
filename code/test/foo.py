@@ -1,5 +1,5 @@
 from DobotEDU import * # type: ignore
-
+import time, requests, datetime
 
 # Set the version of the wheel
 magicbox.set_device_withl(enable=True, version=0) # type: ignore
@@ -92,21 +92,31 @@ def suck(state: bool):
   """
   magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
-
+### Method to post 
 def send_ir_event():
+  # TODO implementation and documentation
   raise NotImplementedError("Function send_ir_event is not implemented yet")
 
 
-def send_ir_error():
-  raise NotImplementedError("Function send_ir_error is not implemented yet")
+def send_ir_error(robot_id: int):
+  """
+  Send a message with timestamp and robot id to "http://127.0.0.5:8080/api/infrared_sensor_error
+  """
+  
+  message = {
+    "ts": datetime.datetime.now(),
+    "robot_id": robot_id
+  }
 
-def send_movement_executed(timeOfExecution: int):
+  requests.post("http://127.0.0.5:8080/api/infrared_sensor_error", json=message)
+
+def send_movement_executed(timeOfExecution: float, robot_id: int):
   """
   Send the movement_executed event to the server.
   """
   message = {
     "ts": datetime.datetime.now(),
-    "robot_id": 2,
+    "robot_id": robot_id,
     "completed": True,
     "time": timeOfExecution,
   }
@@ -121,8 +131,11 @@ suck(False)
 
 # Variables
 CONV_SPEED: int = 100
-timeOfExecution: int = 0 # seconds
-timeStart: int ; timeEnd: int
+ROBOT_ID = 2
+
+timeOfExecution: float = 0 # seconds
+timeStart: float ; timeEnd: float
+lastCheck: float
 
 # Define the collection point and the drop point
 # If the drop point is not perfectly alined the block will move farther way every iteration
@@ -135,7 +148,7 @@ try:
   move_to_offpoint(collectionPoint, 0, 0, 5)
 
   # Get up to speed  the conveyor
-  print("[INFO] - Take the conveyor app to speed")
+  print("[INFO] - Take the conveyor up to speed")
   set_conv_speed(CONV_SPEED)
 
   # Take the block while the conveyor is moving]
@@ -150,6 +163,7 @@ try:
   while True:
     sensor = get_sensor_status()
     if sensor == 1:
+      lastCheck = time.time()
       # Send a infrared_sensor_event to the server
       send_ir_event()
 
@@ -173,19 +187,22 @@ try:
       move_to_offpoint(collectionPoint, 0, 0, 5, 1) # MOV 8
       timeEnd = time.time()
 
-      timeOfExecution = int(timeEnd - timeStart)
+      timeOfExecution = timeEnd - timeStart
       print(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
 
       # Send the time of execution to the server
-      send_movement_executed(timeOfExecution)
+      send_movement_executed(timeOfExecution, ROBOT_ID)
+      
+    # If the sensor doesn't get triggered, check how much time has passed between now and the last block.
+    # If the time is less than 20, send a infrared sensor error to the local server
     else:
       # Check how long the sensor is idle
       # If more than 30 seconds, send a infrared_sensor_error
-      ...
+      if time.time() - lastCheck > 20:
+        print("[INFO] - No block has passed")
+        send_ir_error(ROBOT_ID)
 except Exception as e:
   print(f"[ERROR] - {e}")
 finally:
   set_conv_speed(0)
   suck(False)
-  
-
