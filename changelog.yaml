@@ -5,6 +5,9 @@
 # ╚██████╗██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗███████╗╚██████╔╝╚██████╔╝
 #  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝ 
 
+03/12/2025:
+  - Rename ./code/src/test/foo.py in ./code/src/test/robot_cycle.py
+
 01/12/2025:
   - ADD control to check if the block doesn't trigger the infrared sensor
   - ADD the methods to send the message to the local server
