@@ -97,7 +97,7 @@ def suck(state: bool):
   magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 ```
 
-Per i dobot magician lite:
+For the magician lite robot:
 
 ```python
 def move_to_point(p: Point, mode: int = 0):

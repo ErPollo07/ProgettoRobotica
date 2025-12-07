@@ -5,6 +5,13 @@
 # ╚██████╗██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗███████╗╚██████╔╝╚██████╔╝
 #  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝ 
 
+07/12/2025:
+  - Update docs
+  - Create a helper class in robot_cycle for sending the information to the local server in robot_cycle.py
+  - Modify methods, that post data in local server, in robot_cycle
+  - Change the robot blueprint from /api to /robot
+  - Create robot 2
+
 03/12/2025:
   - Rename ./code/src/test/foo.py in ./code/src/test/robot_cycle.py
 

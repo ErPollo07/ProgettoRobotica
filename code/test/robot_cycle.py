@@ -14,7 +14,26 @@ class Point():
     self.y = y
     self.z = z
 
-### Methods ###
+
+class Message():
+  """ Create a message """
+  link: str = "http://127.0.0.5:8080/robot/"
+
+  @staticmethod
+  def create(robot_id, timeOfExecution = None):
+    if timeOfExecution == None:
+      return {
+        "ts": datetime.datetime.now(),
+        "robot_id": robot_id,
+      }
+    else:
+      return {
+        "ts": datetime.datetime.now(),
+        "robot_id": robot_id,
+        "time": timeOfExecution
+      }
+
+### Methods =^.^= ###
 def get_sensor_status() -> int:
   """
   Gets the infrared sensor status
@@ -92,35 +111,35 @@ def suck(state: bool):
   """
   magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
-### Method to post 
-def send_ir_event():
-  # TODO implementation and documentation
-  raise NotImplementedError("Function send_ir_event is not implemented yet")
+### Method to send data to the local server ###
+def send_ir_event(robot_id: int):
+  """
+  Docstring for send_ir_event
+  """
+  requests.post(
+    Message.link + "/infrared_sensor_event", 
+    json=Message.create(robot_id=robot_id)
+  )
 
 
 def send_ir_error(robot_id: int):
   """
-  Send a message with timestamp and robot id to "http://127.0.0.5:8080/api/infrared_sensor_error
+  Send a message with timestamp and robot id to
   """
-  
-  message = {
-    "ts": datetime.datetime.now(),
-    "robot_id": robot_id
-  }
+  requests.post(
+    Message.link + "/infrared_sensor_error", 
+    json=Message.create(robot_id=robot_id)
+  )
 
-  requests.post("http://127.0.0.5:8080/api/infrared_sensor_error", json=message)
 
 def send_movement_executed(timeOfExecution: float, robot_id: int):
   """
   Send the movement_executed event to the server.
   """
-  message = {
-    "ts": datetime.datetime.now(),
-    "robot_id": robot_id,
-    "completed": True,
-    "time": timeOfExecution,
-  }
-  requests.post("http://localhost:8080/robot/movement_executed", json=message)
+  requests.post(
+    Message.link + "movement_executed",
+    json=Message.create(robot_id=robot_id, timeOfExecution=timeOfExecution)
+  )
 
 
 def reset():
@@ -165,7 +184,7 @@ def main():
       if sensor == 1:
         lastCheck = time.time()
         # Send a infrared_sensor_event to the server
-        send_ir_event()
+        send_ir_event(ROBOT_ID)
 
         timeStart = time.time()
         suck(True)
