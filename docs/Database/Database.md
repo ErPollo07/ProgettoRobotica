@@ -55,3 +55,5 @@ In the Thingsboard site on `http://localhost:8080` the tenant user can create th
 In the dashboards are displayed:
 
 - **Line chart**: Shows the movement duration telemetry.
+- **Table with alarm of infrared sensor**: All the infrared sensor error with timestamp.
+- **Table with colors detected by the color sensor**: All the infrared sensor error with timestamp.
