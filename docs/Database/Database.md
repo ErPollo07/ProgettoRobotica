@@ -2,7 +2,7 @@
 
 ## What database is used
 
-For this project has been chosen the thingsboard service.
+For this project has been chosen the Thingsboard service.
 
 ### What is Thingsboard
 
@@ -46,3 +46,10 @@ This is require to keep track of mechanical wear that can produce degradation ov
 #### Robot 3
 
 - Color sensor event: log the color of the block arrived at destination
+
+## Dashboard in thingsboard
+
+In the Thingsboard site on `http://localhost:8080` the tenant user can create the dashboards for the users.
+In the dashboards are displayed:
+
+- **Line chart**: Shows the movement duration telemetry.
