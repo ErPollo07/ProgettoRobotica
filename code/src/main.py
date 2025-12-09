@@ -1,7 +1,7 @@
 from flask import Flask, request, Request, jsonify
 
 # Import blueprints
-from src.blueprints import robot_bp
+from blueprints import robot_bp
 
 app = Flask(__name__)
 
@@ -14,4 +14,6 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.5', port=8080, debug=True)
+    print(f"{app.url_map=}")
+
+    app.run(host='127.0.0.10', port=8080, debug=True)

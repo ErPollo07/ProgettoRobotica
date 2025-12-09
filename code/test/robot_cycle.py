@@ -1,5 +1,5 @@
 from DobotEDU import * # type: ignore
-import time, requests, datetime
+import time, requests
 
 # Set the version of the wheel
 magicbox.set_device_withl(enable=True, version=0) # type: ignore
@@ -18,21 +18,21 @@ class Point():
 class Message():
   """ Create a message """
   link: str = "http://127.0.0.5:8080/robot/"
+  robot_id: int = 2
 
-  @staticmethod
-  def create(robot_id, timeOfExecution = None):
+  @classmethod
+  def create(cls, timeOfExecution = None):
     if timeOfExecution == None:
       return {
-        "ts": datetime.datetime.now(),
-        "robot_id": robot_id,
+        "ts": str(time.time()),
+        "robot_id": cls.robot_id,
       }
     else:
       return {
-        "ts": datetime.datetime.now(),
-        "robot_id": robot_id,
+        "ts": str(time.time()),
+        "robot_id": cls.robot_id,
         "time": timeOfExecution
       }
-
 ### Methods =^.^= ###
 def get_sensor_status() -> int:
   """
@@ -112,35 +112,35 @@ def suck(state: bool):
   magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
 ### Method to send data to the local server ###
-def send_ir_event(robot_id: int):
+### Method to send data to the local server ###
+def send_ir_event():
   """
   Docstring for send_ir_event
   """
   requests.post(
     Message.link + "/infrared_sensor_event", 
-    json=Message.create(robot_id=robot_id)
+    json=Message.create()
   )
 
 
-def send_ir_error(robot_id: int):
+def send_ir_error():
   """
   Send a message with timestamp and robot id to
   """
   requests.post(
-    Message.link + "/infrared_sensor_error", 
-    json=Message.create(robot_id=robot_id)
+    url=Message.link + "/infrared_sensor_error", 
+    json=Message.create()
   )
 
 
-def send_movement_executed(timeOfExecution: float, robot_id: int):
+def send_movement_executed(timeOfExecution: float):
   """
   Send the movement_executed event to the server.
   """
   requests.post(
     Message.link + "movement_executed",
-    json=Message.create(robot_id=robot_id, timeOfExecution=timeOfExecution)
+    json=Message.create(timeOfExecution=timeOfExecution)
   )
-
 
 def reset():
   set_conv_speed(0)

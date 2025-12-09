@@ -1,7 +1,23 @@
 from flask import Blueprint, request, jsonify
-
+from dotenv import load_dotenv
+import os, requests
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
+
+load_dotenv()
+
+idToAccessToken: dict = {
+    "1": str(os.getenv("ACCESS_TOKEN_1")),
+    "2": str(os.getenv("ACCESS_TOKEN_2")),
+    "3": str(os.getenv("ACCESS_TOKEN_3")),
+}
+
+BASE_LINK = str(os.getenv("BASE_LINK"))
+print(f"{BASE_LINK=}")
+def getTelemetryLink(robot_id: int):
+    link = BASE_LINK + idToAccessToken[robot_id] + "/telemetry"
+    print(f"{link=}")
+    return link
 
 
 @bp.route("/test", methods=['POST'])
@@ -49,8 +65,15 @@ def movement_executed():
 
     message = request.get_json()
 
-    print(f"{message=}")
+    data = {
+        "ts": message["ts"],
+        "time": message["time"]
+    }
 
+    req = requests.post(url=getTelemetryLink(int(message["robot_id"])), json=data)
+
+    print(f"{req=}")
+    
     return jsonify({"status": "success"}), 200
 
 
@@ -66,6 +89,9 @@ def infrared_sensor_event():
     }
     """
     # TODO complete the implementation and documentation
+    message = request.get_json()
+
+    print(f"{message=}")
 
     return jsonify({"status": "success"}), 200
 
@@ -75,6 +101,9 @@ def infrared_sensor_error():
     """
     """
     # TODO complete the implementation and documentation
+    message = request.get_json()
+
+    print(f"{message=}")
 
     return jsonify({"status": "success"}), 200
 
@@ -84,5 +113,8 @@ def color_sensor_event():
     """
     """
     # TODO complete the implementation and documentation
+    message = request.get_json()
+
+    print(f"{message=}")
 
     return jsonify({"status": "success"}), 200
