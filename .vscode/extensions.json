@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    "catppuccin.catppuccin-vsc",
+    "streetsidesoftware.code-spell-checker",
+    "editorconfig.editorconfig",
+    "usernamehw.errorlens",
+    "streetsidesoftware.code-spell-checker-italian",
+    "adamvoss.vscode-languagetool",
+    "davidanson.vscode-markdownlint",
+    "pkief.material-icon-theme",
+    "gruntfuggly.todo-tree",
+    "tonybaloney.vscode-pets",
+    "github.copilot",
+    "hediet.vscode-drawio",
+    "miguelsolorio.fluent-icons",
+    "cardinal90.multi-cursor-case-preserve",
+    "esbenp.prettier-vscode",
+    "mechatroner.rainbow-csv",
+    "ms-python.vscode-pylance",
+    "ms-python.python",
+    "ms-python.debugpy",
+    "ms-python.vscode-python-envs"
+  ]
+}

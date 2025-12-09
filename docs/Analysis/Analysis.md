@@ -1,9 +1,9 @@
 # Analysis
 
-In questa cartella puoi trovare:
+In this folder you can find:
 
-- [Analisi dei requisiti](./analisi_requisiti.md)
-- [Analisi funzionale](./analisi_funzionale.md)
-- [Analisi tecnica](./analisi_tecnica.md)
+- [requirement analysis](./Requirement_Analysis.md)
+- [functional analysis](./Functional_Analysis.md)
+- [technical analysis](./Technical_Analysis.md)
 
-Torna al [README](../../README.md)
+Go back to the [README](../../README.md)

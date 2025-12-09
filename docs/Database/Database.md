@@ -36,15 +36,17 @@ This is require to keep track of mechanical wear that can produce degradation ov
 
 #### Robot 1
 
-- Movement duration: time needed to perform his action
+- Movement duration (default): time needed to perform his action
 
 #### Robot 2
 
+- Movement duration (default): time needed to perform his action
 - Infrared sensor event: when a block has been detected passing in front of the infrared sensor.
 - Infrared sensor error: if no block passes within a predefined interval, an error event is logged to indicate a possible flow interruption
 
 #### Robot 3
 
+- Movement duration (default): time needed to perform his action
 - Color sensor event: log the color of the block arrived at destination
 
 ## Dashboard in thingsboard
