@@ -112,7 +112,6 @@ def suck(state: bool):
   magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
 ### Method to send data to the local server ###
-### Method to send data to the local server ###
 def send_ir_event():
   """
   Docstring for send_ir_event
@@ -141,6 +140,7 @@ def send_movement_executed(timeOfExecution: float):
     Message.link + "movement_executed",
     json=Message.create(timeOfExecution=timeOfExecution)
   )
+
 
 def reset():
   set_conv_speed(0)
@@ -184,7 +184,7 @@ def main():
       if sensor == 1:
         lastCheck = time.time()
         # Send a infrared_sensor_event to the server
-        send_ir_event(ROBOT_ID)
+        send_ir_event()
 
         timeStart = time.time()
         suck(True)
@@ -210,7 +210,7 @@ def main():
         print(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
 
         # Send the time of execution to the server
-        send_movement_executed(timeOfExecution, ROBOT_ID)
+        send_movement_executed(timeOfExecution)
 
       # If the sensor doesn't get triggered, check how much time has passed between now and the last block.
       # If the time is less than 20, send a infrared sensor error to the local server
@@ -219,7 +219,7 @@ def main():
         # If more than 30 seconds, send a infrared_sensor_error
         if time.time() - lastCheck > 20:
           print("[INFO] - No block has passed")
-          send_ir_error(ROBOT_ID)
+          send_ir_error()
   except Exception as e:
     print(f"[ERROR] - {e}")
   finally:
