@@ -2,7 +2,7 @@ import time, requests, datetime
 
 class Message():
   """ Create a message """
-  link: str = "http://127.0.0.5:8080/robot/"
+  link: str = "http://127.0.0.10:8080/robot/"
   robot_id: int = 2
 
   @classmethod

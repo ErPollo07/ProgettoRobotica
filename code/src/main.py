@@ -14,6 +14,6 @@ def index():
 
 
 if __name__ == '__main__':
-    print(f"{app.url_map=}")
+    # print(f"{app.url_map=}")
 
     app.run(host='127.0.0.10', port=8080, debug=True)

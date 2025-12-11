@@ -4,21 +4,22 @@ import os, requests
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
-load_dotenv()
+# load_dotenv()
 
-idToAccessToken: dict = {
-    "1": str(os.getenv("ACCESS_TOKEN_1")),
-    "2": str(os.getenv("ACCESS_TOKEN_2")),
-    "3": str(os.getenv("ACCESS_TOKEN_3")),
-}
+# idToAccessToken: dict = {
+#     "1": str(os.getenv("ACCESS_TOKEN_1")),
+#     "2": str(os.getenv("ACCESS_TOKEN_2")),
+#     "3": str(os.getenv("ACCESS_TOKEN_3")),
+# }
 
-BASE_LINK = str(os.getenv("BASE_LINK"))
-print(f"{BASE_LINK=}")
-def getTelemetryLink(robot_id: int):
-    link = BASE_LINK + idToAccessToken[robot_id] + "/telemetry"
-    print(f"{link=}")
-    return link
+# BASE_LINK = str(os.getenv("BASE_LINK"))
+# print(f"{BASE_LINK=}")
+# def getTelemetryLink(robot_id: int):
+#     link = BASE_LINK + idToAccessToken[robot_id] + "/telemetry"
+#     print(f"{link=}")
+#     return link
 
+TELEMETRY_LINK = "http://192.168.1.197:8080/api/v1/dyYAZhZrOMfAZnQyYaQW/telemetry"
 
 @bp.route("/test", methods=['POST'])
 def api_test():
@@ -65,16 +66,18 @@ def movement_executed():
 
     message = request.get_json()
 
+    # TODO Change the request to make thingsboard accept the ts like the timestamp not the telemetry
+    # {"ts":1451649600512, "values":{"key1":"value1", "key2":"value2"}}
     data = {
         "ts": message["ts"],
         "time": message["time"]
     }
 
-    req = requests.post(url=getTelemetryLink(int(message["robot_id"])), json=data)
+    req = requests.post(url=TELEMETRY_LINK, json=data)
 
-    print(f"{req=}")
-    
-    return jsonify({"status": "success"}), 200
+    # TODO Change the return type based on the response from thingsboard
+
+    return jsonify({"status": "success"}), 200    
 
 
 @bp.route("/infrared_sensor_event", methods=['POST'])
