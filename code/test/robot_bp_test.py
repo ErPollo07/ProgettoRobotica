@@ -1,4 +1,4 @@
-import time, requests, datetime
+import time, requests, random
 
 class Message():
   """ Create a message """
@@ -9,12 +9,12 @@ class Message():
   def create(cls, timeOfExecution = None):
     if timeOfExecution == None:
       return {
-        "ts": str(time.time()),
+        "ts": int(time.time() * 1000),
         "robot_id": cls.robot_id,
       }
     else:
       return {
-        "ts": str(time.time()),
+        "ts": int(time.time() * 1000),
         "robot_id": cls.robot_id,
         "time": timeOfExecution
       }
@@ -54,10 +54,10 @@ def send_movement_executed(timeOfExecution: float):
 
 #send_ir_error()
 #send_ir_event()
-send_movement_executed(5)
+send_movement_executed(random.randint(1, 10))
 time.sleep(3)
-send_movement_executed(5)
+send_movement_executed(random.randint(1, 10))
 time.sleep(3)
-send_movement_executed(7)
+send_movement_executed(random.randint(1, 10))
 time.sleep(3)
-send_movement_executed(3)
+send_movement_executed(random.randint(1, 10))
