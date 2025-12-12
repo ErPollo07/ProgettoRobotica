@@ -5,6 +5,11 @@
 # ╚██████╗██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗███████╗╚██████╔╝╚██████╔╝
 #  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝ 
 
+12/12/2025:
+  - Commented lines related in sending information at the local server in robot_cycle.py 
+  - Changed the Message.create() method in robot_bp_test.py
+  - Change the movement_executed() method in ./code/src/robot_bp.py
+
 07/12/2025:
   - Update docs
   - Create a helper class in robot_cycle for sending the information to the local server in robot_cycle.py

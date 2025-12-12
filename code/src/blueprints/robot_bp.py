@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from dotenv import load_dotenv
-import os, requests
+import os, requests, time, random
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
@@ -62,22 +62,21 @@ def movement_executed():
           a structured logging system for production environments.
         - Extend with error handling and data persistence as needed.
     """
-    # TODO complete the implementation
+    
+    requestJson = request.get_json()
 
-    message = request.get_json()
+    message = [
+        {
+            "ts": requestJson["ts"],
+            "values": {
+                "time": requestJson["time"]
+            }
+        }
+    ]
 
-    # TODO Change the request to make thingsboard accept the ts like the timestamp not the telemetry
-    # {"ts":1451649600512, "values":{"key1":"value1", "key2":"value2"}}
-    data = {
-        "ts": message["ts"],
-        "time": message["time"]
-    }
+    req = requests.post(url=TELEMETRY_LINK, json=message)
 
-    req = requests.post(url=TELEMETRY_LINK, json=data)
-
-    # TODO Change the return type based on the response from thingsboard
-
-    return jsonify({"status": "success"}), 200    
+    return jsonify({"status": "ok"}), 200
 
 
 @bp.route("/infrared_sensor_event", methods=['POST'])
