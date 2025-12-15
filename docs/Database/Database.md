@@ -21,9 +21,9 @@ Every robot send data to a local server on the network created using python.
 So this is the flow of the data of the robot:
 
 ```txt
-  *------*       *--------------*       *-------------*
-  | Data | ----> | Local server | ----> | Thingsboard |
-  *------*       *--------------*       *-------------*
+  *-------*       *--------------*       *-------------*
+  | Robot | ----> | Local server | ----> | Thingsboard |
+  *-------*       *--------------*       *-------------*
 ```
 
 ## Telemetry requirements

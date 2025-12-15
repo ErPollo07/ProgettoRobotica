@@ -12,6 +12,10 @@ app.register_blueprint(robot_bp.bp)
 def index():
     return "Welcome to the main page!"
 
+@app.route('/status', methods=['GET'])
+def status():
+    return jsonify({"status": "ok", "message": "Server is running"})
+
 
 if __name__ == '__main__':
     # print(f"{app.url_map=}")
