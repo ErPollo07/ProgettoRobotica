@@ -1,8 +1,8 @@
 # Progetto robotica
 
-Tutta la documentazione e' presente nella cartella docs/Setup.
+All the documentation is in docs directory.
 
-Lista dei file utili:
+## Index
 
 - [Workspace](./docs/Setup/Workspace.md)
 - [RobotSetup](./docs/Setup/RobotSetup.md)
