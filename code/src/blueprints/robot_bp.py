@@ -4,7 +4,7 @@ import os, requests, time, random
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
-# load_dotenv()
+load_dotenv()
 
 # idToAccessToken: dict = {
 #     "1": str(os.getenv("ACCESS_TOKEN_1")),
@@ -19,7 +19,9 @@ bp = Blueprint('robot', __name__, url_prefix='/robot')
 #     print(f"{link=}")
 #     return link
 
-TELEMETRY_LINK = "http://192.168.1.197:8080/api/v1/dyYAZhZrOMfAZnQyYaQW/telemetry"
+ACCESS_TOKEN_2 = str(os.getenv("ACCESS_TOKEN_2"))
+
+TELEMETRY_LINK = f"{os.getenv("TELEMETRY_LINK")}{token}/telemetry"
 
 @bp.route("/test", methods=['POST'])
 def api_test():
@@ -74,7 +76,7 @@ def movement_executed():
         }
     ]
 
-    req = requests.post(url=TELEMETRY_LINK, json=message)
+    req = requests.post(url=TELEMETRY_LINK.format(token=ACCESS_TOKEN_2), json=message)
 
     return jsonify({"status": "ok"}), 200
 

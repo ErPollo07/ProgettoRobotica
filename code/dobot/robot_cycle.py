@@ -116,11 +116,13 @@ def suck(state: bool):
 # The commented line that start like this "#$", they have to be uncommented if you have to send message to the server
 
 def reset():
+  print("[INFO] - Reset method")
   set_conv_speed(0)
   suck(False)
 
 
 def main():
+  print("[INFO] - Enter main method")
   # Variables
   CONV_SPEED: int = 100
 

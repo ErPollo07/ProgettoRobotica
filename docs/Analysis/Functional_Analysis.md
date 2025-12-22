@@ -1,4 +1,4 @@
-# **FUNCTIONAL ANALYSIS**
+# FUNCTIONAL ANALYSIS
 
 ## Description of the production line
 
@@ -31,4 +31,4 @@ The system ensures full tracking of every production phase, from retrieval to fi
 Go back to the [requirement analysis](./Requirement_Analysis.md)  
 Continue with the [technical analysis](./Technical_Analysis.md)
 
-Go back to the [index](./Analysis.md.md)
+Go back to the [index](./Analysis.md)
