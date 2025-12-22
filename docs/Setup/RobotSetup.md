@@ -2,18 +2,42 @@
 
 ## Cables
 
-Here are listed all the connections from the robot to other instruments:
+Below are all the connections from the robot to other devices:
 
 - PC: USB-B
-- SuctionCup: GP1, SW1
+- Suction Cup: GP1, SW1
 - Laser: GP2
 - Conveyor: Stepper1
 
-At the time of work the magic box doesn't need to be used
+The magic box is not required for operation.
 
-## Connections problems
+## Connection Problems
 
-If you have installed the dobot link and still the robot doesn't show up in the top-right corner. Or when you click connect it gives some errors, it's very likely to be a problem with the drivers.
-To resolve the problem go to device manager and if you see when you connect the usb cable that appears a device under the field "Other devices". You have to install the driver for the device that appears.
+If the robot does not appear in the top-right corner after installing Dobot Link, or if you receive errors when clicking connect, the issue is likely a driver problem. To resolve this:
 
-## Robot position
+1. Connect the USB cable and open Device Manager
+2. Look for an unknown device under "Other devices"
+3. Install the appropriate driver for that device
+
+## Robot Position
+
+The robot and conveyor must be placed next to each other to avoid alignment problems. Position them as shown in the diagram below:
+
+```txt
+                    *---------------*
+                    |               |
+                    |               |
+                    |     ROBOT     |
+                    |               |
+                    |               |
+                    *---------------*
+    *------------------------------------------------*
+    |                                                |
+    |                                                |
+    |                  CONVEYOR                      |
+    |                                                |
+    |                                                |
+    *------------------------------------------------*
+```
+
+There should be no gap between the conveyor and the robot.
