@@ -21,12 +21,72 @@
 The ThingsBoard server will be hosted on a fourth PC (if a fourth PC cannot be used, one of the three will act as the server).  
 Each robot has its own PC connected, running the program to send data to the ThingsBoard server.
 
+## Robot telemetry
+
+Each robot produces different type of telemetry.
+However, all robot measure the duration of each movement.
+This is require to keep track of mechanical wear that can produce degradation over time and slow or stop the production.
+
+### Robot specific telemetry
+
+#### Robot 1
+
+- Movement duration (default): time needed to perform his action
+
+#### Robot 2
+
+- Movement duration (default): time needed to perform his action
+- Infrared sensor event: when a block has been detected passing in front of the infrared sensor.
+- Infrared sensor error: if no block passes within a predefined interval, an error event is logged to indicate a possible flow interruption
+
+#### Robot 3
+
+- Movement duration (default): time needed to perform his action
+- Color sensor event: log the color of the block arrived at destination
+
 ## Anomaly management
 
 - If the laser sensor does not detect any block passage within a predefined time interval, an error message is generated and sent to the control PC.  
 - The PC then logs it in the database.
 
 The system ensures full tracking of every production phase, from retrieval to final classification.
+
+## Message structure of telemetry
+
+### Movement executed event
+
+```json
+{
+  "ts": <timestamp>,
+  "robot_id": <robot_identifier>,
+  "time": <timeOfExecution>
+}
+```
+
+### Infrared sensor event
+
+```json
+{
+  "ts": <timestamp>,
+  "robot_id": <robot_identifier>
+}
+```
+
+### Infrared sensor error
+
+```json
+{}
+```
+
+### Color sensor event
+
+```json
+{
+  "ts": <timestamp>,
+  "robot_id": <robot_identifier>,
+  "color": <detected_color>
+}
+```
 
 Go back to the [requirement analysis](./Requirement_Analysis.md)  
 Continue with the [technical analysis](./Technical_Analysis.md)
