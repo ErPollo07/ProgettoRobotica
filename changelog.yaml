@@ -5,39 +5,69 @@
 # ╚██████╗██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗███████╗╚██████╔╝╚██████╔╝
 #  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝ 
 
+11/12/2025:
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - Change the requirements analysis
+
 12/12/2025:
-  - Commented lines related in sending information at the local server in robot_cycle.py 
-  - Changed the Message.create() method in robot_bp_test.py
-  - Change the movement_executed() method in ./code/src/robot_bp.py
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - Commented lines related in sending information at the local server in robot_cycle.py 
+    - Changed the Message.create() method in robot_bp_test.py
+    - Change the movement_executed() method in ./code/src/robot_bp.py
 
 07/12/2025:
-  - Update docs
-  - Create a helper class in robot_cycle for sending the information to the local server in robot_cycle.py
-  - Modify methods, that post data in local server, in robot_cycle
-  - Change the robot blueprint from /api to /robot
-  - Create robot 2
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - Update docs
+    - Create a helper class in robot_cycle for sending the information to the local server in robot_cycle.py
+    - Modify methods, that post data in local server, in robot_cycle
+    - Change the robot blueprint from /api to /robot
+    - Create robot 2
 
 03/12/2025:
-  - Rename ./code/src/test/foo.py in ./code/src/test/robot_cycle.py
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - Rename ./code/src/test/foo.py in ./code/src/test/robot_cycle.py
 
 01/12/2025:
-  - ADD control to check if the block doesn't trigger the infrared sensor
-  - ADD the methods to send the message to the local server
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - ADD control to check if the block doesn't trigger the infrared sensor
+    - ADD the methods to send the message to the local server
 
 21/11/2025:
-  - MODIFY the file ./code/test/robot_cycle.py
-  - ADD ./code/test/robot_cycle_old.py
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - MODIFY the file ./code/test/robot_cycle.py
+    - ADD ./code/test/robot_cycle_old.py
 
 16/11/2025:
-  - CREATE the file ./docs/Database/Database.md and ./docs/Analysis/Analysis.md
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - CREATE the file ./docs/Database/Database.md and ./docs/Analysis/Analysis.md
 
 07/11/2025:
-  - Changed the documentation in the file ./code/test/robot_cycle.py
-  - Changed the docs files ./docs/RobotSetup.md, ./docs/Workspace.md
-  - Add a blank ./README.md file
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - Changed the documentation in the file ./code/test/robot_cycle.py
+    - Changed the docs files ./docs/RobotSetup.md, ./docs/Workspace.md
+    - Add a blank ./README.md file
 
 06/11/2025:
-  - CREATE the file ./code/test/robot_ciclico.py
-  - CREATE the ./docs/setup folder with documentation files
-  - MOVE all the old file in to ./docs/Analysis folder
-  - ADD changelog file
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - CREATE the file ./code/test/robot_ciclico.py
+    - CREATE the ./docs/setup folder with documentation files
+    - MOVE all the old file in to ./docs/Analysis folder
+    - ADD changelog file
