@@ -53,12 +53,15 @@ In the event of anomalies or errors, the backend records the event and makes it 
 - Movement duration (default): time needed to perform his action
 - Color sensor event: log the color of the block arrived at destination
 
-## Anomaly management
+## Anomaly Management
 
-- If the laser sensor does not detect any block passage within a predefined time interval, an error message is generated and sent to the control PC.  
-- The PC then logs it in the database.
+- If the laser sensor does not detect any block passage within a predefined time interval, an error message is generated and sent to the control PC.
 
-The system ensures full tracking of every production phase, from retrieval to final classification.
+- The PC then records the error in the database in a dedicated error category.
+
+- Anomalies are characterized based on: type of anomaly (e.g., sensor timeout, sensor error, execution error), detection timestamp, and the source that generated the anomaly (robot or sensor).
+
+The system ensures complete monitoring of every production phase, from picking to final sorting.
 
 ## Message structure of telemetry
 
