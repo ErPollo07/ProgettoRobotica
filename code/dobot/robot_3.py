@@ -51,6 +51,10 @@ def suck(state: bool):
   magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
 def main():
+  """
+  When the robot sees a difference beetwen the color detected a moment before and the current color,
+  it will take the block on the color sensor and move it to the specific warehouse.
+  """
   point_color_sensor = Point(229.51, -144.94, 34.4)
   # print(magician.get_color_sensor())
   while True:
