@@ -6,22 +6,17 @@ bp = Blueprint('robot', __name__, url_prefix='/robot')
 
 load_dotenv()
 
-# idToAccessToken: dict = {
-#     "1": str(os.getenv("ACCESS_TOKEN_1")),
-#     "2": str(os.getenv("ACCESS_TOKEN_2")),
-#     "3": str(os.getenv("ACCESS_TOKEN_3")),
-# }
+accessTokenDict: dict = {
+    "1": str(os.getenv("ACCESS_TOKEN_1")),
+    "2": str(os.getenv("ACCESS_TOKEN_2")),
+    "3": str(os.getenv("ACCESS_TOKEN_3")),
+}
 
-# BASE_LINK = str(os.getenv("BASE_LINK"))
-# print(f"{BASE_LINK=}")
-# def getTelemetryLink(robot_id: int):
-#     link = BASE_LINK + idToAccessToken[robot_id] + "/telemetry"
-#     print(f"{link=}")
-#     return link
+def retriveTelemetryLink(robotId: str):
+    baseLink = str(os.getenv("BASE_LINK"))
+    accessTok: str = str(accessTokenDict.get(robotId))
+    return baseLink + accessTok + "/telemetry"
 
-ACCESS_TOKEN_2 = str(os.getenv("ACCESS_TOKEN_2"))
-
-TELEMETRY_LINK = f"{os.getenv("TELEMETRY_LINK")}{token}/telemetry"
 
 @bp.route("/test", methods=['POST'])
 def api_test():
@@ -61,24 +56,27 @@ def movement_executed():
     ------
         - No validation is currently applied to the payload.
         - Logging is performed via standard output; consider using
-          a structured logging system for production environments.
+        a structured logging system for production environments.
         - Extend with error handling and data persistence as needed.
     """
     
     requestJson = request.get_json()
 
-    message = [
-        {
-            "ts": requestJson["ts"],
-            "values": {
-                "time": requestJson["time"]
+    try:
+        message = [
+            {
+                "ts": requestJson["ts"],
+                "values": {
+                    "time": requestJson["time"]
+                }
             }
-        }
-    ]
+        ]
 
-    req = requests.post(url=TELEMETRY_LINK.format(token=ACCESS_TOKEN_2), json=message)
+        req = requests.post(retriveTelemetryLink(str(requestJson["robot_id"])), json=message)
 
-    return jsonify({"status": "ok"}), 200
+        return jsonify({"status": "ok"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
 
 @bp.route("/infrared_sensor_event", methods=['POST'])
@@ -92,12 +90,23 @@ def infrared_sensor_event():
         "robot_id": <robot_identifier>
     }
     """
-    # TODO complete the implementation and documentation
-    message = request.get_json()
+    requestJson = request.get_json()
 
-    print(f"{message=}")
+    try:
+        message = [
+            {
+                "ts": requestJson["ts"],
+                "values": {
+                    "count": 1
+                }
+            }
+        ]
 
-    return jsonify({"status": "success"}), 200
+        requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
+
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
 
 @bp.route("/infrared_sensor_error", methods=['POST'])
@@ -105,11 +114,24 @@ def infrared_sensor_error():
     """
     """
     # TODO complete the implementation and documentation
-    message = request.get_json()
+    requestJson = request.get_json()
 
-    print(f"{message=}")
+    try:
+        message = [
+            {
+                "ts": requestJson["ts"],
+                "values": {
+                    "count": 1
+                }
+            }
+        ]
 
-    return jsonify({"status": "success"}), 200
+        requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
+
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
 
 
 @bp.route("/color_sensor_event", methods=['POST'])
@@ -117,8 +139,23 @@ def color_sensor_event():
     """
     """
     # TODO complete the implementation and documentation
-    message = request.get_json()
+    requestJson = request.get_json()
 
-    print(f"{message=}")
+    try:
+        # Create the message 
+        message = [
+            {
+                "ts": requestJson["ts"],
+                "values": {
+                    "count": 1
+                }
+            }
+        ]
 
-    return jsonify({"status": "success"}), 200
+        # Send request
+        requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
+
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+    

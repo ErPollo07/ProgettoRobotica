@@ -5,6 +5,13 @@
 # ╚██████╗██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗███████╗╚██████╔╝╚██████╔╝
 #  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝ 
 
+14/01/2026:
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - Complete the robot end points at code/src/blueprints/robot_bp.py
+    - Add basic error handling in the end points at code/src/blueprints/robot_bp.py
+
 12/01/2026:
   author_name: Nicola Tosatti
   author_nick: ErPollo07
