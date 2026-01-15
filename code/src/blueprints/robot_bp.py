@@ -72,7 +72,7 @@ def movement_executed():
             }
         ]
 
-        req = requests.post(retriveTelemetryLink(str(requestJson["robot_id"])), json=message)
+        #requests.post(retriveTelemetryLink(str(requestJson["robot_id"])), json=message)
 
         return jsonify({"status": "ok"}), 200
     except Exception as e:
@@ -87,75 +87,83 @@ def infrared_sensor_event():
     The payload:
     {
         "ts": <timestamp>,
-        "robot_id": <robot_identifier>
+        "robot_id": <robot_identifier>,
+        "status": <"success"|"error">
     }
     """
     requestJson = request.get_json()
 
     try:
-        message = [
-            {
-                "ts": requestJson["ts"],
-                "values": {
-                    "count": 1
+        if str(requestJson["status"]) == "success":
+            message = [
+                {
+                    "ts": requestJson["ts"],
+                    "values": {
+                        "status": "success"
+                    }
                 }
-            }
-        ]
+            ]
+        elif str(requestJson["status"]) == "error":
+            message = [
+                {
+                    "ts": requestJson["ts"],
+                    "values": {
+                        "status": "error"
+                    }
+                }
+            ]
+        else:
+            raise Exception("Bad json format\nAccepted format: {'ts': <timestamp>,'robot_id': <robot_identifier>, 'status': <'success'|'error'>}")
 
-        requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
+
+        #requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
 
         return jsonify({"status": "success"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
-
-
-@bp.route("/infrared_sensor_error", methods=['POST'])
-def infrared_sensor_error():
-    """
-    """
-    # TODO complete the implementation and documentation
-    requestJson = request.get_json()
-
-    try:
-        message = [
-            {
-                "ts": requestJson["ts"],
-                "values": {
-                    "count": 1
-                }
-            }
-        ]
-
-        requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
-
-        return jsonify({"status": "success"}), 200
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
-
 
 
 @bp.route("/color_sensor_event", methods=['POST'])
 def color_sensor_event():
     """
+    Handle color sensor event notifications from the robot.
+
+    The payload:
+    {
+        "ts": <timestamp>,
+        "robot_id": <1|2|3>,
+        "color": <"red"|"blue"|"green"|"error">
+    }
     """
-    # TODO complete the implementation and documentation
     requestJson = request.get_json()
 
     try:
         # Create the message 
-        message = [
-            {
-                "ts": requestJson["ts"],
-                "values": {
-                    "count": 1
+        if str(requestJson["color"]) in ["red", "blue", "green"]:
+            message = [
+                {
+                    "ts": requestJson["ts"],
+                    "values": {
+                        "color": requestJson["color"]
+                    }
                 }
-            }
-        ]
-
+            ]
+        elif str(requestJson["color"]) == "error":
+            message = [
+                {
+                    "ts": requestJson["ts"],
+                    "values": {
+                        "color": "error"
+                    }
+                }
+            ]
+        else:
+            raise Exception("Bad json format\nAccepted format: { 'ts': <timestamp>, 'robot_id': <1|2|3>, 'color': <'red'|'blue'|'green'|'error'> }")
         # Send request
-        requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
+        #requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
 
         return jsonify({"status": "success"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
+    
     
