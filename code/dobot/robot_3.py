@@ -1,5 +1,7 @@
 # version: Python3
 from DobotEDU import *
+import requests
+import time
 
 
 magician.set_color_sensor(port=2, enable=True, version=1)
@@ -7,11 +9,15 @@ magician.set_color_sensor(port=2, enable=True, version=1)
 
 class Point():
   """Represents a point in the system of the robot"""
-  
+
   def __init__(self, x: float, y: float, z: float):
     self.x = x
     self.y = y
     self.z = z
+
+
+### Configuration ###
+SERVER_URL = "http://192.168.1.100:5000"
 
 
 ### Methods ###
@@ -32,11 +38,13 @@ def move_to_point(p: Point, mode: int = 0):
 
 
 def get_color_sensor():
+  """Return the raw color sensor data"""
   return magicbox.get_color_sensor()
 
 
 def get_color(color: str):
-  get_color_sensor()[color]
+  """Return 1 if the specified color is detected"""
+  return get_color_sensor()[color]
 
 
 def suck(state: bool):
@@ -50,28 +58,97 @@ def suck(state: bool):
   """
   magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
+
+### HTTP Communication ###
+def send_color_to_pc(color: str):
+  """
+  Send detected color to the PC server.
+
+  Params
+  ------
+  color : str
+    Detected color
+
+  Returns
+  -------
+  str
+    Command received from the server
+  """
+  try:
+    response = requests.post(
+      f"{SERVER_URL}/robot/color",
+      json={"color": color},
+      timeout=1
+    )
+    return response.json()["command"]
+  except:
+    return None
+
+
+def send_status_to_pc(status: str):
+  """
+  Send robot status to the PC server.
+
+  Params
+  ------
+  status : str
+    Current robot status
+  """
+  try:
+    requests.post(
+      f"{SERVER_URL}/robot/status",
+      json={"status": status},
+      timeout=1
+    )
+  except:
+    pass
+
+
+### Main ###
 def main():
   """
-  When the robot sees a difference beetwen the color detected a moment before and the current color,
-  it will take the block on the color sensor and move it to the specific warehouse.
+  When the robot detects a color, it sends it to the PC.
+  The PC decides the destination and sends back a command.
   """
+
   POINT_COLOR_SENSOR = Point(0, 0, 0)
-  # print(magician.get_color_sensor())
+
+  WAREHOUSE_GREEN = Point(120, 0, 40)
+  WAREHOUSE_RED = Point(0, 120, 40)
+  WAREHOUSE_BLUE = Point(-120, 0, 40)
+
   while True:
-    colors = get_color_sensor()
-    print(colors)
     if get_color("green") == 1:
-      point_1 = Point(0, 0, 0)
-      move_to_point(point_1)
-      move_to_point(POINT_COLOR_SENSOR)
+      color = "green"
     elif get_color("red") == 1:
-      point_1 = Point(0, 0, 0)
-      move_to_point(point_1)
-      move_to_point(POINT_COLOR_SENSOR)
+      color = "red"
     elif get_color("blue") == 1:
-      point_1 = Point(0, 0, 0)
-      move_to_point(point_1)
-      move_to_point(POINT_COLOR_SENSOR)
+      color = "blue"
+    else:
+      time.sleep(0.1)
+      continue
+
+    command = send_color_to_pc(color)
+    if not command:
+      continue
+
+    send_status_to_pc("picking")
+
+    move_to_point(POINT_COLOR_SENSOR)
+    suck(True)
+    time.sleep(0.3)
+
+    if command == "MOVE_GREEN":
+      move_to_point(WAREHOUSE_GREEN)
+    elif command == "MOVE_RED":
+      move_to_point(WAREHOUSE_RED)
+    elif command == "MOVE_BLUE":
+      move_to_point(WAREHOUSE_BLUE)
+
+    suck(False)
+    time.sleep(0.3)
+
+    send_status_to_pc("idle")
 
 
 #while True:
