@@ -76,7 +76,7 @@ def send_color_to_pc(color: str):
     """
 
     message = {
-        "ts": time.time(),
+        "ts": str(time.time()),
         "robot_id": 3,
         "color": color
     }

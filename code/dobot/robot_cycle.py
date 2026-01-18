@@ -15,25 +15,9 @@ class Point():
         self.z = z
 
 
-class Message():
-    """ Create a message """
-    link: str = "http://127.0.0.5:8080/robot/"
-    robot_id: int = 2
+BASE_LINK: str = "http://127.0.0.5:8080/robot/"
+ROBOT_ID: int = 2
 
-    @classmethod
-    def create(cls, timeOfExecution = None):
-        if timeOfExecution == None:
-            return {
-                "ts": str(time.time()),
-                "robot_id": cls.robot_id,
-            }
-        else:
-            return {
-                "ts": str(time.time()),
-                "robot_id": cls.robot_id,
-                "time": timeOfExecution
-            }
-    
 ### Methods =^.^= ###
 def get_sensor_status() -> int:
     """
@@ -60,9 +44,7 @@ def move_to_point(p: Point, mode: int = 0):
         - 0: make a "jump" from the current position of the robot and the destination point
         - 1: go strait to the destination point
     """
-    ret: bool = magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
-    if not ret:
-        raise Exception("Error moving to point")
+    magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
 
 
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
@@ -84,9 +66,7 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
         - 0: make a "jump" from the current position of the robot and the destination point
         - 1: go strait to the destination point
     """
-    ret: bool = magician.ptp(mode, p.x + off_x, p.y + off_y, p.z + off_z, 0) # type: ignore
-    if not ret:
-        raise Exception("Error moving to point")
+    magician.ptp(mode, p.x + off_x, p.y + off_y, p.z + off_z, 0) # type: ignore
 
 
 def set_conv_speed(speed: int):
@@ -112,9 +92,49 @@ def suck(state: bool):
     """
     magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
+def send_ir_event():
+    """
+    Docstring for send_ir_event
+    """
+    message = {
+        "ts": str(time.time()),
+        "robot_id": ROBOT_ID,
+        "status": "success"
+    }
+
+    requests.post(url=BASE_LINK + "/infrared_sensor_event", json=message)
+
+
+def send_ir_error():
+    """
+    Docstring for send_ir_error
+    """
+    message = {
+        "ts": str(time.time()),
+        "robot_id": ROBOT_ID,
+        "status": "error"
+    }
+
+    requests.post(url=BASE_LINK + "/infrared_sensor_event", json=message)
+
+
+def send_movement_executed(timeOfExecution: float):
+    """
+    Docstring for send_movement_executed
+    """
+    message = {
+        "ts": str(time.time()),
+        "robot_id": ROBOT_ID,
+        "time": timeOfExecution
+    }
+
+    requests.post(url=BASE_LINK + "/movement_executed", json=message)
+
+
+
 ### Method to send data to the local server ###
 # TODO add method to send data to the local server, there are in ./code/test/robot_bp_test.py
-# The commented line that start like this "#$", they have to be uncommented if you have to send message to the server
+# The commented line that start with "#$", they have to be uncommented if you have to send message to the server
 
 def reset():
     print("[INFO] - Reset method")
@@ -157,7 +177,7 @@ def main():
         while True:
             sensor = get_sensor_status()
             if sensor == 1:
-                #lastCheck = time.time()
+                #$lastCheck = time.time()
                 # Send a infrared_sensor_event to the server
                 #$send_ir_event()
 
@@ -193,8 +213,8 @@ def main():
                 # Check how long the sensor is idle
                 # If more than 30 seconds, send a infrared_sensor_error
                 #$if time.time() - lastCheck > 20:
-                #$print("[INFO] - No block has passed")
-                #$send_ir_error()
+                    #$print("[INFO] - No block has passed")
+                    #$send_ir_error()  
     except Exception as e:
         print(f"[ERROR] - {e}")
     finally:

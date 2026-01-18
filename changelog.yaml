@@ -11,6 +11,7 @@
   changes:
     - Change and optimized robot 3 code
     - Modify indentation in robot_1.py and robot_cycle.py code
+    - Create functions in robot_cycle.py that sends data to the local server
 
 
 15/01/2026:
