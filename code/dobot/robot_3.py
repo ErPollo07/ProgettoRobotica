@@ -36,7 +36,7 @@ def move_to_point(p: Point, mode: int = 0):
     magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
 
 
-def get_color_sensor():
+def get_color_sensor() -> dict:
     """Return the raw color sensor data"""
     return magicbox.get_color_sensor()
 
@@ -87,6 +87,24 @@ def send_color_to_pc(color: str):
     except Exception as e:
         return False, str(e)
 
+
+def compute_color(values):
+    if values == (1, 0, 0):
+        return "red", WAREHOUSE_RED
+    elif values == (0, 1, 0):
+        return "green", WAREHOUSE_GREEN
+    elif values == (0, 0, 1):
+        return "blue", WAREHOUSE_BLUE
+    else:
+        return None, None
+
+COLLECTION_POINT = Point(0, 0, 0)
+IDLE_POINT = Point(100,100,100) # TODO define an idle point (will be near the collection point)
+
+WAREHOUSE_GREEN = Point(120, 0, 40)
+WAREHOUSE_RED = Point(0, 120, 40)
+WAREHOUSE_BLUE = Point(-120, 0, 40)
+
 ### Main ###
 def main():
     """
@@ -96,15 +114,8 @@ def main():
 
     # TODO Add a counter for how many blocks there are every warehouse (make a Warehouse class)
 
-    COLLECTION_POINT = Point(0, 0, 0)
-    IDLE_POINT = Point(100,100,100) # TODO define an idle point (will be near the collection point)
-
-    WAREHOUSE_GREEN = Point(120, 0, 40)
-    WAREHOUSE_RED = Point(0, 120, 40)
-    WAREHOUSE_BLUE = Point(-120, 0, 40)
-
     # Declaring variables
-    color: str ; point: Point = COLLECTION_POINT; pick: bool = False
+    color: str | None ; point: Point | None = COLLECTION_POINT; pick: bool = False
 
     move_to_point(point)
 
@@ -112,30 +123,20 @@ def main():
         color_detected = get_color_sensor()
 
         # Check if any of the color is detected
-        if color_detected["green"] == 1:
-            color = "green"
-            point = WAREHOUSE_GREEN
-        elif color_detected["red"] == 1:
-            color = "red"
-            point = WAREHOUSE_RED
-        elif color_detected["blue"] == 1:
-            color = "blue"
-            point = WAREHOUSE_BLUE
-        else:
-            pick = False
-            continue
+        color, point = compute_color(tuple(color_detected.values()))
 
-        status, error = send_color_to_pc(color)
+        if color != None and point != None:
+            status, error = send_color_to_pc(color)
 
-        # collect the block
-        move_to_point(COLLECTION_POINT)
-        suck(True)
+            # collect the block
+            move_to_point(COLLECTION_POINT)
+            suck(True)
 
-        # Put the block in the correct warehouse
-        move_to_point(point)
-        suck(False)
+            # Put the block in the correct warehouse
+            move_to_point(point)
+            suck(False)
 
-        move_to_point(IDLE_POINT)
+            move_to_point(IDLE_POINT)
 
 
 #while True:
