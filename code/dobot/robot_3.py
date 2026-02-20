@@ -115,7 +115,8 @@ def main():
     # TODO Add a counter for how many blocks there are every warehouse (make a Warehouse class)
 
     # Declaring variables
-    color: str | None ; point: Point | None = COLLECTION_POINT; pick: bool = False
+    color: str | None
+    point: Point | None = COLLECTION_POINT
 
     move_to_point(point)
 
@@ -137,6 +138,8 @@ def main():
             suck(False)
 
             move_to_point(IDLE_POINT)
+
+            color, point = None, None
 
 
 #while True:
