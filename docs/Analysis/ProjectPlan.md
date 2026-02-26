@@ -18,16 +18,20 @@ The telemetry that have to be send to thingsboard is described in [Functional an
 Guerra:
 
 - Development of Robot 1 logic (block placement)
+  The robot have to place take blocks from a collection point and place it on the conveyor belt.
 - Telemetry integration for R1
 
 Tosatti:
 
 - Development of Robot 2 logic (block interception)
+  The robot detects when a block passes in front of the laser and pick it up and place it above the color sensor.
 - Laser sensor handling
 
 Gaino:
 
 - Development of Robot 3 logic (color detection and sorting)
+  The robot have to get the color from the color sensor.
+  If the color change (so from nothing it detects a color) the robot have to take the block and put the block in a predifined point.
 - Color sensor integration
 
 ### Milestone 2: --/--/----
