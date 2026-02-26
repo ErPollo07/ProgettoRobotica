@@ -11,26 +11,52 @@ When the third robot detects a change in the sensor value it picks up the block 
 All the movements of the robots have to be registered in thingsboard.
 The telemetry that have to be send to thingsboard is described in [Functional analysis](/docs/Analysis/Functional_Analysis.md#robot-specific-telemetry) document.
 
-## Division of tasks
+## Tasks for milestone
+
+### Milestone 1: 03/03/2026
 
 Guerra:
 
 - Development of Robot 1 logic (block placement)
 - Telemetry integration for R1
-- Movement timing measurement
 
 Tosatti:
 
 - Development of Robot 2 logic (block interception)
 - Laser sensor handling
-- ThingsBoard configuration and dashboard creation
-- Infrared error detection
 
 Gaino:
 
 - Development of Robot 3 logic (color detection and sorting)
 - Color sensor integration
+
+### Milestone 2: --/--/----
+
+Guerra:
+
+- Movement timing measurement
+
+Tosatti:
+
+- Infrared error detection
+
+Gaino:
+
 - Color-based warehouse management
+
+### Milestone 3: --/--/----
+
+Gaino:
+
+- Send telemetry to thingsboard
+
+Guerra:
+
+- Send telemetry to thingsboard
+
+Tosatti:
+
+- ThingsBoard configuration and dashboard creation
 
 ## Verification and Validation Criteria
 
