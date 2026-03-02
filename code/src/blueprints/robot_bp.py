@@ -6,7 +6,7 @@ bp = Blueprint('robot', __name__, url_prefix='/robot')
 
 load_dotenv()
 
-accessTokenDict: dict = {
+access_token_dict: dict = {
     "1": str(os.getenv("ACCESS_TOKEN_1")),
     "2": str(os.getenv("ACCESS_TOKEN_2")),
     "3": str(os.getenv("ACCESS_TOKEN_3")),
@@ -14,7 +14,7 @@ accessTokenDict: dict = {
 
 def retriveTelemetryLink(robotId: str):
     baseLink = str(os.getenv("BASE_LINK"))
-    accessTok: str = str(accessTokenDict.get(robotId))
+    accessTok: str = str(access_token_dict.get(robotId))
     return baseLink + accessTok + "/telemetry"
 
 
@@ -59,20 +59,21 @@ def movement_executed():
         a structured logging system for production environments.
         - Extend with error handling and data persistence as needed.
     """
-    
-    requestJson = request.get_json()
+
+    request_json = request.get_json()
 
     try:
         message = [
             {
-                "ts": requestJson["ts"],
+                "ts": request_json["ts"],
                 "values": {
-                    "time": requestJson["time"]
+                    "time": request_json["time"]
                 }
             }
         ]
 
         #requests.post(retriveTelemetryLink(str(requestJson["robot_id"])), json=message)
+        print(f"[movement_executed] {message}")
 
         return jsonify({"status": "ok"}), 200
     except Exception as e:
@@ -91,22 +92,22 @@ def infrared_sensor_event():
         "status": <"success"|"error">
     }
     """
-    requestJson = request.get_json()
+    request_json = request.get_json()
 
     try:
-        if str(requestJson["status"]) == "success":
+        if str(request_json["status"]) == "success":
             message = [
                 {
-                    "ts": requestJson["ts"],
+                    "ts": request_json["ts"],
                     "values": {
                         "status": "success"
                     }
                 }
             ]
-        elif str(requestJson["status"]) == "error":
+        elif str(request_json["status"]) == "error":
             message = [
                 {
-                    "ts": requestJson["ts"],
+                    "ts": request_json["ts"],
                     "values": {
                         "status": "error"
                     }
@@ -117,6 +118,8 @@ def infrared_sensor_event():
 
 
         #requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
+        print(f"[infrared_sensor_event] {message}")
+
 
         return jsonify({"status": "success"}), 200
     except Exception as e:
@@ -135,23 +138,23 @@ def color_sensor_event():
         "color": <"red"|"blue"|"green"|"error">
     }
     """
-    requestJson = request.get_json()
+    request_json = request.get_json()
 
     try:
-        # Create the message 
-        if str(requestJson["color"]) in ["red", "blue", "green"]:
+        # Create the message
+        if str(request_json["color"]) in ["red", "blue", "green"]:
             message = [
                 {
-                    "ts": requestJson["ts"],
+                    "ts": request_json["ts"],
                     "values": {
-                        "color": requestJson["color"]
+                        "color": request_json["color"]
                     }
                 }
             ]
-        elif str(requestJson["color"]) == "error":
+        elif str(request_json["color"]) == "error":
             message = [
                 {
-                    "ts": requestJson["ts"],
+                    "ts": request_json["ts"],
                     "values": {
                         "color": "error"
                     }
@@ -161,9 +164,9 @@ def color_sensor_event():
             raise Exception("Bad json format\nAccepted format: { 'ts': <timestamp>, 'robot_id': <1|2|3>, 'color': <'red'|'blue'|'green'|'error'> }")
         # Send request
         #requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
+        print(f"[color_sensor_event] {message}")
 
         return jsonify({"status": "success"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
-    
-    
+

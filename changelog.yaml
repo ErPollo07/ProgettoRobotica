@@ -1,9 +1,16 @@
-#  ██████╗██╗  ██╗ █████╗ ███╗   ██╗ ██████╗ ███████╗██╗      ██████╗  ██████╗ 
-# ██╔════╝██║  ██║██╔══██╗████╗  ██║██╔════╝ ██╔════╝██║     ██╔═══██╗██╔════╝ 
+#  ██████╗██╗  ██╗ █████╗ ███╗   ██╗ ██████╗ ███████╗██╗      ██████╗  ██████╗
+# ██╔════╝██║  ██║██╔══██╗████╗  ██║██╔════╝ ██╔════╝██║     ██╔═══██╗██╔════╝
 # ██║     ███████║███████║██╔██╗ ██║██║  ███╗█████╗  ██║     ██║   ██║██║  ███╗
 # ██║     ██╔══██║██╔══██║██║╚██╗██║██║   ██║██╔══╝  ██║     ██║   ██║██║   ██║
 # ╚██████╗██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗███████╗╚██████╔╝╚██████╔╝
-#  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝ 
+#  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝
+
+02/03/2026:
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  changes:
+    - Add print statement to test the end point for the telemetry
+
 02/03/2026:
   author_name: Leonardo Guerra
   author_nick: zena_07
@@ -87,7 +94,7 @@
   author_name: Nicola Tosatti
   author_nick: ErPollo07
   changes:
-    - Commented lines related in sending information at the local server in robot_cycle.py 
+    - Commented lines related in sending information at the local server in robot_cycle.py
     - Changed the Message.create() method in robot_bp_test.py
     - Change the movement_executed() method in ./code/src/robot_bp.py
 
