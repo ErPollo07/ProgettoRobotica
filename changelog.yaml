@@ -8,6 +8,12 @@
   author_name: Leonardo Guerra
   author_nick: zena_07
   changes:
+    - Finished the robot1_test.py
+
+02/03/2026:
+  author_name: Leonardo Guerra
+  author_nick: zena_07
+  changes:
     _ created new functions on robot1_test.py
     - Started the main
 
