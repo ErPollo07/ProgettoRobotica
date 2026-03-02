@@ -8,8 +8,16 @@
   author_name: Leonardo Guerra
   author_nick: zena_07
   changes:
+    _ created new functions on robot1_test.py
+    - Started the main
+
+02/03/2026:
+  author_name: Leonardo Guerra
+  author_nick: zena_07
+  changes:
     - Created robot1_test.py
     - create new modified functions
+
 20/01/2026:
   author_name: Nicola Tosatti
   author_nick: ErPollo07

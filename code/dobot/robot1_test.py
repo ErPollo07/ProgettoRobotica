@@ -35,3 +35,21 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
     print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
     m_lite.set_ptpcmd(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0)
 
+
+
+def suck(state: bool):
+    """Set the suction cup on or off"""
+
+    status = "ON" if state else "OFF"
+    print(f"[TELEMETRY] Suction cup {status}")
+    m_lite.set_endeffector_suctioncup(enable = state, on = state)
+
+
+#==============================
+#=========== MAIN =============
+#==============================
+
+def main():
+     
+
+
