@@ -12,20 +12,19 @@ class Point():
 
 
 
-#==================================
-#=========== METHODS ==============
-#==================================
+# ==================================
+# =========== METHODS ==============
+# ==================================
 
-def move_to_point(p: Point, mdoe: int = 0):
-    
+def move_to_point(p: Point, mode: int = 0):
+
     """Move the robot to the coordinate of the point with a mode"""
 
     print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
-    m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.x, z=p.z, r = 0)
+    m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.x, z=p.z, r = 0) # type: ignore
 
 
-
-def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0): 
+def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
     """Move the robot to the coordinate of the point  and the offset with a mode"""
 
     target_x = p.x + off_x
@@ -33,8 +32,7 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
     target_z = p.z + off_z
 
     print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
-    m_lite.set_ptpcmd(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0)
-
+    m_lite.set_ptpcmd(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
 
 
 def suck(state: bool):
@@ -42,22 +40,22 @@ def suck(state: bool):
 
     status = "ON" if state else "OFF"
     print(f"[TELEMETRY] Suction cup {status}")
-    m_lite.set_endeffector_suctioncup(enable = state, on = state)
+    m_lite.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
 
 
-#==============================
-#=========== MAIN =============
-#==============================
+# ==============================
+# =========== MAIN =============
+# ==============================
 
 def main():
     print("[INFO] - Robot 1 started")
 
     collection_point = Point(0, 0, 0)
-    conveyor_point = Point(0, 0, 0) 
+    conveyor_point = Point(0, 0, 0)
 
     safe_height = 50
 
-    while true:
+    while True:
         print("\n [INFO] - starting new cycle")
 
         # 1. Move above the collection point
@@ -95,5 +93,5 @@ def main():
 
 
 main()
-        
+
 

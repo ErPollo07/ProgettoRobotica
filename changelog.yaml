@@ -8,8 +8,11 @@
 02/03/2026:
   author_name: Nicola Tosatti
   author_nick: ErPollo07
-  changes:
-    - Add print statement to test the end point for the telemetry
+  commits:
+    commit_1:
+      - Add print statement to test the end point for the telemetry
+    commit_2:
+      - Fix error in code/dobot/robot1_test.py
 
 02/03/2026:
   author_name: Leonardo Guerra
