@@ -12,12 +12,11 @@ class Point():
 
 
 
-#==================================
-#=========== METHODS ==============
-#==================================
+# ==================================
+# =========== METHODS ==============
+# ==================================
 
 def move_to_point(p: Point, mdoe: int = 0):
-    
     """Move the robot to the coordinate of the point with a mode"""
 
     print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
@@ -45,9 +44,9 @@ def suck(state: bool):
     m_lite.set_endeffector_suctioncup(enable = state, on = state)
 
 
-#==============================
-#=========== MAIN =============
-#==============================
+# ==============================
+# =========== MAIN =============
+# ==============================
 
 def main():
     print("[INFO] - Robot 1 started")
@@ -95,5 +94,3 @@ def main():
 
 
 main()
-        
-
