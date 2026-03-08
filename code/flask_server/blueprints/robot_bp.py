@@ -141,6 +141,7 @@ def color_sensor_event():
                 }
             }
         ]
+
         # Send request
         #requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
         print(f"[color_sensor_event] {message}")

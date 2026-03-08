@@ -10,9 +10,11 @@
     "magicbox",
     "offpoint",
     "ptpcmd",
+    "pycache",
     "Pylance",
     "suctioncup",
     "thingsboard",
     "withl"
-  ]
+  ],
+  "python-envs.defaultEnvManager": "ms-python.python:system"
 }
