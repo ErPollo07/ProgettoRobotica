@@ -15,21 +15,15 @@ class Point():
         self.z = z
 
 
-BASE_LINK: str = "http://127.0.0.5:8080/robot/"
+LINK: str = f"http://127.0.0.5:8080/robot/{0}"
 ROBOT_ID: int = 2
 
 ### Methods ###
-def get_sensor_status() -> int:
+def get_sensor_status() -> bool:
     """
     Gets the infrared sensor status
-
-    Returns
-    ------
-    int
-        0 if the sensor doesn't detect anything
-        1 if the sensor detect anything
     """
-    return magicbox.get_infrared_sensor(port=2)["status"] # type: ignore
+    return True if magicbox.get_infrared_sensor(port=2)["status"] == 1 else False # type: ignore
 
 
 def move_to_point(p: Point, mode: int = 0):
@@ -81,7 +75,7 @@ def send_ir_event():
         "status": "success"
     }
 
-    requests.post(url=BASE_LINK + "/infrared_sensor_event", json=message)
+    requests.post(url=LINK.format("/infrared_sensor_event"), json=message)
 
 
 def send_ir_error():
@@ -94,7 +88,7 @@ def send_ir_error():
         "status": "error"
     }
 
-    requests.post(url=BASE_LINK + "/infrared_sensor_event", json=message)
+    requests.post(url=LINK.format("/infrared_sensor_event"), json=message)
 
 
 def send_movement_executed(timeOfExecution: float):
@@ -107,14 +101,11 @@ def send_movement_executed(timeOfExecution: float):
         "time": timeOfExecution
     }
 
-    requests.post(url=BASE_LINK + "/movement_executed", json=message)
-
+    requests.post(url=LINK.format("/movement_executed"), json=message)
 
 
 ### Method to send data to the local server ###
-# TODO add method to send data to the local server, there are in ./code/test/robot_bp_test.py
 # The commented line that start with "#$", they have to be uncommented if you have to send message to the server
-
 def reset():
     print("[INFO] - Reset method")
     set_conv_speed(0)
@@ -144,7 +135,7 @@ def main():
         print("[INFO] - Take the conveyor up to speed")
         set_conv_speed(CONV_SPEED)
 
-        # Take the block while the conveyor is moving]
+        # Take the block while the conveyor is moving
         # When the infrared sensor detect something the robot:
         # - start the suctioncup
         # - go to the collectionPoint
@@ -155,7 +146,7 @@ def main():
         print("[INFO] - Enter main cycle")
         while True:
             sensor = get_sensor_status()
-            if sensor == 1:
+            if sensor:
                 #$lastCheck = time.time()
                 # Send a infrared_sensor_event to the server
                 #$send_ir_event()
