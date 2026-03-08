@@ -181,7 +181,7 @@ def main():
             # If the time is less than 20, send a infrared sensor error to the local server
             #$else:
                 # Check how long the sensor is idle
-                # If more than 30 seconds, send a infrared_sensor_error
+                # If more than 20 seconds, send a infrared_sensor_error
                 #$if time.time() - lastCheck > 20:
                     #$print("[INFO] - No block has passed")
                     #$send_ir_error()
