@@ -6,7 +6,7 @@ bp = Blueprint('robot', __name__, url_prefix='/robot')
 
 load_dotenv()
 
-access_token_dict: dict = {
+access_token_dict: dict[str, str] = {
     "1": str(os.getenv("ACCESS_TOKEN_1")),
     "2": str(os.getenv("ACCESS_TOKEN_2")),
     "3": str(os.getenv("ACCESS_TOKEN_3")),
@@ -76,6 +76,9 @@ def movement_executed():
         print(f"[movement_executed] {message}")
 
         return jsonify({"status": "ok"}), 200
+    except KeyError:
+        m = "Bad json format\nAccepted format: {'ts': <timestamp>,'robot_id': <robot_identifier>, 'time': <timeOfExecution>}"
+        return jsonify({"status": "error", "message": m})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
@@ -95,33 +98,22 @@ def infrared_sensor_event():
     request_json = request.get_json()
 
     try:
-        if str(request_json["status"]) == "success":
-            message = [
-                {
-                    "ts": request_json["ts"],
-                    "values": {
-                        "status": "success"
-                    }
+        message = [
+            {
+                "ts": request_json["ts"],
+                "values": {
+                    "status": request_json["status"]
                 }
-            ]
-        elif str(request_json["status"]) == "error":
-            message = [
-                {
-                    "ts": request_json["ts"],
-                    "values": {
-                        "status": "error"
-                    }
-                }
-            ]
-        else:
-            raise Exception("Bad json format\nAccepted format: {'ts': <timestamp>,'robot_id': <robot_identifier>, 'status': <'success'|'error'>}")
-
+            }
+        ]
 
         #requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
         print(f"[infrared_sensor_event] {message}")
 
-
         return jsonify({"status": "success"}), 200
+    except KeyError:
+        m = "Bad json format\nAccepted format: {'ts': <timestamp>,'robot_id': <robot_identifier>, 'status': <'success'|'error'>}"
+        return jsonify({"status": "error", "message": m})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
@@ -141,32 +133,21 @@ def color_sensor_event():
     request_json = request.get_json()
 
     try:
-        # Create the message
-        if str(request_json["color"]) in ["red", "blue", "green"]:
-            message = [
-                {
-                    "ts": request_json["ts"],
-                    "values": {
-                        "color": request_json["color"]
-                    }
+        message = [
+            {
+                "ts": request_json["ts"],
+                "values": {
+                    "color": request_json["color"]
                 }
-            ]
-        elif str(request_json["color"]) == "error":
-            message = [
-                {
-                    "ts": request_json["ts"],
-                    "values": {
-                        "color": "error"
-                    }
-                }
-            ]
-        else:
-            raise Exception("Bad json format\nAccepted format: { 'ts': <timestamp>, 'robot_id': <1|2|3>, 'color': <'red'|'blue'|'green'|'error'> }")
+            }
+        ]
         # Send request
         #requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
         print(f"[color_sensor_event] {message}")
 
         return jsonify({"status": "success"}), 200
+    except KeyError:
+        m = "Bad json format\nAccepted format: { 'ts': <timestamp>, 'robot_id': <1|2|3>, 'color': <'red'|'blue'|'green'|'error'> }"
+        return jsonify({"status": "error", "message": m})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
-
