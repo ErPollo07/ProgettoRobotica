@@ -1,4 +1,4 @@
-from DobotEDU import *
+from DobotEDU import * # type: ignore
 import time
 
 class Point():
@@ -15,9 +15,7 @@ class Point():
 # ==================================
 # =========== METHODS ==============
 # ==================================
-
 def move_to_point(p: Point, mode: int = 0):
-
     """Move the robot to the coordinate of the point with a mode"""
 
     print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
@@ -93,5 +91,3 @@ def main():
 
 
 main()
-
-

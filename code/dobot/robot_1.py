@@ -1,9 +1,9 @@
 from DobotEDU import * # type: ignore
-
+import time
 
 class Point():
     """Represents a point in the system of the robot"""
-    
+
     def __init__(self, x: float, y: float, z: float):
         self.x = x
         self.y = y
@@ -11,62 +11,74 @@ class Point():
 
 ### Methods ###
 def move_to_point(p: Point, mode: int = 0):
-    """
-    Move the robot to the coordinate of the Point with a mode
+    """Move the robot to the coordinate of the point with a mode"""
 
-    Params
-    ------
-    p : Point
-        The destination Point
-    mode : int
-        Specify the mode of movement:
-        - 0: make a "jump" from the current position of the robot and the destination point
-        - 1: go strait to the destination point
-    """
-    m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r=0)# type: ignore
+    print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
+    m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.x, z=p.z, r = 0) # type: ignore
+
 
 
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
-    """
-    Move the robot to the coordinate of the Point and the offset with a mode.
+    """Move the robot to the coordinate of the point  and the offset with a mode"""
 
-    Params
-    ------
-    p : Point
-        The destination Point
-    off_x : float
-        The offset to apply to the x of the destination point
-    off_y : float
-        The offset to apply to the y of the destination point
-    off_z : float
-        The offset to apply to the z of the destination point
-    mode: int
-        Specify the mode of movement:
-        - 0: make a "jump" from the current position of the robot and the destination point
-        - 1: go strait to the destination point
-    """
-    m_lite.set_ptpcmd(ptp_mode=mode, x=p.x + off_x, y=p.y + off_y, z=p.z + off_z, r=0) # type: ignore
+    target_x = p.x + off_x
+    target_y = p.y + off_y
+    target_z = p.z + off_z
+
+    print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
+    m_lite.set_ptpcmd(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
 
 
 def suck(state: bool):
-    """
-    Set the suction cup on or off.
+    """Set the suction cup on or off"""
 
-    Params
-    ------
-    state : bool
-        The state that needs to be applied to the suction cup.
-    """
-    m_lite.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
+    status = "ON" if state else "OFF"
+    print(f"[TELEMETRY] Suction cup {status}")
+    m_lite.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
 
 
 def main():
-    print("[INFO] - Executing main()")
-    point_1 = Point(0,0,0)
-    move_to_point(point_1)
-    suck(True)
-    point_2 = Point(0,0,0)
-    move_to_point(point_2)
-    suck(False)
+    print("[INFO] - Robot 1 started")
+
+    collection_point = Point(0, 0, 0)
+    conveyor_point = Point(0, 0, 0)
+
+    safe_height = 50
+
+    while True:
+        print("\n [INFO] - starting new cycle")
+
+        # 1. Move above the collection point
+        move_to_offpoint(collection_point, 0, 0, safe_height, mode=0)
+
+        # 2. Move down to reach the block
+        move_to_point(collection_point, mode=1)
+
+        # 3. Activate suction cup to grab the block
+        suck(True)
+        time.sleep(1)
+
+        # 4. Lift the block to a safe height
+        move_to_offpoint(collection_point, 0, 0, safe_height, mode=1)
+
+        # 5. Move above the conveyor belt
+        move_to_offpoint(conveyor_point, 0, 0, safe_height, mode=0)
+
+        # 6. Move down to the conveyor position
+        move_to_point(conveyor_point, mode=1)
+
+        # 7. Deactivate suction cup to release the block
+        suck(False)
+        time.sleep(1)
+
+        # 8. Lift back to safe height above conveyor
+        move_to_offpoint(conveyor_point, 0, 0, safe_height, mode=1)
+
+        # 9. Return above the collection point
+        move_to_offpoint(collection_point, 0, 0, safe_height, mode=0)
+
+        # 10. Wait before starting the next cycle
+        print("[INFO] - Waiting 10 seconds before next cycle")
+        time.sleep(10)
 
 main()
