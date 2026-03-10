@@ -14,6 +14,7 @@ class Point():
     self.y = y
     self.z = z
 
+#https://www.dobot-robots.com/service/download-center
 
 LINK: str = f"http://127.0.0.5:8080/robot/{0}"
 ROBOT_ID: int = 2
