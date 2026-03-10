@@ -124,7 +124,8 @@ def main():
     # Define the collection point and the drop point
     # If the drop point is not perfectly alined the block will move farther way every iteration
     # so adjust the x coordinate of the drop point to be more precise
-    collectionPoint: Point = Point(129.51, -199.44, 20.71)
+    collectionPoint: Point = Point(113.86, -141.17, -20.29)
+    dropPoint: Point = Point(68.55, -183.55, -8.87)
 
     try:
         # Go above the collection point
@@ -159,16 +160,12 @@ def main():
                 move_to_offpoint(collectionPoint, 0, 0, 20, 1) # MOV 2
 
                 # Go to the drop point
-                move_to_offpoint(collectionPoint, 80, 0, 10, 1) # MOV 3
-                move_to_offpoint(collectionPoint, 80, 300, 10, 1) # MOV 4
-                move_to_offpoint(collectionPoint, 0, 300, 5, 1) # MOV 5
+                move_to_point()
 
                 suck(False)
 
                 # Return to the collection point
-                move_to_offpoint(collectionPoint, 80, 300, 10, 1) # MOV 6
-                move_to_offpoint(collectionPoint, 80, 0, 10, 1) # MOV 7
-                move_to_offpoint(collectionPoint, 0, 0, 5, 1) # MOV 8
+                
                 timeEnd = time.time()
 
                 timeOfExecution = timeEnd - timeStart

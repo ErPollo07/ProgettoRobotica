@@ -8,65 +8,49 @@ magician.motion_params(100, 100) # type: ignore
 
 class Point():
     """Represents a point in the system of the robot"""
-    
+
     def __init__(self, x: float, y: float, z: float):
         self.x = x
         self.y = y
         self.z = z
 
 
-BASE_LINK: str = "http://127.0.0.5:8080/robot/"
+LINK: str = f"http://127.0.0.5:8080/robot/{0}"
 ROBOT_ID: int = 2
 
-### Methods =^.^= ###
-def get_sensor_status() -> int:
+### Methods ###
+def get_sensor_status() -> bool:
     """
     Gets the infrared sensor status
-
-    Returns
-    ------
-    int
-        0 if the sensor doesn't detect anything
-        1 if the sensor detect anything
     """
-    return magicbox.get_infrared_sensor(port=2)["status"] # type: ignore
+    return True if magicbox.get_infrared_sensor(port=2)["status"] == 1 else False # type: ignore
+
 
 def move_to_point(p: Point, mode: int = 0):
-    """
-    Move the robot to the coordinate of the Point with a mode
+    """Move the robot to the coordinate of the point with a mode"""
 
-    Params
-    ------
-    p : Point
-        The destination Point
-    mode : int
-        Specify the mode of movement:
-        - 0: make a "jump" from the current position of the robot and the destination point
-        - 1: go strait to the destination point
-    """
-    magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
+    print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
+    m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.x, z=p.z, r = 0) # type: ignore
+
 
 
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
-    """
-    Move the robot to the coordinate of the Point and the offset with a mode.
+    """Move the robot to the coordinate of the point  and the offset with a mode"""
 
-    Params
-    ------
-    p : Point
-        The destination Point
-    off_x : float
-        The offset to apply to the x of the destination point
-    off_y : float
-        The offset to apply to the y of the destination point
-    off_z : float
-        The offset to apply to the z of the destination point
-    mode: int
-        Specify the mode of movement:
-        - 0: make a "jump" from the current position of the robot and the destination point
-        - 1: go strait to the destination point
-    """
-    magician.ptp(mode, p.x + off_x, p.y + off_y, p.z + off_z, 0) # type: ignore
+    target_x = p.x + off_x
+    target_y = p.y + off_y
+    target_z = p.z + off_z
+
+    print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
+    m_lite.set_ptpcmd(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
+
+
+def suck(state: bool):
+    """Set the suction cup on or off"""
+
+    status = "ON" if state else "OFF"
+    print(f"[TELEMETRY] Suction cup {status}")
+    m_lite.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
 
 
 def set_conv_speed(speed: int):
@@ -81,17 +65,6 @@ def set_conv_speed(speed: int):
     magicbox.set_converyor(index=magicbox.STP1,enable=True,speed=speed) # type: ignore
 
 
-def suck(state: bool):
-    """
-    Set the suction cup on or off.
-
-    Params
-    ------
-    state : bool
-        The state that needs to be applied to the suction cup.
-    """
-    magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
-
 def send_ir_event():
     """
     Docstring for send_ir_event
@@ -102,7 +75,7 @@ def send_ir_event():
         "status": "success"
     }
 
-    requests.post(url=BASE_LINK + "/infrared_sensor_event", json=message)
+    requests.post(url=LINK.format("/infrared_sensor_event"), json=message)
 
 
 def send_ir_error():
@@ -115,7 +88,7 @@ def send_ir_error():
         "status": "error"
     }
 
-    requests.post(url=BASE_LINK + "/infrared_sensor_event", json=message)
+    requests.post(url=LINK.format("/infrared_sensor_event"), json=message)
 
 
 def send_movement_executed(timeOfExecution: float):
@@ -128,14 +101,11 @@ def send_movement_executed(timeOfExecution: float):
         "time": timeOfExecution
     }
 
-    requests.post(url=BASE_LINK + "/movement_executed", json=message)
-
+    requests.post(url=LINK.format("/movement_executed"), json=message)
 
 
 ### Method to send data to the local server ###
-# TODO add method to send data to the local server, there are in ./code/test/robot_bp_test.py
 # The commented line that start with "#$", they have to be uncommented if you have to send message to the server
-
 def reset():
     print("[INFO] - Reset method")
     set_conv_speed(0)
@@ -165,18 +135,18 @@ def main():
         print("[INFO] - Take the conveyor up to speed")
         set_conv_speed(CONV_SPEED)
 
-        # Take the block while the conveyor is moving]
+        # Take the block while the conveyor is moving
         # When the infrared sensor detect something the robot:
         # - start the suctioncup
         # - go to the collectionPoint
-        # - take the block 
+        # - take the block
         # - go to dropPoint
         # - release the block
         # - return above the collectionPoint
         print("[INFO] - Enter main cycle")
         while True:
             sensor = get_sensor_status()
-            if sensor == 1:
+            if sensor:
                 #$lastCheck = time.time()
                 # Send a infrared_sensor_event to the server
                 #$send_ir_event()
@@ -211,10 +181,10 @@ def main():
             # If the time is less than 20, send a infrared sensor error to the local server
             #$else:
                 # Check how long the sensor is idle
-                # If more than 30 seconds, send a infrared_sensor_error
+                # If more than 20 seconds, send a infrared_sensor_error
                 #$if time.time() - lastCheck > 20:
                     #$print("[INFO] - No block has passed")
-                    #$send_ir_error()  
+                    #$send_ir_error()
     except Exception as e:
         print(f"[ERROR] - {e}")
     finally:
