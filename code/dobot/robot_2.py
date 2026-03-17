@@ -5,6 +5,7 @@ import time, requests
 magicbox.set_device_withl(enable=True, version=0) # type: ignore
 magicbox.set_infrared_sensor(port=2, enable=True, version=1) # type: ignore
 magician.motion_params(100, 100) # type: ignore
+magician.jump_params(200, 30) # zlimit, height
 
 class Point():
   """Represents a point in the system of the robot"""
@@ -31,7 +32,7 @@ def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
 
   print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
-  m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.x, z=p.z, r = 0) # type: ignore
+  m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
 
 
 
@@ -128,8 +129,8 @@ def main():
   # Define the collection point and the drop point
   # If the drop point is not perfectly alined the block will move farther way every iteration
   # so adjust the x coordinate of the drop point to be more precise
-  collectionPoint: Point = Point(113.86, -141.17, -20.29)
-  dropPoint: Point = Point(68.55, -183.55, -8.87)
+  collectionPoint: Point = Point(247.03, -116.26, 14.02)
+  dropPoint: Point = Point(185.97, -162.46, 30.36)
 
   try:
     # Go above the collection point
@@ -165,8 +166,8 @@ def main():
 
         # Go to the drop point
         move_to_point(dropPoint)
-        time.sleep(5)
-
+        #time.sleep(5)
+        magician.wait(second=3)
         suck(False)
 
         # Return to the collection point
@@ -192,6 +193,10 @@ def main():
   finally:
     set_conv_speed(0)
     suck(False)
+
+
+def test():
+  move_to_point(dropPoint)
 
 
 main()
