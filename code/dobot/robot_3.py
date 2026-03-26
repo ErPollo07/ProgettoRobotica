@@ -98,12 +98,12 @@ def compute_color(values):
     else:
         return None, None
 
-COLLECTION_POINT = Point(0, 0, 0)
-IDLE_POINT = Point(100,100,100) # TODO define an idle point (will be near the collection point)
+COLLECTION_POINT = Point(267.17, 165, 42.54)
+IDLE_POINT = Point(247.23,36.75,42.54) # TODO define an idle point (will be near the collection point)
 
-WAREHOUSE_GREEN = Point(120, 0, 40)
-WAREHOUSE_RED = Point(0, 120, 40)
-WAREHOUSE_BLUE = Point(-120, 0, 40)
+WAREHOUSE_GREEN = Point(247.23, 36.75, 151.74)
+WAREHOUSE_RED = Point(247.23, 36.75, 151.74)
+WAREHOUSE_BLUE = Point(247.23, 36.75, 151.74)
 
 ### Main ###
 def main():
@@ -116,12 +116,14 @@ def main():
 
     # Declaring variables
     color: str | None
-    point: Point | None = COLLECTION_POINT
+    point: Point | None
 
-    move_to_point(point)
+    move_to_point(IDLE_POINT)
 
     while True:
         color_detected = get_color_sensor()
+        
+        print(color_detected)
 
         # Check if any of the color is detected
         color, point = compute_color(tuple(color_detected.values()))
@@ -132,7 +134,7 @@ def main():
             # collect the block
             move_to_point(COLLECTION_POINT)
             suck(True)
-
+            
             # Put the block in the correct warehouse
             move_to_point(point)
             suck(False)
@@ -142,5 +144,5 @@ def main():
             color, point = None, None
 
 
-#while True:
-main()
+while True:
+  main()
