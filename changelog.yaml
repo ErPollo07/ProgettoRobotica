@@ -5,6 +5,13 @@
 # ╚██████╗██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗███████╗╚██████╔╝╚██████╔╝
 #  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚══════╝ ╚═════╝  ╚═════╝
 
+29/03/2026:
+  author_name: Nicola Tosatti
+  author_nick: ErPollo07
+  commits:
+    - Modified robot 3 code
+    - Modify methods move_to_point(), move_to_offpoint() and suck() method in robot_2, robot_3 and robot_cycle
+
 02/03/2026:
   author_name: Nicola Tosatti
   author_nick: ErPollo07
