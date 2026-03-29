@@ -18,22 +18,31 @@ class Point():
 ### Configuration ###
 SERVER_URL = "http://192.168.1.100:8080"
 
-
 ### Methods ###
 def move_to_point(p: Point, mode: int = 0):
-  """
-  Move the robot to the coordinate of the Point with a mode
+  """Move the robot to the coordinate of the point with a mode"""
 
-  Params
-  ------
-  p : Point
-    The destination Point
-  mode : int
-    Specify the mode of movement:
-    - 0: make a "jump" from the current position of the robot and the destination point
-    - 1: go strait to the destination point
-  """
-  magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
+  print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
+  magician.ptp(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
+
+
+def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
+  """Move the robot to the coordinate of the point  and the offset with a mode"""
+
+  target_x = p.x + off_x
+  target_y = p.y + off_y
+  target_z = p.z + off_z
+
+  print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
+  magician.ptp(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
+
+
+def suck(state: bool):
+  """Set the suction cup on or off"""
+
+  status = "ON" if state else "OFF"
+  print(f"[TELEMETRY] Suction cup {status}")
+  magician.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
 
 
 def get_color_sensor() -> dict:
@@ -44,18 +53,6 @@ def get_color_sensor() -> dict:
 def get_color(color: str):
   """Return 1 if the specified color is detected"""
   return get_color_sensor()[color]
-
-
-def suck(state: bool):
-  """
-  Set the suction cup on or off.
-
-  Params
-  ------
-  state : bool
-    The state that needs to be applied to the suction cup.
-  """
-  magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
 
 ### HTTP Communication ###

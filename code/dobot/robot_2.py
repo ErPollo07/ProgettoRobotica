@@ -21,19 +21,11 @@ LINK: str = f"http://127.0.0.5:8080/robot/{0}"
 ROBOT_ID: int = 2
 
 ### Methods ###
-def get_sensor_status() -> bool:
-  """
-  Gets the infrared sensor status
-  """
-  return True if magicbox.get_infrared_sensor(port=2)["status"] == 1 else False # type: ignore
-
-
 def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
 
   print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
-  m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
-
+  magician.ptp(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
 
 
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
@@ -44,7 +36,7 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
   target_z = p.z + off_z
 
   print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
-  m_lite.set_ptpcmd(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
+  magician.ptp(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
 
 
 def suck(state: bool):
@@ -52,7 +44,13 @@ def suck(state: bool):
 
   status = "ON" if state else "OFF"
   print(f"[TELEMETRY] Suction cup {status}")
-  m_lite.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
+  magician.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
+
+def get_ir_sensor_status() -> bool:
+  """
+  Gets the infrared sensor status
+  """
+  return True if magicbox.get_infrared_sensor(port=2)["status"] == 1 else False # type: ignore
 
 
 def set_conv_speed(speed: int):
@@ -151,7 +149,7 @@ def main():
     # - return above the collectionPoint
     print("[INFO] - Enter main cycle")
     while True:
-      sensor = get_sensor_status()
+      sensor = get_ir_sensor_status()
       if sensor:
         #$lastCheck = time.time()
         # Send a infrared_sensor_event to the server

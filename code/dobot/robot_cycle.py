@@ -7,101 +7,100 @@ magicbox.set_infrared_sensor(port=2, enable=True, version=1) # type: ignore
 magician.motion_params(100, 100) # type: ignore
 
 class Point():
-    """Represents a point in the system of the robot"""
+  """Represents a point in the system of the robot"""
 
-    def __init__(self, x: float, y: float, z: float):
-        self.x = x
-        self.y = y
-        self.z = z
+  def __init__(self, x: float, y: float, z: float):
+    self.x = x
+    self.y = y
+    self.z = z
 
 
 LINK: str = f"http://127.0.0.5:8080/robot/{0}"
 ROBOT_ID: int = 2
 
 ### Methods ###
-def get_sensor_status() -> bool:
-    """
-    Gets the infrared sensor status
-    """
-    return True if magicbox.get_infrared_sensor(port=2)["status"] == 1 else False # type: ignore
-
-
 def move_to_point(p: Point, mode: int = 0):
-    """Move the robot to the coordinate of the point with a mode"""
+  """Move the robot to the coordinate of the point with a mode"""
 
-    print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
-    m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.x, z=p.z, r = 0) # type: ignore
-
+  print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
+  magician.ptp(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
 
 
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
-    """Move the robot to the coordinate of the point  and the offset with a mode"""
+  """Move the robot to the coordinate of the point  and the offset with a mode"""
 
-    target_x = p.x + off_x
-    target_y = p.y + off_y
-    target_z = p.z + off_z
+  target_x = p.x + off_x
+  target_y = p.y + off_y
+  target_z = p.z + off_z
 
-    print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
-    m_lite.set_ptpcmd(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
+  print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
+  magician.ptp(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
 
 
 def suck(state: bool):
-    """Set the suction cup on or off"""
+  """Set the suction cup on or off"""
 
-    status = "ON" if state else "OFF"
-    print(f"[TELEMETRY] Suction cup {status}")
-    m_lite.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
+  status = "ON" if state else "OFF"
+  print(f"[TELEMETRY] Suction cup {status}")
+  magician.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
 
 
 def set_conv_speed(speed: int):
-    """
-    Set the conveyor speed.
+  """
+  Set the conveyor speed.
 
-    Params
-    ------
-    speed : int
-        The speed to set to the conveyor.
-    """
-    magicbox.set_converyor(index=magicbox.STP1,enable=True,speed=speed) # type: ignore
+  Params
+  ------
+  speed : int
+    The speed to set to the conveyor.
+  """
+  magicbox.set_converyor(index=magicbox.STP1,enable=True,speed=speed) # type: ignore
+
+
+def get_sensor_status() -> bool:
+  """
+  Gets the infrared sensor status
+  """
+  return True if magicbox.get_infrared_sensor(port=2)["status"] == 1 else False # type: ignore
 
 
 def send_ir_event():
-    """
-    Docstring for send_ir_event
-    """
-    message = {
-        "ts": str(time.time()),
-        "robot_id": ROBOT_ID,
-        "status": "success"
-    }
+  """
+  Docstring for send_ir_event
+  """
+  message = {
+    "ts": str(time.time()),
+    "robot_id": ROBOT_ID,
+    "status": "success"
+  }
 
-    requests.post(url=LINK.format("/infrared_sensor_event"), json=message)
+  requests.post(url=LINK.format("/infrared_sensor_event"), json=message)
 
 
 def send_ir_error():
-    """
-    Docstring for send_ir_error
-    """
-    message = {
-        "ts": str(time.time()),
-        "robot_id": ROBOT_ID,
-        "status": "error"
-    }
+  """
+  Docstring for send_ir_error
+  """
+  message = {
+    "ts": str(time.time()),
+    "robot_id": ROBOT_ID,
+    "status": "error"
+  }
 
-    requests.post(url=LINK.format("/infrared_sensor_event"), json=message)
+  requests.post(url=LINK.format("/infrared_sensor_event"), json=message)
 
 
 def send_movement_executed(timeOfExecution: float):
-    """
-    Docstring for send_movement_executed
-    """
-    message = {
-        "ts": str(time.time()),
-        "robot_id": ROBOT_ID,
-        "time": timeOfExecution
-    }
+  """
+  Docstring for send_movement_executed
+  """
+  message = {
+    "ts": str(time.time()),
+    "robot_id": ROBOT_ID,
+    "time": timeOfExecution
+  }
 
-    requests.post(url=LINK.format("/movement_executed"), json=message)
+  requests.post(url=LINK.format("/movement_executed"), json=message)
 
 
 ### Method to send data to the local server ###
