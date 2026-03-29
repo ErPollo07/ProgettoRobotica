@@ -14,7 +14,8 @@
     "Pylance",
     "suctioncup",
     "thingsboard",
-    "withl"
+    "withl",
+    "zlimit"
   ],
   "python-envs.defaultEnvManager": "ms-python.python:system"
 }

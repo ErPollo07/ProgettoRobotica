@@ -5,7 +5,7 @@ import time, requests
 magicbox.set_device_withl(enable=True, version=0) # type: ignore
 magicbox.set_infrared_sensor(port=2, enable=True, version=1) # type: ignore
 magician.motion_params(100, 100) # type: ignore
-magician.jump_params(200, 30) # zlimit, height
+magician.jump_params(200, 30) # zlimit, height # type: ignore
 
 class Point():
   """Represents a point in the system of the robot"""
@@ -167,7 +167,7 @@ def main():
         # Go to the drop point
         move_to_point(dropPoint)
         #time.sleep(5)
-        magician.wait(second=3)
+        magician.wait(second=3) # type: ignore
         suck(False)
 
         # Return to the collection point

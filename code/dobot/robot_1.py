@@ -14,7 +14,7 @@ def move_to_point(p: Point, mode: int = 0):
     """Move the robot to the coordinate of the point with a mode"""
 
     print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
-    m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.x, z=p.z, r = 0) # type: ignore
+    m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
 
 
 
@@ -34,7 +34,7 @@ def suck(state: bool):
 
     status = "ON" if state else "OFF"
     print(f"[TELEMETRY] Suction cup {status}")
-    m_lite.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
+    m_lite.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
 
 def main():
@@ -51,7 +51,7 @@ def main():
     while True:
         print("\n [INFO] - starting new cycle")
 
-        # 2. Move down to reach the block
+        # Move down to reach the block
         move_to_point(collection_point, mode=1)
         suck(True)
 

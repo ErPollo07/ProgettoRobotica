@@ -1,18 +1,18 @@
 # version: Python3
-from DobotEDU import *
-import requests, time
+from DobotEDU import * # type: ignore
+import time, requests
 
 
-magician.set_color_sensor(port=2, enable=True, version=1)
+magician.set_color_sensor(port=2, enable=True, version=1) # type: ignore
 
 
 class Point():
-    """Represents a point in the system of the robot"""
+  """Represents a point in the system of the robot"""
 
-    def __init__(self, x: float, y: float, z: float):
-        self.x = x
-        self.y = y
-        self.z = z
+  def __init__(self, x: float, y: float, z: float):
+    self.x = x
+    self.y = y
+    self.z = z
 
 
 ### Configuration ###
@@ -21,127 +21,129 @@ SERVER_URL = "http://192.168.1.100:8080"
 
 ### Methods ###
 def move_to_point(p: Point, mode: int = 0):
-    """
-    Move the robot to the coordinate of the Point with a mode
+  """
+  Move the robot to the coordinate of the Point with a mode
 
-    Params
-    ------
-    p : Point
-        The destination Point
-    mode : int
-        Specify the mode of movement:
-        - 0: make a "jump" from the current position of the robot and the destination point
-        - 1: go strait to the destination point
-    """
-    magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
+  Params
+  ------
+  p : Point
+    The destination Point
+  mode : int
+    Specify the mode of movement:
+    - 0: make a "jump" from the current position of the robot and the destination point
+    - 1: go strait to the destination point
+  """
+  magician.ptp(mode, p.x, p.y, p.z, 0) # type: ignore
 
 
 def get_color_sensor() -> dict:
-    """Return the raw color sensor data"""
-    return magicbox.get_color_sensor()
+  """Return the raw color sensor data"""
+  return magicbox.get_color_sensor() # type: ignore
 
 
 def get_color(color: str):
-    """Return 1 if the specified color is detected"""
-    return get_color_sensor()[color]
+  """Return 1 if the specified color is detected"""
+  return get_color_sensor()[color]
 
 
 def suck(state: bool):
-    """
-    Set the suction cup on or off.
+  """
+  Set the suction cup on or off.
 
-    Params
-    ------
-    state : bool
-        The state that needs to be applied to the suction cup.
-    """
-    magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
+  Params
+  ------
+  state : bool
+    The state that needs to be applied to the suction cup.
+  """
+  magician.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
 
 ### HTTP Communication ###
 def send_color_to_pc(color: str):
-    """
-    Send detected color to the PC server.
+  """
+  Send detected color to the PC server.
 
-    Params
-    ------
-    color : str
-        Detected color
+  Params
+  ------
+  color : str
+    Detected color
 
-    Returns
-    -------
-    bool, str
-        True, None : If the command executed with error
-        False, str : If the command had error
-    """
+  Returns
+  -------
+  bool, str
+    True, None : If the command executed with error
+    False, str : If the command had error
+  """
 
-    message = {
-        "ts": str(time.time()),
-        "robot_id": 3,
-        "color": color
-    }
+  message = {
+    "ts": str(time.time()),
+    "robot_id": 3,
+    "color": color
+  }
 
-    try:
-        requests.post(f"{SERVER_URL}/robot/color", json=message)
-        return True, None
-    except Exception as e:
-        return False, str(e)
+  try:
+    requests.post(f"{SERVER_URL}/robot/color", json=message)
+    return True, None
+  except Exception as e:
+    return False, str(e)
 
 
 def compute_color(values):
-    if values == (1, 0, 0):
-        return "red", WAREHOUSE_RED
-    elif values == (0, 1, 0):
-        return "green", WAREHOUSE_GREEN
-    elif values == (0, 0, 1):
-        return "blue", WAREHOUSE_BLUE
-    else:
-        return None, None
+  if values == (1, 0, 0):
+    return "red", WAREHOUSE_RED
+  elif values == (0, 1, 0):
+    return "green", WAREHOUSE_GREEN
+  elif values == (0, 0, 1):
+    return "blue", WAREHOUSE_BLUE
+  else:
+    return None, None
 
-COLLECTION_POINT = Point(267.17, 165, 42.54)
-IDLE_POINT = Point(247.23,36.75,42.54) # TODO define an idle point (will be near the collection point)
+COLLECTION_POINT = Point(000, 000, 000)
+IDLE_POINT = Point(000,000,000) # define an idle point (NOT ABOVE THE COLLECTION POINT)
 
-WAREHOUSE_GREEN = Point(247.23, 36.75, 151.74)
-WAREHOUSE_RED = Point(247.23, 36.75, 151.74)
-WAREHOUSE_BLUE = Point(247.23, 36.75, 151.74)
+WAREHOUSE_GREEN = Point(000,000,000)
+WAREHOUSE_RED = Point(000,000,000)
+WAREHOUSE_BLUE = Point(000,000,000)
 
 ### Main ###
 def main():
-    """
-    When the robot detects a color, it sends it to the PC.
-    The PC decides the destination and sends back a command.
-    """
+  """
+  When the robot detects a color, it sends it to the PC.
+  The PC decides the destination and sends back a command.
+  """
 
-    # TODO Add a counter for how many blocks there are every warehouse (make a Warehouse class)
+  # TODO Add a counter for how many blocks there are every warehouse (make a Warehouse class)
 
-    # Declaring variables
-    color: str | None
-    point: Point | None
+  # Declaring variables
+  color: str | None
+  point: Point | None
 
-    move_to_point(IDLE_POINT)
+  move_to_point(IDLE_POINT)
 
-    while True:
-        color_detected = get_color_sensor()
-        
-        print(color_detected)
+  while True:
+    color_detected = get_color_sensor()
 
-        # Check if any of the color is detected
-        color, point = compute_color(tuple(color_detected.values()))
+    print(color_detected)
 
-        if color != None and point != None:
-            status, error = send_color_to_pc(color)
+    # Check if any of the color is detected
+    color, point = compute_color(tuple(color_detected.values()))
 
-            # collect the block
-            move_to_point(COLLECTION_POINT)
-            suck(True)
-            
-            # Put the block in the correct warehouse
-            move_to_point(point)
-            suck(False)
+    if color != None and point != None:
+      # wait 6 second (3 seconds more than the sleep of the robot 2) that the robot 2 release the block
+      time.sleep(6)
+      # status, error = send_color_to_pc(color)
 
-            move_to_point(IDLE_POINT)
+      # collect the block
+      move_to_point(COLLECTION_POINT)
+      suck(True)
 
-            color, point = None, None
+      # Put the block in the correct warehouse
+      move_to_point(point)
+      suck(False)
+
+      move_to_point(IDLE_POINT)
+
+      color, point = None, None
 
 
 while True:
