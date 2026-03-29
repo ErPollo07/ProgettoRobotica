@@ -92,7 +92,7 @@ def infrared_sensor_event():
     {
         "ts": <timestamp>,
         "robot_id": <robot_identifier>,
-        "status": <"success"|"error">
+        "infrared_sensor_status": <"ok"|"error">
     }
     """
     request_json = request.get_json()
@@ -102,7 +102,7 @@ def infrared_sensor_event():
             {
                 "ts": request_json["ts"],
                 "values": {
-                    "status": request_json["status"]
+                    "infrared_sensor_status": request_json["status"]
                 }
             }
         ]
@@ -112,7 +112,7 @@ def infrared_sensor_event():
 
         return jsonify({"status": "success"}), 200
     except KeyError:
-        m = "Bad json format\nAccepted format: {'ts': <timestamp>,'robot_id': <robot_identifier>, 'status': <'success'|'error'>}"
+        m = "Bad json format\nAccepted format: {'ts': <timestamp>,'robot_id': <robot_identifier>, 'infrared_sensor_status': <'success'|'error'>}"
         return jsonify({"status": "error", "message": m})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
