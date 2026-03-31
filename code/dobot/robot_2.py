@@ -65,12 +65,12 @@ def set_conv_speed(speed: int):
   magicbox.set_converyor(index=magicbox.STP1,enable=True,speed=speed) # type: ignore
 
 
-def send_ir_event():
+def send_ir_event(t = time.time()):
   """
   Docstring for send_ir_event
   """
   message = {
-    "ts": str(time.time()),
+    "ts": str(t),
     "robot_id": ROBOT_ID,
     "status": "success"
   }
@@ -127,8 +127,8 @@ def main():
   # Define the collection point and the drop point
   # If the drop point is not perfectly alined the block will move farther way every iteration
   # so adjust the x coordinate of the drop point to be more precise
-  collectionPoint: Point = Point(247.03, -116.26, 14.02)
-  dropPoint: Point = Point(185.97, -162.46, 30.36)
+  collectionPoint: Point = Point(000,000,000)
+  dropPoint: Point = Point(000,000,000)
 
   try:
     # Go above the collection point
@@ -153,7 +153,7 @@ def main():
       if sensor:
         #$lastCheck = time.time()
         # Send a infrared_sensor_event to the server
-        #$send_ir_event()
+        #$send_ir_event(lastCheck)
 
         timeStart = time.time()
         suck(True)
@@ -183,9 +183,10 @@ def main():
         #$else:
           # Check how long the sensor is idle
           # If more than 20 seconds, send a infrared_sensor_error
-          #$if time.time() - lastCheck > 20:
+          #$t = time.time()
+          #$if t - lastCheck > 20:
             #$print("[INFO] - No block has passed")
-            #$send_ir_error()
+            #$send_ir_error(t)
   except Exception as e:
     print(f"[ERROR] - {e}")
   finally:
