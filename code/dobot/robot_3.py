@@ -16,14 +16,14 @@ class Point():
 
 
 ### Configuration ###
-SERVER_URL = "http://192.168.1.100:8080"
+LINK: str = "http://127.0.0.10:8080/robot/{p}"
 
 ### Methods ###
 def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
 
   print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
-  magician.ptp(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
+  magician.ptp(mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
 
 
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
@@ -34,7 +34,7 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
   target_z = p.z + off_z
 
   print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
-  magician.ptp(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
+  magician.ptp(mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
 
 
 def suck(state: bool):
@@ -79,7 +79,7 @@ def send_color_to_pc(color: str):
   }
 
   try:
-    requests.post(f"{SERVER_URL}/robot/color", json=message)
+    requests.post(f"{LINK}/color_sensor_event", json=message)
     return True, None
   except Exception as e:
     return False, str(e)
@@ -138,6 +138,8 @@ def main():
       move_to_point(point)
       suck(False)
 
+      send_color_to_pc(color)
+      
       move_to_point(IDLE_POINT)
 
       color, point = None, None
