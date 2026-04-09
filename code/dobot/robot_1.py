@@ -9,6 +9,9 @@ class Point():
     self.y = y
     self.z = z
 
+LINK: str = "http://127.0.0.10:8080/robot/{p}"
+ROBOT_ID: int = 1  
+
 ### Methods ###
 def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
@@ -35,6 +38,20 @@ def suck(state: bool):
   status = "ON" if state else "OFF"
   print(f"[TELEMETRY] Suction cup {status}")
   m_lite.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
+
+
+def send_movement_executed(timeOfExecution: float):
+  """
+  Docstring for send_movement_executed
+  """
+  message = {
+    "ts": str(time.time()),
+    "robot_id": ROBOT_ID,
+    "time": timeOfExecution
+  }
+
+  print(f"[send_movement_executed]: {message}")
+  requests.post(url=LINK.format(p="movement_executed"), json=message)
 
 
 def main():
