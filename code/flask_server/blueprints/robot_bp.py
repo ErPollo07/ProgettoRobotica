@@ -61,6 +61,7 @@ def movement_executed():
     """
 
     request_json = request.get_json()
+    print(f"{request_json=}")
 
     try:
         message = [
@@ -96,6 +97,7 @@ def infrared_sensor_event():
     }
     """
     request_json = request.get_json()
+    print(f"{request_json=}")
 
     try:
         message = [

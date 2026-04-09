@@ -17,7 +17,7 @@ class Point():
 
 #https://www.dobot-robots.com/service/download-center
 
-LINK: str = f"http://127.0.0.5:8080/robot/{0}"
+LINK: str = "http://127.0.0.10:8080/robot/{p}"
 ROBOT_ID: int = 2
 
 ### Methods ###
@@ -25,7 +25,7 @@ def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
 
   print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
-  magician.ptp(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
+  magician.ptp(mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
 
 
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
@@ -36,7 +36,7 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
   target_z = p.z + off_z
 
   print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
-  magician.ptp(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
+  magician.ptp(mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
 
 
 def suck(state: bool):
@@ -76,7 +76,7 @@ def send_ir_event(t = time.time()):
   }
 
   print(f"[send_ir_event]: {message}")
-  #requests.post(url=LINK.format("/infrared_sensor_event"), json=message)
+  requests.post(url=LINK.format(p="infrared_sensor_event"), json=message)
 
 
 def send_ir_error():
@@ -90,7 +90,7 @@ def send_ir_error():
   }
 
   print(f"[send_ir_error]: {message}")
-  #requests.post(url=LINK.format("/infrared_sensor_event"), json=message)
+  requests.post(url=LINK.format(p="infrared_sensor_event"), json=message)
 
 
 def send_movement_executed(timeOfExecution: float):
@@ -104,7 +104,7 @@ def send_movement_executed(timeOfExecution: float):
   }
 
   print(f"[send_movement_executed]: {message}")
-  #requests.post(url=LINK.format("/movement_executed"), json=message)
+  requests.post(url=LINK.format(p="movement_executed"), json=message)
 
 
 ### Method to send data to the local server ###
@@ -122,13 +122,13 @@ def main():
 
   timeOfExecution: float = 0 # seconds
   timeStart: float ; timeEnd: float
-  #$lastCheck: float
+  lastCheck = time.time()
 
   # Define the collection point and the drop point
   # If the drop point is not perfectly alined the block will move farther way every iteration
   # so adjust the x coordinate of the drop point to be more precise
-  collectionPoint: Point = Point(000,000,000)
-  dropPoint: Point = Point(000,000,000)
+  collectionPoint: Point = Point(232.31,-100,73.36)
+  dropPoint: Point = Point(232.31,53.49,81.93)
 
   try:
     # Go above the collection point
@@ -137,7 +137,7 @@ def main():
 
     # Get up to speed  the conveyor
     print("[INFO] - Take the conveyor up to speed")
-    set_conv_speed(CONV_SPEED)
+    #set_conv_speed(CONV_SPEED)
 
     # Take the block while the conveyor is moving
     # When the infrared sensor detect something the robot:
@@ -151,9 +151,9 @@ def main():
     while True:
       sensor = get_ir_sensor_status()
       if sensor:
-        #$lastCheck = time.time()
+        lastCheck = time.time()
         # Send a infrared_sensor_event to the server
-        #$send_ir_event(lastCheck)
+        send_ir_event(lastCheck)
 
         timeStart = time.time()
         suck(True)
@@ -176,26 +176,23 @@ def main():
         print(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
 
         # Send the time of execution to the server
-        #$send_movement_executed(timeOfExecution)
+        send_movement_executed(timeOfExecution)
 
         # If the sensor doesn't get triggered, check how much time has passed between now and the last block.
         # If the time is less than 20, send a infrared sensor error to the local server
-        #$else:
-          # Check how long the sensor is idle
-          # If more than 20 seconds, send a infrared_sensor_error
-          #$t = time.time()
-          #$if t - lastCheck > 20:
-            #$print("[INFO] - No block has passed")
-            #$send_ir_error(t)
+      else:
+        # Check how long the sensor is idle
+        # If more than 20 seconds, send a infrared_sensor_error
+        t = time.time()
+        if lastCheck is not None and t - lastCheck > 20:
+          print("[INFO] - No block has passed")
+          send_ir_error()
+          lastCheck = time.time()
   except Exception as e:
     print(f"[ERROR] - {e}")
   finally:
     set_conv_speed(0)
     suck(False)
-
-
-def test():
-  move_to_point(dropPoint)
 
 
 main()
