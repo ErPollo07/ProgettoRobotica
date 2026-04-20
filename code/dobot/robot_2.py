@@ -137,7 +137,7 @@ def main():
 
     # Get up to speed  the conveyor
     print("[INFO] - Take the conveyor up to speed")
-    #set_conv_speed(CONV_SPEED)
+    set_conv_speed(CONV_SPEED)
 
     # Take the block while the conveyor is moving
     # When the infrared sensor detect something the robot:
