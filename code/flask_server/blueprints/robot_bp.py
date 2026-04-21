@@ -12,10 +12,14 @@ access_token_dict: dict[str, str] = {
     "3": str(os.getenv("ACCESS_TOKEN_3")),
 }
 
+
 def retriveTelemetryLink(robotId: str):
-    baseLink = str(os.getenv("BASE_LINK"))
-    accessTok: str = str(access_token_dict.get(robotId))
-    return baseLink + accessTok + "/telemetry"
+    baseLink = str(os.getenv("TELEMETRY_LINK"))
+    accessTok: str = str(access_token_dict.get(str(robotId)))
+    link = baseLink + accessTok + "/telemetry"
+    print(f"[retriveTelemetryLink] {link=}")
+    return link
+
 
 
 @bp.route("/test", methods=['POST'])
@@ -66,14 +70,16 @@ def movement_executed():
     try:
         message = [
             {
-                "ts": request_json["ts"],
+                "ts": float(request_json["ts"]),
                 "values": {
                     "time": request_json["time"]
                 }
             }
         ]
 
-        #requests.post(retriveTelemetryLink(str(requestJson["robot_id"])), json=message)
+        response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
+        print(f"{response.text=}\n{response.status_code=}")
+
         print(f"[movement_executed] {message}")
 
         return jsonify({"status": "ok"}), 200
@@ -102,14 +108,15 @@ def infrared_sensor_event():
     try:
         message = [
             {
-                "ts": request_json["ts"],
+                "ts": float(request_json["ts"]),
                 "values": {
                     "infrared_sensor_status": request_json["status"]
                 }
             }
         ]
 
-        #requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
+        response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
+        print(f"{response.text=}\n{response.status_code=}")
         print(f"[infrared_sensor_event] {message}")
 
         return jsonify({"status": "success"}), 200
@@ -137,7 +144,7 @@ def color_sensor_event():
     try:
         message = [
             {
-                "ts": request_json["ts"],
+                "ts": float(request_json["ts"]),
                 "values": {
                     "color": request_json["color"]
                 }
@@ -145,7 +152,8 @@ def color_sensor_event():
         ]
 
         # Send request
-        #requests.post(retriveTelemetryLink(requestJson["robot_id"]), json=message)
+        response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
+        print(f"{response.text=}\n{response.status_code=}")
         print(f"[color_sensor_event] {message}")
 
         return jsonify({"status": "success"}), 200
@@ -153,4 +161,5 @@ def color_sensor_event():
         m = "Bad json format\nAccepted format: { 'ts': <timestamp>, 'robot_id': <1|2|3>, 'color': <'red'|'blue'|'green'|'error'> }"
         return jsonify({"status": "error", "message": m})
     except Exception as e:
+        print(f"{e}")
         return jsonify({"status": "error", "message": str(e)})
