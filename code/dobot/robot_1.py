@@ -9,7 +9,7 @@ class Point():
     self.y = y
     self.z = z
 
-LINK: str = "http://127.0.0.10:8080/robot/{p}"
+LINK: str = "http://127.0.0.10:8080/robot/{}"
 ROBOT_ID: int = 1  
 
 ### Methods ###
@@ -51,14 +51,14 @@ def send_movement_executed(timeOfExecution: float):
   }
 
   print(f"[send_movement_executed]: {message}")
-  requests.post(url=LINK.format(p="movement_executed"), json=message)
+  requests.post(LINK.format("movement_executed"), json=message)
 
 
 def main():
   print("[INFO] - Robot 1 started")
 
-  collection_point = Point(0, 0, 0)
-  conveyor_point = Point(0, 0, 0)
+  collection_point = Point(167.73, 192.46, -28.79)
+  conveyor_point = Point(247.6, -80.74, 42.53)
 
   safe_height = 30
 
@@ -83,3 +83,25 @@ def main():
     time.sleep(3) # Put 3 for testing
 
 main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
