@@ -16,7 +16,7 @@ class Point():
 
 
 ### Configuration ###
-LINK: str = "http://127.0.0.10:8080/robot/{p}"
+LINK: str = "http://127.0.0.10:8080/robot/{}"
 
 ### Methods ###
 def move_to_point(p: Point, mode: int = 0):
@@ -79,7 +79,7 @@ def send_color_to_pc(color: str):
   }
 
   try:
-    requests.post(f"{LINK}/color_sensor_event", json=message)
+    requests.post(LINK.format("color_sensor_event"), json=message)
     return True, None
   except Exception as e:
     return False, str(e)
