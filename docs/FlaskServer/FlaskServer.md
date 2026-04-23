@@ -34,3 +34,4 @@ project/
 
 - **/robot/color_sensor_event**: This endpoint receives POST requests with JSON data about color sensor events from the robot. The data is forwarded to the Thingsboard server.
 
+## Data flow
