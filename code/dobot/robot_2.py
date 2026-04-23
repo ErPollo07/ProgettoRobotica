@@ -168,8 +168,10 @@ def main():
         magician.wait(second=3) # type: ignore
         suck(False)
 
+        move_to_offpoint(dropPoint, 0, 0, 20, 1)
+
         # Return to the collection point
-        move_to_offpoint(collectionPoint, 0, 0, 5, 1)
+        move_to_offpoint(collectionPoint, 0, 0, 5)
         timeEnd = time.time()
 
         timeOfExecution = timeEnd - timeStart

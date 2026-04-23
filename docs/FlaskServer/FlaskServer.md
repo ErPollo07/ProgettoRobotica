@@ -2,7 +2,7 @@
 
 ## Overview
 
-Between the comunication of the data from the robots to Thingsboard, a Flask server is used to handle the requests and responses.
+Between the communication of the data from the robots to Thingsboard, a Flask server is used to handle the requests and responses.
 
 The code is split between two main files:
 
@@ -13,7 +13,6 @@ The code is split between two main files:
 
 ```txt
 project/
-│
 ├── main.py           # Main application file to run the server
 └── blueprints/
     └── robot_bp.py   # Blueprint containing robot-related endpoints
