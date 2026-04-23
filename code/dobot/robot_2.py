@@ -17,7 +17,7 @@ class Point():
 
 #https://www.dobot-robots.com/service/download-center
 
-LINK: str = "http://127.0.0.10:8080/robot/{p}"
+LINK: str = "http://127.0.0.10:8080/robot/{}"
 ROBOT_ID: int = 2
 
 ### Methods ###
@@ -76,7 +76,7 @@ def send_ir_event(t = time.time()):
   }
 
   print(f"[send_ir_event]: {message}")
-  requests.post(url=LINK.format(p="infrared_sensor_event"), json=message)
+  requests.post(url=LINK.format("infrared_sensor_event"), json=message)
 
 
 def send_ir_error():
@@ -90,7 +90,7 @@ def send_ir_error():
   }
 
   print(f"[send_ir_error]: {message}")
-  requests.post(url=LINK.format(p="infrared_sensor_event"), json=message)
+  requests.post(url=LINK.format("infrared_sensor_event"), json=message)
 
 
 def send_movement_executed(timeOfExecution: float):
@@ -104,7 +104,7 @@ def send_movement_executed(timeOfExecution: float):
   }
 
   print(f"[send_movement_executed]: {message}")
-  requests.post(url=LINK.format(p="movement_executed"), json=message)
+  requests.post(url=LINK.format("movement_executed"), json=message)
 
 
 ### Method to send data to the local server ###
@@ -127,8 +127,8 @@ def main():
   # Define the collection point and the drop point
   # If the drop point is not perfectly alined the block will move farther way every iteration
   # so adjust the x coordinate of the drop point to be more precise
-  collectionPoint: Point = Point(232.31,-100,73.36)
-  dropPoint: Point = Point(232.31,53.49,81.93)
+  collectionPoint: Point = Point(181.08, -176.77, 14.24)
+  dropPoint: Point = Point(92.54, 158.69, -28.53)
 
   try:
     # Go above the collection point
@@ -196,5 +196,4 @@ def main():
     set_conv_speed(0)
     suck(False)
 
-
-main()
+reset()

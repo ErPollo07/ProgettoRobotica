@@ -33,3 +33,4 @@ project/
 - **/robot/infrared_sensor_error**: This endpoint handles POST requests with JSON data regarding infrared sensor errors from the robot. The data is sent to the Thingsboard server.
 
 - **/robot/color_sensor_event**: This endpoint receives POST requests with JSON data about color sensor events from the robot. The data is forwarded to the Thingsboard server.
+
