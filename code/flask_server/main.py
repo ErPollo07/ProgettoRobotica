@@ -18,7 +18,5 @@ def status():
 
 
 if __name__ == '__main__':
-    # print(f"{app.url_map=}")
-
     # run the app on http://127.0.0.10:8080/
     app.run(host='127.0.0.10', port=8080, debug=True)

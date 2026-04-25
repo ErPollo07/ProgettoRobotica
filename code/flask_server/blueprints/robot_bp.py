@@ -25,8 +25,7 @@ def retriveTelemetryLink(robotId: str):
 @bp.route("/test", methods=['POST'])
 def api_test():
     message = request.get_json()
-
-    print("Received message:", message['data'])
+    print(f"[api_test] {message=}")
 
     return jsonify({"status": "success", "message": "Message received"}), 200
 
@@ -65,7 +64,7 @@ def movement_executed():
     """
 
     request_json = request.get_json()
-    print(f"{request_json=}")
+    print(f"[movement_executed] {request_json=}")
 
     try:
         message = [
@@ -77,10 +76,11 @@ def movement_executed():
             }
         ]
 
-        response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
-        print(f"{response.text=}\n{response.status_code=}")
+        print(f"[movement_executed] {message=}")
 
-        print(f"[movement_executed] {message}")
+        response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
+        print(f"[movement_executed] {response.text=}")
+        print(f"[movement_executed] {response.status_code=}")
 
         return jsonify({"status": "ok"}), 200
     except KeyError:
@@ -103,7 +103,7 @@ def infrared_sensor_event():
     }
     """
     request_json = request.get_json()
-    print(f"{request_json=}")
+    print(f"[infrared_sensor_event] {request_json=}")
 
     try:
         message = [
@@ -114,10 +114,12 @@ def infrared_sensor_event():
                 }
             }
         ]
+        
+        print(f"[infrared_sensor_event] {message=}")
 
         response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
-        print(f"{response.text=}\n{response.status_code=}")
-        print(f"[infrared_sensor_event] {message}")
+        print(f"[infrared_sensor_event] {response.text=}")
+        print(f"[infrared_sensor_event] {response.status_code=}")
 
         return jsonify({"status": "success"}), 200
     except KeyError:
@@ -140,6 +142,7 @@ def color_sensor_event():
     }
     """
     request_json = request.get_json()
+    print(f"[color_sensor_event] {request_json=}")
 
     try:
         message = [
@@ -151,15 +154,17 @@ def color_sensor_event():
             }
         ]
 
+        print(f"[color_sensor_event] {message=}")
+
         # Send request
         response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
-        print(f"{response.text=}\n{response.status_code=}")
-        print(f"[color_sensor_event] {message}")
+        print(f"[color_sensor_event] {response.text=}")
+        print(f"[color_sensor_event] {response.status_code=}")
 
         return jsonify({"status": "success"}), 200
     except KeyError:
         m = "Bad json format\nAccepted format: { 'ts': <timestamp>, 'robot_id': <1|2|3>, 'color': <'red'|'blue'|'green'|'error'> }"
         return jsonify({"status": "error", "message": m})
     except Exception as e:
-        print(f"{e}")
+        print(f"[color_sensor_event] {e=}")
         return jsonify({"status": "error", "message": str(e)})
