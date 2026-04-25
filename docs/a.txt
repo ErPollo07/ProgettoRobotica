@@ -1,0 +1,13 @@
+Ho sbagliato nel contesto. il collegamento e' questo:
+
+```txt
+[robot 1] --- [pc 1 (flask server)]
+                      |
+[robot 2] --- [pc 2 (flask server)]
+                      |
+[robot 3] --- [pc 3 (flask server)]
+```
+
+Ogni robot e' collegato a un computer. Ogni computer hosta un flask server. i flask server servono su tutti i pc perche' e' quello che permette ai robot di comunicare tra di loro.
+Il codice del flask server e' lo stesso per tutti i robot.
+Cambia il contesto della modifica. E, se necessario, le modifiche da fare.
