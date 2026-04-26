@@ -18,5 +18,9 @@ param(
 	[string]$Branch
 )
 
+Write-Host -ForegroundColor Red "Branch: $Branch"
+Write-Host -ForegroundColor Red "Eseguo: git push -u origin $Branch"
 git push -u origin $Branch
+
+Write-Host -ForegroundColor Red "Eseguo: git push --set-upstream origin $Branch"
 git push --set-upstream origin $Branch
