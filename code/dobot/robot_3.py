@@ -5,45 +5,8 @@ import time, requests
 
 magician.set_color_sensor(port=2, enable=True, version=1) # type: ignore
 
-
-class Point():
-  """Represents a point in the system of the robot"""
-
-  def __init__(self, x: float, y: float, z: float):
-    self.x = x
-    self.y = y
-    self.z = z
-
-
 ### Configuration ###
 LINK: str = "http://127.0.0.10:8080/robot/{}"
-
-### Methods ###
-def move_to_point(p: Point, mode: int = 0):
-  """Move the robot to the coordinate of the point with a mode"""
-
-  print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
-  magician.ptp(mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
-
-
-def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
-  """Move the robot to the coordinate of the point  and the offset with a mode"""
-
-  target_x = p.x + off_x
-  target_y = p.y + off_y
-  target_z = p.z + off_z
-
-  print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
-  magician.ptp(mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
-
-
-def suck(state: bool):
-  """Set the suction cup on or off"""
-
-  status = "ON" if state else "OFF"
-  print(f"[TELEMETRY] Suction cup {status}")
-  magician.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
-
 
 def get_color_sensor() -> dict:
   """Return the raw color sensor data"""
@@ -87,20 +50,13 @@ def send_color_to_pc(color: str):
 
 def compute_color(values):
   if values == (1, 0, 0):
-    return "red", WAREHOUSE_RED
+    return "red",
   elif values == (0, 1, 0):
-    return "green", WAREHOUSE_GREEN
+    return "green",
   elif values == (0, 0, 1):
-    return "blue", WAREHOUSE_BLUE
+    return "blue",
   else:
-    return None, None
-
-COLLECTION_POINT = Point(000, 000, 000)
-IDLE_POINT = Point(000,000,000) # define an idle point (NOT ABOVE THE COLLECTION POINT)
-
-WAREHOUSE_GREEN = Point(000,000,000)
-WAREHOUSE_RED = Point(000,000,000)
-WAREHOUSE_BLUE = Point(000,000,000)
+    return None
 
 ### Main ###
 def main():
@@ -113,9 +69,6 @@ def main():
 
   # Declaring variables
   color: str | None
-  point: Point | None
-
-  move_to_point(IDLE_POINT)
 
   while True:
     color_detected = get_color_sensor()
@@ -123,26 +76,14 @@ def main():
     print(color_detected)
 
     # Check if any of the color is detected
-    color, point = compute_color(tuple(color_detected.values()))
+    color = compute_color(tuple(color_detected.values()))
 
-    if color != None and point != None:
-      # wait 6 second (3 seconds more than the sleep of the robot 2) that the robot 2 release the block
-      time.sleep(6)
+    if color != None:
       # status, error = send_color_to_pc(color)
 
-      # collect the block
-      move_to_point(COLLECTION_POINT)
-      suck(True)
-
-      # Put the block in the correct warehouse
-      move_to_point(point)
-      suck(False)
-
       send_color_to_pc(color)
-      
-      move_to_point(IDLE_POINT)
 
-      color, point = None, None
+      color = None
 
 
 while True:
