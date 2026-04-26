@@ -166,7 +166,7 @@ def color_sensor_event():
         print(f"[color_sensor_event] {response.text=}")
         print(f"[color_sensor_event] {response.status_code=}")
 
-        # TODO send a request to the robot 2 flask server at /trigger end point to tell that the color is detected and it can move on
+        # Send a get request to the trigger endpoint of the robot 2 server
         requests.get(server_ips["2"] + "/trigger")
 
         return jsonify({"status": "success"}), 200

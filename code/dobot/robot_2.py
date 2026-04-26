@@ -107,6 +107,47 @@ def send_movement_executed(timeOfExecution: float):
   requests.post(url=LINK.format("movement_executed"), json=message)
 
 
+def wait_for_is_triggered(poll_interval: float = 0.5):
+  """
+  Poll the server endpoint `/is_triggered` until it returns True.
+
+  The server is expected to respond with JSON containing the key
+  `message` set to a boolean (True/False). This function will block
+  until that value becomes True. It logs attempts and sleeps
+  `poll_interval` seconds between requests.
+  """
+  url = LINK.format("is_triggered")
+  print(f"[INFO] - Polling {url} every {poll_interval}s for trigger")
+  while True:
+    try:
+      resp = requests.get(url, timeout=3)
+      if resp.status_code == 200:
+        try:
+          data = resp.json()
+        except Exception:
+          print(f"[WARN] - Invalid JSON from {url}: {resp.text}")
+          data = None
+
+        triggered = None
+        if isinstance(data, dict):
+          triggered = data.get("message")
+        else:
+          # fallback: accept bare boolean responses
+          triggered = data
+
+        if triggered is True:
+          print("[INFO] - Server returned triggered=True, continuing")
+          return True
+        else:
+          print("[INFO] - Server not ready yet (trigger=False). Waiting...")
+      else:
+        print(f"[WARN] - is_triggered returned status {resp.status_code}")
+    except Exception as e:
+      print(f"[WARN] - Error contacting is_triggered endpoint: {e}")
+
+    time.sleep(poll_interval)
+
+
 ### Method to send data to the local server ###
 # The commented line that start with "#$", they have to be uncommented if you have to send message to the server
 def reset():
@@ -128,7 +169,8 @@ def main():
   # If the drop point is not perfectly alined the block will move farther way every iteration
   # so adjust the x coordinate of the drop point to be more precise
   collectionPoint: Point = Point(181.08, -176.77, 14.24)
-  dropPoint: Point = Point(92.54, 158.69, -28.53)
+  sensorPoint: Point = Point(92.54, 158.69, -28.53)
+  dropPoint: Point = Point(000, 000, 000)
 
   try:
     # Go above the collection point
@@ -163,19 +205,24 @@ def main():
         move_to_offpoint(collectionPoint, 0, 0, 20, 1)
 
         # Go to the drop point
-        move_to_point(dropPoint)
-        #time.sleep(5)
-        magician.wait(second=3) # type: ignore
-        suck(False)
+        move_to_point(sensorPoint)
 
-        move_to_offpoint(dropPoint, 0, 0, 20, 1)
-
-        # Return to the collection point
-        move_to_offpoint(collectionPoint, 0, 0, 5)
+        # When the robot reach the drop point calculates the time of the movement
         timeEnd = time.time()
 
         timeOfExecution = timeEnd - timeStart
         print(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
+
+        # Poll the server until it allows the robot to continue
+        wait_for_is_triggered(0.5)
+
+        # Move to the dropPoint
+        move_to_offpoint(dropPoint, 0, 0, 5)
+
+        suck(False)
+
+        # Return to the collection point
+        move_to_offpoint(collectionPoint, 0, 0, 5)
 
         # Send the time of execution to the server
         send_movement_executed(timeOfExecution)
