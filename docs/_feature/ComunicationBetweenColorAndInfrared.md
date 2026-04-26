@@ -51,3 +51,21 @@ When the color sensor endpoint is triggered on any PC, the local Flask server in
 1. Define the exact URL and payload for the call from `color_sensor_event` to `robot_2`.
 2. Implement the call in the server and update `robot_3` if required.
 3. Update `robot_2` to handle the notification and test the integration.
+
+## Changes made
+
+- Create two new endpoints in the flask server:
+  - `/trigger`: sets a variable to indicate that the trigger has been received.
+  - `/is_triggered`: if the trigger variable is set to true, returns true and makes the trigger variable false, else return false and do nothing.
+
+- Add in the .env file the ips of all the flask servers. So add these three lines:
+
+  ```.env
+  # existing code
+
+  ROBOT_1_SERVER = "ip"
+  ROBOT_2_SERVER = "ip"
+  ROBOT_3_SERVER = "ip"
+  ```
+
+- Modified the code of the robot 2 to poll the server every 0.5 seconds waiting for a trigger from the server before executing logic that depends on the color event.

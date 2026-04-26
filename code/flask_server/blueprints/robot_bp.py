@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from dotenv import load_dotenv
-import os, requests, time, random
+import os, requests
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
@@ -12,6 +12,11 @@ access_token_dict: dict[str, str] = {
     "3": str(os.getenv("ACCESS_TOKEN_3")),
 }
 
+server_ips: dict[str, str] = {
+    "1": str(os.getenv("ROBOT_1_SERVER")),
+    "2": str(os.getenv("ROBOT_2_SERVER")),
+    "3": str(os.getenv("ROBOT_3_SERVER")),
+}
 
 def retriveTelemetryLink(robotId: str):
     baseLink = str(os.getenv("TELEMETRY_LINK"))
@@ -114,7 +119,7 @@ def infrared_sensor_event():
                 }
             }
         ]
-        
+
         print(f"[infrared_sensor_event] {message=}")
 
         response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
@@ -160,6 +165,9 @@ def color_sensor_event():
         response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
         print(f"[color_sensor_event] {response.text=}")
         print(f"[color_sensor_event] {response.status_code=}")
+
+        # TODO send a request to the robot 2 flask server at /trigger end point to tell that the color is detected and it can move on
+        requests.get(server_ips["2"] + "/trigger")
 
         return jsonify({"status": "success"}), 200
     except KeyError:
