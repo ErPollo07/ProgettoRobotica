@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from server_log import _log
 
 # Import blueprints
 from blueprints import robot_bp
@@ -28,7 +29,7 @@ def trigger():
     Set a variable called trigger_var True when called.
     """
     global trigger_var
-    print(f"[trigger] {trigger_var=}")
+    _log(f"[trigger] {trigger_var=}")
     trigger_var = True
     return jsonify({"status": "ok", "message": "success"})
 
@@ -41,7 +42,7 @@ def is_triggered():
 
     global trigger_var
 
-    print(f"[is_trigger] {trigger_var=}")
+    _log(f"[is_trigger] {trigger_var=}")
 
     if trigger_var:
         trigger_var = False

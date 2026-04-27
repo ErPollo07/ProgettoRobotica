@@ -51,6 +51,11 @@ def get_ir_sensor_status() -> bool:
 def set_conv_speed(speed: int):
   magicbox.set_converyor(index=magicbox.STP1,enable=True,speed=speed) # type: ignore
 
+### Method to send data to the local server ###
+
+def test_connettivity() -> bool:
+  requests.get(LINK.format)
+
 
 def send_ir_event(t = time.time()):
   message = {
@@ -128,8 +133,6 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
     time.sleep(poll_interval)
 
 
-### Method to send data to the local server ###
-# The commented line that start with "#$", they have to be uncommented if you have to send message to the server
 def reset():
   print("[INFO] Reset method")
   set_conv_speed(0)

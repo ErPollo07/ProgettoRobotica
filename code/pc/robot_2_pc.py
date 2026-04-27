@@ -4,6 +4,7 @@ import requests
 import random
 import math
 import argparse
+from datetime import datetime
 
 LINK: str = "http://127.0.0.10:8080/{}"
 ROBOT_ID: int = 2
@@ -22,7 +23,8 @@ _conv_speed = 0
 _last_sensor_time = 0.0
 
 def _log(msg: str):
-    print(msg)
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+    print(f"[{ts}] {msg}")
 
 
 def move_to_point(p: Point, mode: int = 0):
@@ -75,7 +77,19 @@ def set_conv_speed(speed: int):
     _log(f"[SIM] Conveyor speed set to {speed}")
 
 
-def send_ir_event(t: float = None):
+### Method to send data to the local server ###
+
+def test_connectivity() -> tuple[bool, int]:
+    try:
+        res = requests.get(LINK.format("status"), timeout=3)
+        return res.status_code == 200, res.status_code
+    except Exception as e:
+        _log(f"[ERROR] {e=}")
+        return False, 404
+
+
+
+def send_ir_event(t: float | None = None):
     if t is None:
         t = time.time()
     message = {
@@ -161,6 +175,16 @@ def reset():
 
 def main(cycles: Optional[int] = 3):
     _log("[INFO] - Enter main method (simulator)")
+
+    # Check connectivity with the local server
+    status, code = test_connectivity()
+
+    if not status or code != 200:
+        _log("[ERROR] Can't connect to the server")
+        _log(f"[ERROR] {status=}")
+        _log(f"[ERROR] {code=}")
+        return
+
     CONV_SPEED = 100
     timeOfExecution = 0.0
     lastCheck = time.time()
