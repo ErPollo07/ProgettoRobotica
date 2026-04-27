@@ -17,5 +17,8 @@ indent_size = 2
 [**/*.md]
 indent_size = 2
 
+[*.yaml]
+indent_size = 2
+
 [code/flask_server/**.py]
 indent_size = 4

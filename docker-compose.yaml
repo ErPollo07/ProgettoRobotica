@@ -31,5 +31,5 @@ services:
 
 volumes:
   postgres-data:
-    name: thingsboard-volume
+    name: thingsboard-robotica
     driver: local

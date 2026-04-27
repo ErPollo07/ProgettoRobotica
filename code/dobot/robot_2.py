@@ -116,7 +116,7 @@ def wait_for_is_triggered(poll_interval: float = 0.5):
   until that value becomes True. It logs attempts and sleeps
   `poll_interval` seconds between requests.
   """
-  url = LINK.format("is_triggered")
+  url = "http://127.0.0.10:8080/is_triggered"
   print(f"[INFO] - Polling {url} every {poll_interval}s for trigger")
   while True:
     try:
@@ -168,9 +168,9 @@ def main():
   # Define the collection point and the drop point
   # If the drop point is not perfectly alined the block will move farther way every iteration
   # so adjust the x coordinate of the drop point to be more precise
-  collectionPoint: Point = Point(181.08, -176.77, 14.24)
-  sensorPoint: Point = Point(92.54, 158.69, -28.53)
-  dropPoint: Point = Point(000, 000, 000)
+  collectionPoint: Point = Point(230, 100, 60)
+  sensorPoint: Point = Point(230, 0, 60)
+  dropPoint: Point = Point(230, -100, 60)
 
   try:
     # Go above the collection point

@@ -22,24 +22,26 @@ def status():
     return jsonify({"status": "ok", "message": "Server is running"})
 
 
-@app.route('/trigger', method=["GET"])
+@app.route('/trigger', methods=["GET"])
 def trigger():
     """
     Set a variable called trigger_var True when called.
     """
     global trigger_var
+    print(f"[trigger] {trigger_var=}")
     trigger_var = True
     return jsonify({"status": "ok", "message": "success"})
 
 
-@app.route('is_triggered', method=["GET"])
+@app.route('/is_triggered', methods=["GET"])
 def is_triggered():
     """
     This function return true if the trigger variable is set to true and than make the variable False else return false and do nothing.
     """
 
     global trigger_var
-
+    trigger_var = True
+    print(f"[is_trigger] {trigger_var=}")
     if trigger_var:
         trigger_var = False
         return jsonify({"status": "ok", "message": True})
