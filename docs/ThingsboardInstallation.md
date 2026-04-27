@@ -57,3 +57,32 @@ Bring up all containers in detached mode, then follow the ThingsBoard logs (use 
 ```bash
 docker compose up -d; docker compose logs -f thingsboard-ce
 ```
+
+## On a not new device
+
+### Get the latest volume
+
+Go on google drive in the shared folder of the project and in the tb-backup folder download the latest zip.
+
+### Unzip
+
+Then unzip the zip in the root project directory. Than make sure that the tb-volume folder has this structure:
+
+```txt
+tb-volume
+  | base
+  | global
+  | ...
+```
+
+If the it has a structure like this:
+
+```txt
+tb-volume
+  | tb-volume
+      | base
+      | global
+      | ...
+```
+
+It is wrong.
