@@ -40,8 +40,9 @@ def is_triggered():
     """
 
     global trigger_var
-    trigger_var = True
+
     print(f"[is_trigger] {trigger_var=}")
+
     if trigger_var:
         trigger_var = False
         return jsonify({"status": "ok", "message": True})

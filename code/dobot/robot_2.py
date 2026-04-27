@@ -17,7 +17,7 @@ class Point():
 
 #https://www.dobot-robots.com/service/download-center
 
-LINK: str = "http://127.0.0.10:8080/robot/{}"
+LINK: str = "http://127.0.0.10:8080/{}"
 ROBOT_ID: int = 2
 
 ### Methods ###
@@ -31,12 +31,10 @@ def move_to_point(p: Point, mode: int = 0):
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
   """Move the robot to the coordinate of the point  and the offset with a mode"""
 
-  target_x = p.x + off_x
-  target_y = p.y + off_y
-  target_z = p.z + off_z
+  target = Point(x=p.x + off_x, y=p.y + off_y, z=p.z + off_z)
 
-  print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
-  magician.ptp(mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
+  print(f"[TELEMETRY] Moving to offset ({target.x}, {target.y}, {target.z}) | mode={mode}")
+  move_to_point(target, mode=mode)
 
 
 def suck(state: bool):
@@ -47,28 +45,14 @@ def suck(state: bool):
   magician.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
 
 def get_ir_sensor_status() -> bool:
-  """
-  Gets the infrared sensor status
-  """
   return True if magicbox.get_infrared_sensor(port=2)["status"] == 1 else False # type: ignore
 
 
 def set_conv_speed(speed: int):
-  """
-  Set the conveyor speed.
-
-  Params
-  ------
-  speed : int
-      The speed to set to the conveyor.
-  """
   magicbox.set_converyor(index=magicbox.STP1,enable=True,speed=speed) # type: ignore
 
 
 def send_ir_event(t = time.time()):
-  """
-  Docstring for send_ir_event
-  """
   message = {
     "ts": str(t),
     "robot_id": ROBOT_ID,
@@ -76,13 +60,10 @@ def send_ir_event(t = time.time()):
   }
 
   print(f"[send_ir_event]: {message}")
-  requests.post(url=LINK.format("infrared_sensor_event"), json=message)
+  requests.post(url=LINK.format("robot/infrared_sensor_event"), json=message)
 
 
 def send_ir_error():
-  """
-  Docstring for send_ir_error
-  """
   message = {
     "ts": str(time.time()),
     "robot_id": ROBOT_ID,
@@ -90,13 +71,10 @@ def send_ir_error():
   }
 
   print(f"[send_ir_error]: {message}")
-  requests.post(url=LINK.format("infrared_sensor_event"), json=message)
+  requests.post(url=LINK.format("robot/infrared_sensor_event"), json=message)
 
 
 def send_movement_executed(timeOfExecution: float):
-  """
-  Docstring for send_movement_executed
-  """
   message = {
     "ts": str(time.time()),
     "robot_id": ROBOT_ID,
@@ -104,10 +82,10 @@ def send_movement_executed(timeOfExecution: float):
   }
 
   print(f"[send_movement_executed]: {message}")
-  requests.post(url=LINK.format("movement_executed"), json=message)
+  requests.post(url=LINK.format("robot/movement_executed"), json=message)
 
 
-def wait_for_is_triggered(poll_interval: float = 0.5):
+def wait_for_is_triggered(poll_interval: float = 1.0):
   """
   Poll the server endpoint `/is_triggered` until it returns True.
 
@@ -116,8 +94,10 @@ def wait_for_is_triggered(poll_interval: float = 0.5):
   until that value becomes True. It logs attempts and sleeps
   `poll_interval` seconds between requests.
   """
-  url = "http://127.0.0.10:8080/is_triggered"
+  url = LINK.format("is_triggered")
+
   print(f"[INFO] - Polling {url} every {poll_interval}s for trigger")
+
   while True:
     try:
       resp = requests.get(url, timeout=3)
@@ -125,7 +105,7 @@ def wait_for_is_triggered(poll_interval: float = 0.5):
         try:
           data = resp.json()
         except Exception:
-          print(f"[WARN] - Invalid JSON from {url}: {resp.text}")
+          print(f"[WARN] Invalid JSON from {url}: {resp.text}")
           data = None
 
         triggered = None
@@ -136,14 +116,14 @@ def wait_for_is_triggered(poll_interval: float = 0.5):
           triggered = data
 
         if triggered is True:
-          print("[INFO] - Server returned triggered=True, continuing")
+          print("[INFO] Server returned triggered=True, continuing")
           return True
         else:
-          print("[INFO] - Server not ready yet (trigger=False). Waiting...")
+          print("[INFO] Server not ready yet (trigger=False). Waiting...")
       else:
-        print(f"[WARN] - is_triggered returned status {resp.status_code}")
+        print(f"[WARN] is_triggered returned status {resp.status_code}")
     except Exception as e:
-      print(f"[WARN] - Error contacting is_triggered endpoint: {e}")
+      print(f"[WARN] Error contacting is_triggered endpoint: {e}")
 
     time.sleep(poll_interval)
 
@@ -151,7 +131,7 @@ def wait_for_is_triggered(poll_interval: float = 0.5):
 ### Method to send data to the local server ###
 # The commented line that start with "#$", they have to be uncommented if you have to send message to the server
 def reset():
-  print("[INFO] - Reset method")
+  print("[INFO] Reset method")
   set_conv_speed(0)
   suck(False)
 
@@ -179,7 +159,7 @@ def main():
 
     # Get up to speed  the conveyor
     print("[INFO] - Take the conveyor up to speed")
-    set_conv_speed(CONV_SPEED)
+    set_conv_speed(CONV_SPEED) # Comment this line is in debug
 
     # Take the block while the conveyor is moving
     # When the infrared sensor detect something the robot:
@@ -195,10 +175,9 @@ def main():
       if sensor:
         lastCheck = time.time()
         # Send a infrared_sensor_event to the server
-        send_ir_event(lastCheck)
 
         timeStart = time.time()
-        suck(True)
+        suck(True) # Set this to False for debugging
 
         # Get the block on the fly
         move_to_offpoint(collectionPoint, 0, 0, 0, 1)
@@ -213,8 +192,12 @@ def main():
         timeOfExecution = timeEnd - timeStart
         print(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
 
+        # Send the event to the server
+        # This was on top before but it takes time to send the message (I don't know why) so i moved here.
+        send_ir_event(lastCheck)
+
         # Poll the server until it allows the robot to continue
-        wait_for_is_triggered(0.5)
+        wait_for_is_triggered()
 
         # Move to the dropPoint
         move_to_offpoint(dropPoint, 0, 0, 5)
@@ -240,7 +223,6 @@ def main():
   except Exception as e:
     print(f"[ERROR] - {e}")
   finally:
-    set_conv_speed(0)
-    suck(False)
+    reset()
 
 reset()
