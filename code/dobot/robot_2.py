@@ -1,5 +1,5 @@
 from DobotEDU import * # type: ignore
-import time, requests
+import time, requests, datetime
 
 # Set the version of the wheel
 magicbox.set_device_withl(enable=True, version=0) # type: ignore
@@ -20,11 +20,15 @@ class Point():
 LINK: str = "http://127.0.0.10:8080/{}"
 ROBOT_ID: int = 2
 
+def _log(msg: str):
+    ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+    print(f"[{ts}] {msg}")
+
 ### Methods ###
 def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
-
-  print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
+  
+  _log(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
   magician.ptp(mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
 
 
@@ -32,8 +36,8 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
   """Move the robot to the coordinate of the point  and the offset with a mode"""
 
   target = Point(x=p.x + off_x, y=p.y + off_y, z=p.z + off_z)
-
-  print(f"[TELEMETRY] Moving to offset ({target.x}, {target.y}, {target.z}) | mode={mode}")
+  
+  _log(f"[TELEMETRY] Moving to offset ({target.x}, {target.y}, {target.z}) | mode={mode}")
   move_to_point(target, mode=mode)
 
 
@@ -41,7 +45,7 @@ def suck(state: bool):
   """Set the suction cup on or off"""
 
   status = "ON" if state else "OFF"
-  print(f"[TELEMETRY] Suction cup {status}")
+  _log(f"[TELEMETRY] Suction cup {status}")
   magician.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
 
 def get_ir_sensor_status() -> bool:
@@ -53,8 +57,13 @@ def set_conv_speed(speed: int):
 
 ### Method to send data to the local server ###
 
-def test_connettivity() -> bool:
-  requests.get(LINK.format)
+def test_connectivity() -> tuple[bool, int]:
+    try:
+        res = requests.get(LINK.format("status"), timeout=3)
+        return res.status_code == 200, res.status_code
+    except Exception as e:
+        _log(f"[ERROR] {e=}")
+        return False, 404
 
 
 def send_ir_event(t = time.time()):
@@ -63,8 +72,8 @@ def send_ir_event(t = time.time()):
     "robot_id": ROBOT_ID,
     "status": "success"
   }
-
-  print(f"[send_ir_event]: {message}")
+  
+  _log(f"[send_ir_event]: {message}")
   requests.post(url=LINK.format("robot/infrared_sensor_event"), json=message)
 
 
@@ -74,8 +83,8 @@ def send_ir_error():
     "robot_id": ROBOT_ID,
     "status": "error"
   }
-
-  print(f"[send_ir_error]: {message}")
+  
+  _log(f"[send_ir_error]: {message}")
   requests.post(url=LINK.format("robot/infrared_sensor_event"), json=message)
 
 
@@ -85,8 +94,8 @@ def send_movement_executed(timeOfExecution: float):
     "robot_id": ROBOT_ID,
     "time": timeOfExecution
   }
-
-  print(f"[send_movement_executed]: {message}")
+  
+  _log(f"[send_movement_executed]: {message}")
   requests.post(url=LINK.format("robot/movement_executed"), json=message)
 
 
@@ -100,8 +109,8 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
   `poll_interval` seconds between requests.
   """
   url = LINK.format("is_triggered")
-
-  print(f"[INFO] - Polling {url} every {poll_interval}s for trigger")
+  
+  _log(f"[INFO] - Polling {url} every {poll_interval}s for trigger")
 
   while True:
     try:
@@ -110,7 +119,7 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
         try:
           data = resp.json()
         except Exception:
-          print(f"[WARN] Invalid JSON from {url}: {resp.text}")
+          _log(f"[WARN] Invalid JSON from {url}: {resp.text}")
           data = None
 
         triggered = None
@@ -121,26 +130,26 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
           triggered = data
 
         if triggered is True:
-          print("[INFO] Server returned triggered=True, continuing")
+          _log("[INFO] Server returned triggered=True, continuing")
           return True
         else:
-          print("[INFO] Server not ready yet (trigger=False). Waiting...")
+          _log("[INFO] Server not ready yet (trigger=False). Waiting...")
       else:
-        print(f"[WARN] is_triggered returned status {resp.status_code}")
+        _log(f"[WARN] is_triggered returned status {resp.status_code}")
     except Exception as e:
-      print(f"[WARN] Error contacting is_triggered endpoint: {e}")
+      _log(f"[WARN] Error contacting is_triggered endpoint: {e}")
 
     time.sleep(poll_interval)
 
 
 def reset():
-  print("[INFO] Reset method")
+  _log("[INFO] Reset method")
   set_conv_speed(0)
   suck(False)
 
 
 def main():
-  print("[INFO] - Enter main method")
+  _log("[INFO] - Enter main method")
   # Variables
   CONV_SPEED: int = 100
 
@@ -157,11 +166,11 @@ def main():
 
   try:
     # Go above the collection point
-    print("[INFO] - Move above the collection point")
+    _log("[INFO] - Move above the collection point")
     move_to_offpoint(collectionPoint, 0, 0, 5)
 
     # Get up to speed  the conveyor
-    print("[INFO] - Take the conveyor up to speed")
+    _log("[INFO] - Take the conveyor up to speed")
     set_conv_speed(CONV_SPEED) # Comment this line is in debug
 
     # Take the block while the conveyor is moving
@@ -172,7 +181,7 @@ def main():
     # - go to dropPoint
     # - release the block
     # - return above the collectionPoint
-    print("[INFO] - Enter main cycle")
+    _log("[INFO] - Enter main cycle")
     while True:
       sensor = get_ir_sensor_status()
       if sensor:
@@ -193,7 +202,7 @@ def main():
         timeEnd = time.time()
 
         timeOfExecution = timeEnd - timeStart
-        print(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
+        _log(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
 
         # Send the event to the server
         # This was on top before but it takes time to send the message (I don't know why) so i moved here.
@@ -220,11 +229,11 @@ def main():
         # If more than 20 seconds, send a infrared_sensor_error
         t = time.time()
         if lastCheck is not None and t - lastCheck > 20:
-          print("[INFO] - No block has passed")
+          _log("[INFO] - No block has passed")
           send_ir_error()
           lastCheck = time.time()
   except Exception as e:
-    print(f"[ERROR] - {e}")
+    _log(f"[ERROR] - {e}")
   finally:
     reset()
 
