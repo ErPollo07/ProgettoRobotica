@@ -4,21 +4,21 @@
 
 ## Hardware components of the production line
 
-- Dobot conveyor belt  
+- Dobot conveyor belt
 - 3 robots (2 Dobot Magician, 1 Dobot Magician Lite)
-- Laser sensor (object presence detection)  
+- Laser sensor (object presence detection)
 - Color sensor (block color identification)
 
 ## Description of the operational flow
 
-1. Robot R1 picks up a block from warehouse 1 (manual warehouse feeding by the operator) and places it on the conveyor belt.  
-2. The laser sensor detects the passage of the block and signals the event to robot R2.  
-3. Robot R2 intercepts the moving block and places it on the color sensor.  
+1. Robot R1 picks up a block from warehouse 1 (manual warehouse feeding by the operator) and places it on the conveyor belt.
+2. The laser sensor detects the passage of the block and signals the event to robot R2.
+3. Robot R2 intercepts the moving block and places it on the color sensor.
 4. Robot R3, which monitors the color sensor, detects a change in the color and retrieves the block from the color sensor, depositing it in warehouse 2 in the section corresponding to the detected color.
 
 ## Communication with the ThingsBoard server
 
-The ThingsBoard server will be hosted on a fourth PC (if a fourth PC cannot be used, one of the three will host the server).  
+The ThingsBoard server will be hosted on a fourth PC (if a fourth PC cannot be used, one of the three will host the server).
 Each robot has its own PC connected, running the program to send data to the ThingsBoard server.
 The server will contain the information that the robots will send, such as movement actions (completed and running), color status
 and laser (whether it detects an object or not).
@@ -41,11 +41,11 @@ In the event of anomalies or errors, the backend records the event and makes it 
 
 #### Robot 1
 
-- Movement duration (default): time needed to perform his action
+- Movement duration (default) (time): time needed to perform his action
 
 #### Robot 2
 
-- Movement duration (default): time needed to perform his action
+- Movement duration (default) (time): time needed to perform his action
 - Infrared sensor event: when a block has been detected passing in front of the infrared sensor.
 - Infrared sensor error: if no block passes within a predefined interval, an error event is logged to indicate a possible flow interruption
 
@@ -101,7 +101,7 @@ The system ensures complete monitoring of every production phase, from picking t
 }
 ```
 
-Go back to the [requirement analysis](./Requirement_Analysis.md)  
+Go back to the [requirement analysis](./Requirement_Analysis.md)
 Continue with the [technical analysis](./Technical_Analysis.md)
 
 Go back to the [index](./Analysis.md)

@@ -49,14 +49,12 @@ def send_color_to_pc(color: str):
 
 
 def compute_color(values):
-  if values == (1, 0, 0):
-    return "red",
-  elif values == (0, 1, 0):
-    return "green",
-  elif values == (0, 0, 1):
-    return "blue",
-  else:
-    return None
+  print(f"{values}")
+  for key, value in values.items():
+    if value == 1:
+      return key
+  return None
+
 
 ### Main ###
 def main():
@@ -64,8 +62,6 @@ def main():
   When the robot detects a color, it sends it to the PC.
   The PC decides the destination and sends back a command.
   """
-
-  # TODO Add a counter for how many blocks there are every warehouse (make a Warehouse class)
 
   # Declaring variables
   color: str | None
@@ -76,7 +72,9 @@ def main():
     print(color_detected)
 
     # Check if any of the color is detected
-    color = compute_color(tuple(color_detected.values()))
+    color = compute_color(color_detected)
+
+    print(f"{color=}")
 
     if color != None:
       # status, error = send_color_to_pc(color)
@@ -86,5 +84,4 @@ def main():
       color = None
 
 
-while True:
-  main()
+main()

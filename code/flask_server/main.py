@@ -49,6 +49,7 @@ def is_triggered():
         return jsonify({"status": "ok", "message": True})
     return jsonify({"status": "ok", "message": False})
 
+
 if __name__ == '__main__':
     # run the app on http://127.0.0.10:8080/
     app.run(host='127.0.0.10', port=8080, debug=True)
