@@ -185,9 +185,6 @@ def main():
     while True:
       sensor = get_ir_sensor_status()
       if sensor:
-        lastCheck = time.time()
-        # Send a infrared_sensor_event to the server
-
         timeStart = time.time()
         suck(True) # Set this to False for debugging
 
@@ -204,10 +201,6 @@ def main():
         timeOfExecution = timeEnd - timeStart
         _log(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
 
-        # Send the event to the server
-        # This was on top before but it takes time to send the message (I don't know why) so i moved here.
-        send_ir_event(lastCheck)
-
         # Poll the server until it allows the robot to continue
         wait_for_is_triggered()
 
@@ -221,6 +214,10 @@ def main():
 
         # Send the time of execution to the server
         send_movement_executed(timeOfExecution)
+
+        # Send the last time the robot put down a block
+        lastCheck = time.time()
+        send_ir_event(lastCheck)
 
         # If the sensor doesn't get triggered, check how much time has passed between now and the last block.
         # If the time is less than 20, send a infrared sensor error to the local server
