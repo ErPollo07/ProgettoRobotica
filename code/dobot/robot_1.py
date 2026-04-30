@@ -20,7 +20,7 @@ def _log(msg: str):
 def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
 
-  print(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
+  _log(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
   m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
 
 
@@ -32,7 +32,7 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
   target_y = p.y + off_y
   target_z = p.z + off_z
 
-  print(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
+  _log(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
   m_lite.set_ptpcmd(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
 
 
@@ -40,7 +40,7 @@ def suck(state: bool):
   """Set the suction cup on or off"""
 
   status = "ON" if state else "OFF"
-  print(f"[TELEMETRY] Suction cup {status}")
+  _log(f"[TELEMETRY] Suction cup {status}")
   m_lite.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
 
@@ -54,8 +54,51 @@ def send_movement_executed(timeOfExecution: float):
     "time": timeOfExecution
   }
 
-  print(f"[send_movement_executed]: {message}")
+  _log(f"[send_movement_executed]: {message}")
   requests.post(LINK.format("robot/movement_executed"), json=message)
+
+
+def wait_for_is_triggered(poll_interval: float = 1.0):
+  """
+  Poll the server endpoint `/is_triggered` until it returns True.
+
+  The server is expected to respond with JSON containing the key
+  `message` set to a boolean (True/False). This function will block
+  until that value becomes True. It logs attempts and sleeps
+  `poll_interval` seconds between requests.
+  """
+  url = LINK.format("robot_1/is_triggered")
+
+  _log(f"[INFO] - Polling {url} every {poll_interval}s for trigger")
+
+  while True:
+    try:
+      resp = requests.get(url, timeout=3)
+      if resp.status_code == 200:
+        try:
+          data = resp.json()
+        except Exception:
+          _log(f"[WARN] Invalid JSON from {url}: {resp.text}")
+          data = None
+
+        triggered = None
+        if isinstance(data, dict):
+          triggered = data.get("message")
+        else:
+          # fallback: accept bare boolean responses
+          triggered = data
+
+        if triggered is True:
+          _log("[INFO] Server returned triggered=True, continuing")
+          return True
+        else:
+          _log("[INFO] Server not ready yet (trigger=False). Waiting...")
+      else:
+        _log(f"[WARN] is_triggered returned status {resp.status_code}")
+    except Exception as e:
+      _log(f"[WARN] Error contacting is_triggered endpoint: {e}")
+
+    time.sleep(poll_interval)
 
 
 def main():
@@ -63,6 +106,7 @@ def main():
 
   collection_point = Point(167.73, 192.46, -28.79)
   conveyor_point = Point(247.6, -80.74, 42.53)
+  idle_point = Point(0, 0, 0)
 
   safe_height = 30
 
@@ -70,7 +114,7 @@ def main():
   move_to_offpoint(collection_point, 0, 0, safe_height)
 
   while True:
-    print("\n [INFO] - starting new cycle")
+    _log("\n [INFO] - starting new cycle")
 
     # Move down to reach the block
     move_to_point(collection_point, mode=1)
@@ -80,32 +124,9 @@ def main():
 
     suck(False)
 
-    move_to_offpoint(collection_point, 0, 0, safe_height)
+    move_to_point(idle_point)
 
-    # 10. Wait before starting the next cycle
-    print("[INFO] - Waiting 10 seconds before next cycle")
-    time.sleep(3) # Put 3 for testing
+    # Wait for server to allow next cycle
+    wait_for_is_triggered()
 
 main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
