@@ -21,7 +21,7 @@ def trigger():
     return jsonify({"status": "ok", "message": "success"})
 
 
-@bp.route('/is_triggered', methods=["POST"])
+@bp.route('/is_triggered', methods=["GET"])
 def is_triggered():
     """
     This function return true if the trigger variable is set to true and than make the variable False else return false and do nothing.

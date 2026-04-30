@@ -142,6 +142,10 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
     time.sleep(poll_interval)
 
 
+def send_block_dropped():
+  requests.post(url=LINK.format("robot_2/block_dropped"))
+
+
 def reset():
   _log("[INFO] Reset method")
   set_conv_speed(0)
@@ -211,6 +215,8 @@ def main():
 
         # Return to the collection point
         move_to_offpoint(collectionPoint, 0, 0, 5)
+
+        send_block_dropped()
 
         # Send the time of execution to the server
         send_movement_executed(timeOfExecution)
