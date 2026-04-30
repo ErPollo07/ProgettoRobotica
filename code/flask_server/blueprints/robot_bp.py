@@ -168,7 +168,7 @@ def color_sensor_event():
         _log(f"[color_sensor_event] {response.status_code=}")
 
         # Send a get request to the trigger endpoint of the robot 2 server
-        requests.get(server_ips["2"] + "/trigger")
+        requests.get(server_ips["2"] + "robot_2/trigger")
 
         return jsonify({"status": "success"}), 200
     except KeyError:

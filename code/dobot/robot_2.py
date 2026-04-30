@@ -27,7 +27,7 @@ def _log(msg: str):
 ### Methods ###
 def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
-  
+
   _log(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
   magician.ptp(mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
 
@@ -36,7 +36,7 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
   """Move the robot to the coordinate of the point  and the offset with a mode"""
 
   target = Point(x=p.x + off_x, y=p.y + off_y, z=p.z + off_z)
-  
+
   _log(f"[TELEMETRY] Moving to offset ({target.x}, {target.y}, {target.z}) | mode={mode}")
   move_to_point(target, mode=mode)
 
@@ -72,7 +72,7 @@ def send_ir_event(t = time.time()):
     "robot_id": ROBOT_ID,
     "status": "success"
   }
-  
+
   _log(f"[send_ir_event]: {message}")
   requests.post(url=LINK.format("robot/infrared_sensor_event"), json=message)
 
@@ -83,7 +83,7 @@ def send_ir_error():
     "robot_id": ROBOT_ID,
     "status": "error"
   }
-  
+
   _log(f"[send_ir_error]: {message}")
   requests.post(url=LINK.format("robot/infrared_sensor_event"), json=message)
 
@@ -94,7 +94,7 @@ def send_movement_executed(timeOfExecution: float):
     "robot_id": ROBOT_ID,
     "time": timeOfExecution
   }
-  
+
   _log(f"[send_movement_executed]: {message}")
   requests.post(url=LINK.format("robot/movement_executed"), json=message)
 
@@ -108,8 +108,8 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
   until that value becomes True. It logs attempts and sleeps
   `poll_interval` seconds between requests.
   """
-  url = LINK.format("is_triggered")
-  
+  url = LINK.format("robot_2/is_triggered")
+
   _log(f"[INFO] - Polling {url} every {poll_interval}s for trigger")
 
   while True:

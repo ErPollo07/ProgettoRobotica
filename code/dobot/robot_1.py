@@ -1,5 +1,5 @@
 from DobotEDU import * # type: ignore
-import time
+import time, datetime, requests
 
 class Point():
   """Represents a point in the system of the robot"""
@@ -9,10 +9,14 @@ class Point():
     self.y = y
     self.z = z
 
-LINK: str = "http://127.0.0.10:8080/robot/{}"
-ROBOT_ID: int = 1  
+LINK: str = "http://127.0.0.10:8080/{}"
+ROBOT_ID: int = 1
 
 ### Methods ###
+def _log(msg: str):
+  ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+  print(f"[{ts}] {msg}")
+
 def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
 
@@ -51,7 +55,7 @@ def send_movement_executed(timeOfExecution: float):
   }
 
   print(f"[send_movement_executed]: {message}")
-  requests.post(LINK.format("movement_executed"), json=message)
+  requests.post(LINK.format("robot/movement_executed"), json=message)
 
 
 def main():
