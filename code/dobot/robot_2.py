@@ -58,12 +58,12 @@ def set_conv_speed(speed: int):
 ### Method to send data to the local server ###
 
 def test_connectivity() -> tuple[bool, int]:
-    try:
-        res = requests.get(LINK.format("status"), timeout=3)
-        return res.status_code == 200, res.status_code
-    except Exception as e:
-        _log(f"[ERROR] {e=}")
-        return False, 404
+  try:
+    res = requests.get(LINK.format("status"), timeout=3)
+    return res.status_code == 200, res.status_code
+  except Exception as e:
+    _log(f"[ERROR] {e=}")
+    return False, 404
 
 
 def send_ir_event(t = time.time()):
@@ -154,6 +154,14 @@ def reset():
 
 def main():
   _log("[INFO] - Enter main method")
+
+  status, code = test_connectivity()
+  if not status or code != 200:
+    _log("[ERROR] Can't connect to the server")
+    _log(f"[ERROR] {status=}")
+    _log(f"[ERROR] {code=}")
+    return
+
   # Variables
   CONV_SPEED: int = 100
 

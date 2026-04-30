@@ -17,12 +17,12 @@ def _log(msg: str):
   ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
   print(f"[{ts}] {msg}")
 
+
 def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
 
   _log(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
   m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
-
 
 
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
@@ -43,6 +43,15 @@ def suck(state: bool):
   _log(f"[TELEMETRY] Suction cup {status}")
   m_lite.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 
+### Method to send data to the local server ###
+
+def test_connectivity() -> tuple[bool, int]:
+  try:
+    res = requests.get(LINK.format("status"), timeout=3)
+    return res.status_code == 200, res.status_code
+  except Exception as e:
+    _log(f"[ERROR] {e=}")
+    return False, 404
 
 def send_movement_executed(timeOfExecution: float):
   """
@@ -103,6 +112,13 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
 
 def main():
   print("[INFO] - Robot 1 started")
+
+  status, code = test_connectivity()
+  if not status or code != 200:
+    _log("[ERROR] Can't connect to the server")
+    _log(f"[ERROR] {status=}")
+    _log(f"[ERROR] {code=}")
+    return
 
   collection_point = Point(-18, -222, 105)
   conveyor_point = Point(182, -172, 100)

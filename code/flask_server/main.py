@@ -12,10 +12,6 @@ app.register_blueprint(robot_1_bp.bp)
 app.register_blueprint(robot_2_bp.bp)
 
 
-global trigger_var
-trigger_var = False
-
-
 @app.route('/')
 def index():
     return "Welcome to the main page!"
