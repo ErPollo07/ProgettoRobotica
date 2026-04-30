@@ -104,20 +104,22 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
 def main():
   print("[INFO] - Robot 1 started")
 
-  collection_point = Point(167.73, 192.46, -28.79)
-  conveyor_point = Point(247.6, -80.74, 42.53)
-  idle_point = Point(0, 0, 0)
+  collection_point = Point(-18, -222, 105)
+  conveyor_point = Point(182, -172, 100)
+  idle_point = Point(93, -222, 105)
 
-  safe_height = 30
+  safe_height = 20
 
-  # Move above the collection point
+  _log("[INFO] Showing the collection point")
+  # Move above the collection point to show it
   move_to_offpoint(collection_point, 0, 0, safe_height)
+  time.sleep(5)
 
   while True:
     _log("\n [INFO] - starting new cycle")
 
     # Move down to reach the block
-    move_to_point(collection_point, mode=1)
+    move_to_point(collection_point)
     suck(True)
 
     move_to_point(conveyor_point)
