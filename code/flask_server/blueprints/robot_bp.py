@@ -19,13 +19,13 @@ server_ips: dict[str, str] = {
     "3": str(os.getenv("ROBOT_3_SERVER")),
 }
 
+
 def retriveTelemetryLink(robotId: str):
     baseLink = str(os.getenv("TELEMETRY_LINK"))
     accessTok: str = str(access_token_dict.get(str(robotId)))
     link = baseLink + accessTok + "/telemetry"
     _log(f"[retriveTelemetryLink] {link=}")
     return link
-
 
 
 @bp.route("/test", methods=['POST'])
