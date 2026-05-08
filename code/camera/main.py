@@ -18,16 +18,9 @@ MASKS = {
     ]
 }
 
-RESULTS = {
-    "red": 0,
-    "green": 0,
-    "blue": 0,
-}
+RESULTS = {}
 
 def main():
-    global RESULTS
-
-    i = 0
     while True:
         ret, frame = cap.read()
 
@@ -35,7 +28,6 @@ def main():
             continue
 
         # Define the roi (region of interest)
-
         h, w = frame.shape[:2] # ?
         cx, cy = w // 2, h // 2
 
@@ -54,8 +46,9 @@ def main():
         # Transform the roi colors from bgr to hsv
         hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
-        lower_blue = np.array([90,   50,  50])
-
+        # Cycle through every color that we have to detect
+        # Calculate the mask with lower and upper values
+        # Calculate the percentage cover by every color
         for color, masks in MASKS.items():
             m = np.zeros(hsv.shape[:2], dtype=np.uint8)
             for (lo, hi) in masks:
@@ -67,10 +60,11 @@ def main():
 
             RESULTS[color] = percentage
 
+        # Sort the percentage to get the most present color
         RESULTS = dict(sorted(RESULTS.items(), key=lambda item: item[1], reverse=True))
-        print(f"{RESULTS=}")
         first_key, first_value = next(iter(RESULTS.items()))
 
+        # check if the most present color is present enough
         if (first_value > 0.750):
             cv2.putText(frame, f"Color: {first_key}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
         else:
