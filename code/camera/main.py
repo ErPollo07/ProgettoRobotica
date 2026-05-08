@@ -5,8 +5,28 @@ cap = cv2.VideoCapture(0) # Get the first camere available
 
 ROI_LENGTH = 100
 
+MASKS = {
+    "blue": [
+        (np.array([90,   50,  50]), np.array([130, 255, 255]))
+    ],
+    "red": [
+        (np.array([160,   90,  0]), np.array([179, 255, 255])),
+        (np.array([0,   90,  0]), np.array([10, 255, 255])),
+    ],
+    "green": [
+        (np.array([40,   90,  0]), np.array([100, 255, 255])),
+    ]
+}
+
+RESULTS = {
+    "red": 0,
+    "green": 0,
+    "blue": 0,
+}
 
 def main():
+    global RESULTS
+
     i = 0
     while True:
         ret, frame = cap.read()
@@ -26,30 +46,33 @@ def main():
 
         roi = frame[y1:y2, x1:x2]
 
+        total = roi.shape[0] * roi.shape[1]
+
         # Draw the rectangle wit the coordinates of the roi
         cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 255, 255), 1)
 
         # Transform the roi colors from bgr to hsv
         hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
-        # Define the upper bound and the lower bound colors that the pixel must have to be considered blue
-        lower_blue = np.array([90, 50, 50])
-        upper_blue = np.array([130, 255, 255])
+        lower_blue = np.array([90,   50,  50])
 
-        # Create a mash with
-        mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        for color, masks in MASKS.items():
+            m = np.zeros(hsv.shape[:2], dtype=np.uint8)
+            for (lo, hi) in masks:
+                current_mask = cv2.inRange(hsv, lo, hi)
+                m = cv2.bitwise_or(m, current_mask)
 
-        # This will return a frame showing the real color of the pixel that in the mask have a value of 1. If in the mask they have a value of 0 then the pixel is black
-        result = cv2.bitwise_and(roi, roi, mask=mask)
+            count = cv2.countNonZero(m)
+            percentage = count / total
 
-        count = cv2.countNonZero(mask)
+            RESULTS[color] = percentage
 
-        total = roi.shape[0] * roi.shape[1]
+        RESULTS = dict(sorted(RESULTS.items(), key=lambda item: item[1], reverse=True))
+        print(f"{RESULTS=}")
+        first_key, first_value = next(iter(RESULTS.items()))
 
-        percentage = count / total
-
-        if (percentage > 0.50):
-            cv2.putText(frame, f"Color: blue", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        if (first_value > 0.750):
+            cv2.putText(frame, f"Color: {first_key}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
         else:
             cv2.putText(frame, f"Color: none", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
