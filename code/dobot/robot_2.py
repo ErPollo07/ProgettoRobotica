@@ -17,7 +17,7 @@ class Point():
 
 #https://www.dobot-robots.com/service/download-center
 
-LINK: str = "http://127.0.0.10:8080/{}"
+LINK: str = "http://10.33.77.20:8080/{}"
 ROBOT_ID: int = 2
 
 def _log(msg: str):
@@ -55,8 +55,8 @@ def get_ir_sensor_status() -> bool:
 def set_conv_speed(speed: int):
   magicbox.set_converyor(index=magicbox.STP1,enable=True,speed=speed) # type: ignore
 
-### Method to send data to the local server ###
-
+# Method to send data to the local server
+"""
 def test_connectivity() -> tuple[bool, int]:
   try:
     res = requests.get(LINK.format("status"), timeout=3)
@@ -64,7 +64,7 @@ def test_connectivity() -> tuple[bool, int]:
   except Exception as e:
     _log(f"[ERROR] {e=}")
     return False, 404
-
+"""
 
 def send_ir_event(t = time.time()):
   message = {
@@ -143,7 +143,11 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
 
 
 def send_block_dropped():
-  requests.post(url=LINK.format("robot_2/block_dropped"))
+  link = LINK.format("robot_2/block_dropped")
+  _log(f"[sed_block_dropped] link={link}")
+  ret = requests.post(url=link)
+  _log(f"[sed_block_dropped] {ret.status_code=}")
+  _log(f"[sed_block_dropped] {ret.status_code=}")
 
 
 def reset():
@@ -151,16 +155,22 @@ def reset():
   set_conv_speed(0)
   suck(False)
 
+def test():
+  dropPoint: Point = Point(53.29, 262.02, -95.83)
+  move_to_point(dropPoint)
+
 
 def main():
   _log("[INFO] - Enter main method")
 
+  """
   status, code = test_connectivity()
   if not status or code != 200:
     _log("[ERROR] Can't connect to the server")
     _log(f"[ERROR] {status=}")
     _log(f"[ERROR] {code=}")
     return
+  """
 
   # Variables
   CONV_SPEED: int = 100
@@ -172,9 +182,9 @@ def main():
   # Define the collection point and the drop point
   # If the drop point is not perfectly alined the block will move farther way every iteration
   # so adjust the x coordinate of the drop point to be more precise
-  collectionPoint: Point = Point(230, 100, 60)
-  sensorPoint: Point = Point(230, 0, 60)
-  dropPoint: Point = Point(230, -100, 60)
+  collectionPoint: Point = Point(196.79, -160.8, -35.35)
+  sensorPoint: Point = Point(133.14, -216.57, -17.52)
+  dropPoint: Point = Point(18.61, 253.54, -92.01)
 
   try:
     # Go above the collection point
@@ -217,6 +227,7 @@ def main():
         wait_for_is_triggered()
 
         # Move to the dropPoint
+        move_to_offpoint(dropPoint, 0, 0, 50)
         move_to_offpoint(dropPoint, 0, 0, 5)
 
         suck(False)
@@ -248,4 +259,4 @@ def main():
   finally:
     reset()
 
-reset()
+main()

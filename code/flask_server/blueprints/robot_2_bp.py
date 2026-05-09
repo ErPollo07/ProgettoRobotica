@@ -17,14 +17,14 @@ server_ips: dict[str, str] = {
 }
 
 
-@bp.route("block_dropped", methods=["POST"])
+@bp.route("/block_dropped", methods=["POST"])
 def block_dropped():
     """
     This endpoint has to be called from the robot 2 to signal that he is above the collection point and the robot 1 can take the block from the drop point.
     It makes a post request to the robot 1 server.
     """
 
-    requests.post(server_ips["1"] + "/trigger")
+    requests.post("http://" + server_ips["1"] + ":8080/robot_1/trigger")
     return jsonify({"status": "ok", "message": "success"}), 200
 
 

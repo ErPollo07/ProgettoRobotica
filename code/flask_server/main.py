@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
 from server_log import _log
 
+# Usare pc 10 e 12
+
 # Import blueprints
 from blueprints import robot_bp, robot_1_bp, robot_2_bp
 
@@ -24,4 +26,4 @@ def status():
 
 if __name__ == '__main__':
     # run the app on http://127.0.0.10:8080/
-    app.run(host='127.0.0.10', port=8080, debug=True)
+    app.run(host='10.33.77.20', port=8080, debug=True)
