@@ -3,9 +3,9 @@ import numpy as np
 
 cap = cv2.VideoCapture(0) # Get the first camere available
 
-ROI_LENGTH = 100
+roi_length = 100
 
-MASKS = {
+masks = {
     "blue": [
         (np.array([90,   50,  50]), np.array([130, 255, 255]))
     ],
@@ -18,9 +18,11 @@ MASKS = {
     ]
 }
 
-RESULTS = {}
+colors_percentage = {}
 
 def main():
+    global colors_percentage
+
     while True:
         ret, frame = cap.read()
 
@@ -31,7 +33,7 @@ def main():
         h, w = frame.shape[:2] # ?
         cx, cy = w // 2, h // 2
 
-        size = ROI_LENGTH // 2
+        size = roi_length // 2
 
         x1, y1 = cx - size, cy - size
         x2, y2 = cx + size, cy + size
@@ -49,20 +51,20 @@ def main():
         # Cycle through every color that we have to detect
         # Calculate the mask with lower and upper values
         # Calculate the percentage cover by every color
-        for color, masks in MASKS.items():
+        for color, ranges in masks.items():
             m = np.zeros(hsv.shape[:2], dtype=np.uint8)
-            for (lo, hi) in masks:
+            for (lo, hi) in ranges:
                 current_mask = cv2.inRange(hsv, lo, hi)
                 m = cv2.bitwise_or(m, current_mask)
 
             count = cv2.countNonZero(m)
             percentage = count / total
 
-            RESULTS[color] = percentage
+            colors_percentage[color] = percentage
 
         # Sort the percentage to get the most present color
-        RESULTS = dict(sorted(RESULTS.items(), key=lambda item: item[1], reverse=True))
-        first_key, first_value = next(iter(RESULTS.items()))
+        colors_percentage = dict(sorted(colors_percentage.items(), key=lambda item: item[1], reverse=True))
+        first_key, first_value = next(iter(colors_percentage.items()))
 
         # check if the most present color is present enough
         if (first_value > 0.750):
