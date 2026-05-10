@@ -30,5 +30,6 @@ def detect_color():
         _log(f"[detect_color] Error: {e}")
         return jsonify({"status": "error", "message": "Some things is not working"}), 500
 
+
 if __name__ == '__main__':
     app.run(host='10.33.77.100', port=8080, debug=True)
