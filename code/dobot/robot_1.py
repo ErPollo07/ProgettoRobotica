@@ -76,7 +76,7 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
   until that value becomes True. It logs attempts and sleeps
   `poll_interval` seconds between requests.
   """
-  url = LINK.format("robot_1/is_triggered")
+  url = LINK.format("robot1/can_collect")
 
   _log(f"[INFO] - Polling {url} every {poll_interval}s for trigger")
 

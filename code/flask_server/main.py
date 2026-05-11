@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from server_log import _log
 
 # Import blueprints
@@ -14,7 +14,7 @@ app.register_blueprint(robot_2_bp.bp)
 
 @app.route('/')
 def index():
-    return "Welcome to the main page!"
+    return render_template("index.html")
 
 
 @app.route('/status', methods=['GET'])
