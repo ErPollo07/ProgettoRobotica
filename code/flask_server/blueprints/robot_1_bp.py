@@ -1,37 +1,26 @@
 from flask import Blueprint, request, jsonify
-from dotenv import load_dotenv
 import os, requests
 from server_log import _log
 
-bp = Blueprint('robot_1', __name__, url_prefix='/robot_1')
+bp = Blueprint('robot1', __name__, url_prefix='/robot1')
 
 
-global trigger_var
-trigger_var = False
+global can_collect_var
+can_collect_var = False
 
 
-@bp.route('/trigger', methods=["POST"])
-def trigger():
+@bp.route("/can_collect", methods=["GET"])
+def can_collect():
     """
-    Set a variable called trigger_var True when called.
+    This is the endpoint that the robot 1 poll to ask if it can get the block
     """
-    global trigger_var
-    _log(f"[trigger] {trigger_var=}")
-    trigger_var = True
-    return jsonify({"status": "ok", "message": "success"})
+    return jsonify({"status": "ok", "message": "success"}), 200
 
 
-@bp.route('/is_triggered', methods=["GET"])
-def is_triggered():
+@bp.route("/block_dropped", methods=["GET"])
+def block_dropped():
     """
-    This function return true if the trigger variable is set to true and than make the variable False else return false and do nothing.
+    This is called from the robot 2.
+    When called the variable can_collect_var has to be set to True
     """
-
-    global trigger_var
-
-    _log(f"[is_trigger] {trigger_var=}")
-
-    if trigger_var:
-        trigger_var = False
-        return jsonify({"status": "ok", "message": True})
-    return jsonify({"status": "ok", "message": False})
+    return jsonify({"status": "ok", "message": "success"}), 200

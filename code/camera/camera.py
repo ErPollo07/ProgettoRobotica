@@ -79,7 +79,7 @@ def get_color():
 def main():
     colors_percentage = {}
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
 
     while True:
         ret, frame = cap.read()
