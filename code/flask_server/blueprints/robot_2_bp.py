@@ -1,5 +1,4 @@
 from flask import Blueprint, request, jsonify
-from dotenv import load_dotenv
 import os, requests
 from server_log import _log
 import util
