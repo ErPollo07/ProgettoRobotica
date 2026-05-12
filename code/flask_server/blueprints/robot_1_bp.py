@@ -24,7 +24,7 @@ def can_collect():
         return jsonify({"status": "ok", "message": False}), 200
 
 
-@bp.route("/block_dropped", methods=["GET"])
+@bp.route("/block_dropped", methods=["POST"])
 def block_dropped():
     """
     This is called from the robot 2.
@@ -32,7 +32,7 @@ def block_dropped():
     """
 
     global can_collect_var
-    
+
     can_collect_var = True
 
     return jsonify({"status": "ok", "message": "success"}), 200

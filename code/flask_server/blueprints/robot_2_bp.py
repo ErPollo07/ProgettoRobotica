@@ -27,12 +27,12 @@ def block_dropped():
 def detect_color():
     """
     This endpoint has to be called from the robot 2 when it's above the sensor
-    this will call the endpoint robot1/detect_color that has to response with the color.
+    this will call the endpoint robot3/detect_color that has to response with the color.
     When it respond the variable can_drop_var has to be set to True.
     """
     global can_drop_var
 
-    color = requests.get(f"http://{server_ips["3"]}:8080/robot3/detect_color")
+    color = requests.get(f"http://{server_ips['3']}:8080/robot3/detect_color")
 
     can_drop_var = True
 
@@ -45,6 +45,5 @@ def can_drop():
     This endpoint will be polled by the robot 2.
     Return the can_drop_var value.
     """
-
-
-    return jsonify({"status": "ok", "message": "success"}), 200
+    global can_drop_var
+    return jsonify({"status": "ok", "message": can_drop_var}), 200
