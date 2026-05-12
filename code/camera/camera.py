@@ -19,7 +19,7 @@ masks = {
 }
 
 
-def get_color():
+def get_color() -> str:
     colors_percentage = {}
 
     cap = cv2.VideoCapture(0) # Get the first camere available

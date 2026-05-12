@@ -18,7 +18,7 @@ def block_dropped():
     It makes a post request to the robot 1 server.
     """
 
-    requests.post("http://" + server_ips["1"] + ":8080/robot_1/trigger")
+    requests.post("http://" + server_ips["1"] + ":8080/robot1/block_dropped")
 
     return jsonify({"status": "ok", "message": "success"}), 200
 
@@ -30,10 +30,16 @@ def detect_color():
     this will call the endpoint robot1/detect_color that has to response with the color.
     When it respond the variable can_drop_var has to be set to True.
     """
+    global can_drop_var
+
+    color = requests.get(f"http://{server_ips["3"]}:8080/robot3/detect_color")
+
+    can_drop_var = True
+
     return jsonify({"status": "ok", "message": "success"}), 200
 
 
-@bp.route("/detect_color", methods=["GET"])
+@bp.route("/can_drop", methods=["GET"])
 def can_drop():
     """
     This endpoint will be polled by the robot 2.
