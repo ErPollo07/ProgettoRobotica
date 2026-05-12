@@ -14,26 +14,24 @@ ROBOT_ID: int = 1
 
 ### Methods ###
 def _log(msg: str):
-  ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-  print(f"[{ts}] {msg}")
+    ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+    print(f"[{ts}] {msg}")
 
-
+### Methods ###
 def move_to_point(p: Point, mode: int = 0):
   """Move the robot to the coordinate of the point with a mode"""
 
   _log(f"[TELEMETRY] Moving to ({p.x}, {p.y}, {p.z}) | mode = {mode})")
-  m_lite.set_ptpcmd(ptp_mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
+  magician.ptp(mode=mode, x=p.x, y=p.y, z=p.z, r = 0) # type: ignore
 
 
 def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: int = 0):
   """Move the robot to the coordinate of the point  and the offset with a mode"""
 
-  target_x = p.x + off_x
-  target_y = p.y + off_y
-  target_z = p.z + off_z
+  target = Point(x=p.x + off_x, y=p.y + off_y, z=p.z + off_z)
 
-  _log(f"[TELEMETRY] Moving to offset ({target_x}, {target_y}, {target_z}) | mode={mode}")
-  m_lite.set_ptpcmd(ptp_mode=mode, x=target_x, y=target_y, z=target_z, r = 0) # type: ignore
+  _log(f"[TELEMETRY] Moving to offset ({target.x}, {target.y}, {target.z}) | mode={mode}")
+  move_to_point(target, mode=mode)
 
 
 def suck(state: bool):
@@ -41,7 +39,7 @@ def suck(state: bool):
 
   status = "ON" if state else "OFF"
   _log(f"[TELEMETRY] Suction cup {status}")
-  m_lite.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
+  magician.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
 
 ### Method to send data to the local server ###
 
