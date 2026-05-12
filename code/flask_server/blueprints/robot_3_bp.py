@@ -10,14 +10,18 @@ bp = Blueprint('robot3', __name__, url_prefix='/robot3')
 
 @bp.route("/detect_color", methods=["GET"])
 def detect_color():
-    """
-    Get color from the camera and respond with the color
-    """
+    try:
+        _log("[detect_color] Called")
+        color = get_color()
 
-    color = get_color()
+        _log(f"[detect_color] {color=}")
 
-    # Send the color to thingsboard
+        if color == None:
+            return jsonify({"status": "ok", "message": "none"}), 200
 
-    return jsonify({"status": "ok", "message": color}), 200
+        return jsonify({"status": "ok", "message": color}), 200
+    except Exception as e:
+        _log(f"[detect_color] Error: {e}")
+        return jsonify({"status": "error", "message": "Some things is not working"}), 500
 
 
