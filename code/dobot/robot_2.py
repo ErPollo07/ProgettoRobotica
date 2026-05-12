@@ -1,5 +1,5 @@
 from DobotEDU import * # type: ignore
-import time, requests, datetime
+import time, requests, datetime, atexit
 
 # Set the version of the wheel
 magicbox.set_device_withl(enable=True, version=0) # type: ignore
@@ -258,5 +258,9 @@ def main():
     _log(f"[ERROR] - {e}")
   finally:
     reset()
+
+# Register the function reset to be called on program exit
+# The function reset will be called when the program closes normally or with an unhandled exception
+atexit.register(reset)
 
 main()

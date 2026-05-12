@@ -2,30 +2,13 @@ from flask import Blueprint, request, jsonify
 from dotenv import load_dotenv
 import os, requests
 from server_log import _log
+import util
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
-load_dotenv()
+access_token_dict = util.access_token_dict
 
-access_token_dict: dict[str, str] = {
-    "1": str(os.getenv("ACCESS_TOKEN_1")),
-    "2": str(os.getenv("ACCESS_TOKEN_2")),
-    "3": str(os.getenv("ACCESS_TOKEN_3")),
-}
-
-server_ips: dict[str, str] = {
-    "1": str(os.getenv("ROBOT_1_SERVER")),
-    "2": str(os.getenv("ROBOT_2_SERVER")),
-    "3": str(os.getenv("ROBOT_3_SERVER")),
-}
-
-
-def retriveTelemetryLink(robotId: str):
-    baseLink = str(os.getenv("TELEMETRY_LINK"))
-    accessTok: str = str(access_token_dict.get(str(robotId)))
-    link = baseLink + accessTok + "/telemetry"
-    _log(f"[retriveTelemetryLink] {link=}")
-    return link
+server_ips = util.server_ips
 
 
 @bp.route("/test", methods=['POST'])
@@ -84,7 +67,7 @@ def movement_executed():
 
         _log(f"[movement_executed] {message=}")
 
-        response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
+        response = requests.post(util.retriveTelemetryLink(request_json["robot_id"]), json=message)
         _log(f"[movement_executed] {response.text=}")
         _log(f"[movement_executed] {response.status_code=}")
 
@@ -123,7 +106,7 @@ def infrared_sensor_event():
 
         _log(f"[infrared_sensor_event] {message=}")
 
-        response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
+        response = requests.post(util.retriveTelemetryLink(request_json["robot_id"]), json=message)
         _log(f"[infrared_sensor_event] {response.text=}")
         _log(f"[infrared_sensor_event] {response.status_code=}")
 
@@ -163,7 +146,7 @@ def color_sensor_event():
         _log(f"[color_sensor_event] {message=}")
 
         # Send request
-        response = requests.post(retriveTelemetryLink(request_json["robot_id"]), json=message)
+        response = requests.post(util.retriveTelemetryLink(request_json["robot_id"]), json=message)
         _log(f"[color_sensor_event] {response.text=}")
         _log(f"[color_sensor_event] {response.status_code=}")
 
