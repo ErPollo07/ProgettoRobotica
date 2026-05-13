@@ -1,1 +1,1 @@
-py src/flask_server/main.py
+py src.flask_server.main.py
