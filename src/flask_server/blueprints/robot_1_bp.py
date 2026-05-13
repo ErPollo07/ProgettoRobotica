@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 import os, requests
-from server_log import _log
+from src.shared.server_log import _log
 
 bp = Blueprint('robot1', __name__, url_prefix='/robot1')
 

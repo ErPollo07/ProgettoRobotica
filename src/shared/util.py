@@ -1,9 +1,7 @@
 from dotenv import load_dotenv
 import os
 
-# TODO put the directory
-
-from server_log import _log
+from src.shared.server_log import _log
 
 load_dotenv()
 

@@ -23,5 +23,8 @@ indent_size = 2
 [*.html]
 indent_size = 2
 
+[*.php]
+indent_size = 2
+
 [code/flask_server/**.py]
 indent_size = 4

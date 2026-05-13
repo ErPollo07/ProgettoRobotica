@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
 import requests
-from server_log import _log
-import util
+from src.shared.server_log import _log
+import src.shared.util as util
 
-from camera.camera import get_color
+from src.camera.camera import get_color
 
 bp = Blueprint('robot3', __name__, url_prefix='/robot3')
 
