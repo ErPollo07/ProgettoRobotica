@@ -1,6 +1,8 @@
 from DobotEDU import * # type: ignore
 import time, datetime, requests
 
+magician.motion_params(100, 100) # vel, acc
+
 class Point():
   """Represents a point in the system of the robot"""
 
@@ -9,7 +11,7 @@ class Point():
     self.y = y
     self.z = z
 
-LINK: str = "http://127.0.0.10:8080/{}"
+LINK: str = "http://10.33.77.10:8080/{}"
 ROBOT_ID: int = 1
 
 ### Methods ###
@@ -36,14 +38,13 @@ def move_to_offpoint(p: Point, off_x: float, off_y: float, off_z: float, mode: i
 
 def suck(state: bool):
   """Set the suction cup on or off"""
-
   status = "ON" if state else "OFF"
   _log(f"[TELEMETRY] Suction cup {status}")
   magician.set_endeffector_suctioncup(enable = state, on = state) # type: ignore
 
 ### Method to send data to the local server ###
 
-def test_connectivity() -> tuple[bool, int]:
+def test_connectivity():
   try:
     res = requests.get(LINK.format("status"), timeout=3)
     return res.status_code == 200, res.status_code
@@ -118,9 +119,8 @@ def main():
     _log(f"[ERROR] {code=}")
     return
 
-  collection_point = Point(-18, -222, 105)
-  conveyor_point = Point(182, -172, 100)
-  idle_point = Point(93, -222, 105)
+  collection_point = Point(225.58, 0, -40.97)
+  conveyor_point = Point(236.79, 136.17, 26.16)
 
   safe_height = 20
 
@@ -140,7 +140,7 @@ def main():
 
     suck(False)
 
-    move_to_point(idle_point)
+    move_to_offpoint(conveyor_point, 0, 0, 30, 1)
 
     # Wait for server to allow next cycle
     wait_for_is_triggered()
