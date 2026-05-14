@@ -6,7 +6,7 @@ import time, requests
 magician.set_color_sensor(port=2, enable=True, version=1) # type: ignore
 
 ### Configuration ###
-LINK: str = "http://127.0.0.10:8080/robot/{}"
+LINK: str = "http://10.33.77.30:8080/robot/{}"
 
 def get_color_sensor() -> dict:
   """Return the raw color sensor data"""

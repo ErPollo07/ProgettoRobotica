@@ -13,4 +13,4 @@
 .NOTES
 	Per eseguire in un virtual environment attivarlo prima di lanciare lo script.
 #>
-py src.flask_server.main.py
+py src.flask_server.main

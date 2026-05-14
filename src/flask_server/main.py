@@ -15,7 +15,7 @@ app.register_blueprint(robot_3_bp.bp)
 
 @app.route('/')
 def index():
-    return render_template("index.php")
+    return render_template("index.html")
 
 
 @app.route('/status', methods=['GET'])
@@ -25,4 +25,4 @@ def status():
 
 if __name__ == '__main__':
     # Usare i pc 10 e 12
-    app.run(host='10.33.77.100', port=8080, debug=True)
+    app.run(host='10.33.77.10', port=8080, debug=True)
