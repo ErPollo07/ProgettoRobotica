@@ -88,3 +88,22 @@ La presente sezione riporta gli aspetti tecnici che risultano mancanti o che nec
 * Va chiarito se tali parametri sono statici (hard-coded) o configurabili (file di configurazione/variabili d’ambiente), e con quale livello di tracciabilità delle modifiche.
 * L’assenza di una sezione di configurazione rende meno riproducibile la simulazione e più difficile confrontare sessioni diverse a parità di condizioni.
 
+## Pianificazione del progetto
+
+La documentazione di project management risulta presente solo parzialmente rispetto alla consegna richiesta.
+
+### Project Plan
+
+- Il documento contiene obiettivi, assegnazione dei compiti, milestone e criteri generali di verifica, risultando coerente con l’impostazione richiesta dalla consegna.
+- La suddivisione delle responsabilità tra i membri del gruppo è chiara e consente di comprendere la distribuzione delle attività principali.
+- Manca una sezione dedicata ai rischi progettuali e alle eventuali strategie di mitigazione.
+
+### Diagramma di Gantt
+
+- Non risulta presente un diagramma di Gantt conforme alla consegna.
+- La documentazione attuale elenca milestone e attività, ma non rappresenta:
+  - distribuzione temporale delle attività;
+  - parallelismo tra task;
+  - dipendenze principali;
+  - assorbimento delle risorse nel tempo.
+- L’assenza del Gantt rende incompleta la parte di pianificazione e monitoraggio del progetto richiesta per la milestone.
