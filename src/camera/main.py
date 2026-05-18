@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from server_log import _log
+from src.shared.server_log import _log
 import camera
 
 app = Flask(__name__)
