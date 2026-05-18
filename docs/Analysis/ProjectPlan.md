@@ -13,7 +13,7 @@ The telemetry that have to be send to thingsboard is described in [Functional an
 
 ## Tasks for milestone
 
-### Milestone 1: 03/03/2026
+### Milestone 1: 03/03/2026 - Funzionalita' di base
 
 Guerra:
 
