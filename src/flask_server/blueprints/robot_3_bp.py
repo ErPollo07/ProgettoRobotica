@@ -24,4 +24,3 @@ def detect_color():
     except Exception as e:
         _log(f"[detect_color] Error: {e}")
         return jsonify({"status": "error", "message": "Some things is not working"}), 500
-
