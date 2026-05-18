@@ -79,3 +79,21 @@ Validation methods:
 - Integration testing of full pipeline
 - Dashboard consistency checks
 - Manual anomaly injection tests
+
+## Design risks
+
+- Availability of a backup robot for use in the event of malfunctions, maintenance requirements,
+or unexpected changes to the execution program.
+- Use of dedicated laptops, pre-configured with the necessary software environment,
+to reduce setup times and ensure operational continuity.
+- Provision of alternative connections via mobile hotspots to ensure business
+continuity in the event of internet failure or instability.
+
+### Mitigation Strategies
+
+- Availability of a backup robot for use in the event of malfunctions, maintenance requirements,
+or unexpected changes to the execution program.
+- Use of dedicated laptops, pre-configured with the necessary software environment,
+to reduce setup times and ensure operational continuity.
+- Provision of alternative connections via mobile hotspots to ensure business continuity
+in the event of internet failure or instability.
