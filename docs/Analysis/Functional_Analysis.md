@@ -5,16 +5,17 @@
 ## Hardware components of the production line
 
 - Dobot conveyor belt
-- 3 robots (2 Dobot Magician, 1 Dobot Magician Lite)
+- 2 robots (2 Dobot Magician)
 - Laser sensor (object presence detection)
-- Color sensor (block color identification)
+- Camera for color identification (block color identification)
 
 ## Description of the operational flow
 
 1. Robot R1 picks up a block from warehouse 1 (manual warehouse feeding by the operator) and places it on the conveyor belt.
 2. The laser sensor detects the passage of the block and signals the event to robot R2.
 3. Robot R2 intercepts the moving block and places it on the color sensor.
-4. Robot R3, which monitors the color sensor, detects a change in the color and retrieves the block from the color sensor, depositing it in warehouse 2 in the section corresponding to the detected color.
+4. The camera identifies the color and sends the identified color to robot R2.
+5. Robot R2 receives the message and places the block in its appropriate magazine.
 
 ## Communication with the ThingsBoard server
 
@@ -48,11 +49,6 @@ In the event of anomalies or errors, the backend records the event and makes it 
 - Movement duration (default) (time): time needed to perform his action
 - Infrared sensor event: when a block has been detected passing in front of the infrared sensor.
 - Infrared sensor error: if no block passes within a predefined interval, an error event is logged to indicate a possible flow interruption
-
-#### Robot 3
-
-- Movement duration (default): time needed to perform his action
-- Color sensor event: log the color of the block arrived at destination
 
 ## Anomaly Management
 

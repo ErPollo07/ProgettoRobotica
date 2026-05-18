@@ -2,14 +2,14 @@
 
 ## Objectives
 
-The objective of the project is to create a functional production chain with the robots.
-At start of the production chain there is a robot that pick up blocks and put them in the conveyor belt.
-In between of the first and the second robot there is a 3D printed conveyor guide that guide the block in the right position to be picked up from the second robot.
-The second robot detect the movement of the block and proceed to pick up the block and put it above the color sensor. Then reposition it self above the collection point.
-When the third robot detects a change in the sensor value it picks up the block and put it in the right warehouse for the color detected.
+The goal of the project is to create a functional production chain with robots and a camera.
+At the beginning of the production chain, a robot picks up the blocks and places them on the conveyor belt.
+Between the first and second robots, there is a 3D-printed conveyor belt guide that guides the block into the correct position for pickup by the second robot.
+The second robot detects the block's movement, picks it up, and places it over the color sensor. It then repositions itself over the pickup point.
+When the camera detects a change in color value, it sends a message to the second robot with the detected color.
 
-All the movements of the robots have to be registered in thingsboard.
-The telemetry that have to be send to thingsboard is described in [Functional analysis](/docs/Analysis/Functional_Analysis.md#robot-specific-telemetry) document.
+All robot movements must be recorded in Thingsboard.
+The telemetry to be sent to Thingsboard is described in the document [Functional Analysis](/docs/Analysis/Functional_Analysis.md#robot-specific-telemetry).
 
 ## Tasks for milestone
 
@@ -62,11 +62,16 @@ Tosatti:
 
 - ThingsBoard configuration and dashboard creation
 
+## Program changes
+
+As the project progressed, a change was made: the R3 robot was replaced with a camera because the color sensor connected to the robot did not always detect colors accurately.
+
 ## Verification and Validation Criteria
 
 The project is considered successful if:
 
 - All robots complete their assigned tasks without deadlocks.
+- The camera detects colors perfectly and distinguishes them.
 - Every movement generates telemetry.
 - Laser and color events are logged correctly.
 - KPIs are correctly calculated.
