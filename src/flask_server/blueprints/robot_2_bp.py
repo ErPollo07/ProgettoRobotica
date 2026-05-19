@@ -9,16 +9,17 @@ global can_drop_var
 can_drop_var = False
 
 server_ips = util.server_ips
+port = util.port
 
 
 @bp.route("/block_dropped", methods=["POST"])
 def block_dropped():
     """
-    This endpoint has to be called from the robot 2 to signal that he is above the collection point and the robot 1 can take the block from the drop point.
-    It makes a post request to the robot 1 server.
+    This endpoint has to be called from the robot 2 to signal that he is above the collection point
+    Then this endpoint will make a call to the endpoint /block_dropped of the robot 1 server so the robot 1 can take the block from the drop point.
     """
 
-    requests.post("http://10.33.77.1:8080/robot1/block_dropped")
+    requests.post(f"http://{server_ips["1"]}:{port}/robot1/block_dropped")
 
     return jsonify({"status": "ok", "message": "success"}), 200
 
@@ -32,7 +33,7 @@ def detect_color():
     """
     global can_drop_var
 
-    color = requests.get(f"http://10.33.77.3:8080/robot3/detect_color")
+    color = requests.get(f"http://{server_ips["3"]}:{port}/robot3/detect_color")
 
     can_drop_var = True
 
@@ -46,4 +47,9 @@ def can_drop():
     Return the can_drop_var value.
     """
     global can_drop_var
-    return jsonify({"status": "ok", "message": can_drop_var}), 200
+
+    if can_drop_var == True:
+        can_drop_var = False
+        return jsonify({"status": "ok", "message": True}), 200
+
+    return jsonify({"status": "ok", "message": False}), 200

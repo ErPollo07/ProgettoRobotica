@@ -12,16 +12,16 @@ can_collect_var: bool = False
 @bp.route("/can_collect", methods=["GET"])
 def can_collect():
     """
-    This is the endpoint that the robot 1 poll to ask if it can get the block
+    This is the endpoint that the robot 1 poll to ask if it can get the block.
     """
 
     global can_collect_var
 
-    if can_collect_var:
+    if can_collect_var == True:
         can_collect_var = False
         return jsonify({"status": "ok", "message": True}), 200
-    else:
-        return jsonify({"status": "ok", "message": False}), 200
+
+    return jsonify({"status": "ok", "message": False}), 200
 
 
 @bp.route("/block_dropped", methods=["POST"])

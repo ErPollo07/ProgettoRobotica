@@ -22,5 +22,5 @@ def detect_color():
 
         return jsonify({"status": "ok", "message": color}), 200
     except Exception as e:
-        _log(f"[detect_color] Error: {e}")
-        return jsonify({"status": "error", "message": "Some things is not working"}), 500
+        _log(f"[robot3/detect_color] Error: {e}")
+        return jsonify({"status": "error", "message": "Something is not working"}), 500

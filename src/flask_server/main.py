@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template
 from src.shared.server_log import _log
+import src.shared.util as util
 
 # Import blueprints
 from src.flask_server.blueprints import robot_bp, robot_1_bp, robot_2_bp, robot_3_bp
@@ -8,9 +9,21 @@ from src.flask_server.blueprints import robot_bp, robot_1_bp, robot_2_bp, robot_
 app = Flask(__name__)
 
 app.register_blueprint(robot_bp.bp)
-app.register_blueprint(robot_1_bp.bp)
-app.register_blueprint(robot_2_bp.bp)
-app.register_blueprint(robot_3_bp.bp)
+
+# Register only the necessary blueprints for the server number specified
+match (util.server_number):
+    case "1":
+        app.register_blueprint(robot_1_bp.bp)
+    case "2":
+        app.register_blueprint(robot_2_bp.bp)
+    case "3":
+        app.register_blueprint(robot_3_bp.bp)
+    case "100":
+        app.register_blueprint(robot_1_bp.bp)
+        app.register_blueprint(robot_2_bp.bp)
+        app.register_blueprint(robot_3_bp.bp)
+    case _:
+        raise Exception("Missing or wrong SERVER_NUMBER in .env file")
 
 
 @app.route('/')
@@ -25,4 +38,4 @@ def status():
 
 if __name__ == '__main__':
     # Usare i pc 10 e 12
-    app.run(host='10.33.77.2', port=8080, debug=True)
+    app.run(host=f'10.33.77.{util.server_number}', port=int(util.port), debug=True)
