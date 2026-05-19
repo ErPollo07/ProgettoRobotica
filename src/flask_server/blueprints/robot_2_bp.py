@@ -18,7 +18,7 @@ def block_dropped():
     It makes a post request to the robot 1 server.
     """
 
-    requests.post("http://" + server_ips["1"] + ":8080/robot1/block_dropped")
+    requests.post("http://10.33.77.1:8080/robot1/block_dropped")
 
     return jsonify({"status": "ok", "message": "success"}), 200
 
@@ -32,7 +32,7 @@ def detect_color():
     """
     global can_drop_var
 
-    color = requests.get(f"http://{server_ips['3']}:8080/robot3/detect_color")
+    color = requests.get(f"http://10.33.77.3:8080/robot3/detect_color")
 
     can_drop_var = True
 

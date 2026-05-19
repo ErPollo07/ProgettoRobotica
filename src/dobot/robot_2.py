@@ -17,7 +17,7 @@ class Point():
 
 #https://www.dobot-robots.com/service/download-center
 
-LINK: str = "http://10.33.77.20:8080/{}"
+LINK: str = "http://10.33.77.2:8080/{}"
 ROBOT_ID: int = 2
 
 def _log(msg: str):
@@ -108,7 +108,7 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
   until that value becomes True. It logs attempts and sleeps
   `poll_interval` seconds between requests.
   """
-  url = LINK.format("robot_2/is_triggered")
+  url = LINK.format("robot2/can_drop")
 
   _log(f"[INFO] - Polling {url} every {poll_interval}s for trigger")
 
@@ -143,7 +143,7 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
 
 
 def send_block_dropped():
-  link = LINK.format("robot_2/block_dropped")
+  link = LINK.format("robot2/block_dropped")
   _log(f"[sed_block_dropped] link={link}")
   ret = requests.post(url=link)
   _log(f"[sed_block_dropped] {ret.status_code=}")
@@ -156,8 +156,14 @@ def reset():
   suck(False)
 
 def test():
-  dropPoint: Point = Point(53.29, 262.02, -95.83)
+  dropPoint: Point = Point(16.77, 248.73, -93.05)
   move_to_point(dropPoint)
+
+
+def detect():
+  l = LINK.format("/robot2/detect_color")
+  res = requests.get(l)
+  _log(f"{res.status_code=}")
 
 
 def main():
@@ -182,9 +188,9 @@ def main():
   # Define the collection point and the drop point
   # If the drop point is not perfectly alined the block will move farther way every iteration
   # so adjust the x coordinate of the drop point to be more precise
-  collectionPoint: Point = Point(196.79, -160.8, -35.35)
-  sensorPoint: Point = Point(133.14, -216.57, -17.52)
-  dropPoint: Point = Point(18.61, 253.54, -92.01)
+  collectionPoint: Point = Point(174.99, -169.83, -35.5)
+  sensorPoint: Point = Point(100.22, -220.38, -17.4)
+  dropPoint: Point = Point(16.77, 248.73, -93.05)
 
   try:
     # Go above the collection point
@@ -223,11 +229,13 @@ def main():
         timeOfExecution = timeEnd - timeStart
         _log(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
 
+        detect()
+
         # Poll the server until it allows the robot to continue
         wait_for_is_triggered()
 
         # Move to the dropPoint
-        move_to_offpoint(dropPoint, 0, 0, 50)
+        move_to_offpoint(sensorPoint, 0, 0, 50)
         move_to_offpoint(dropPoint, 0, 0, 5)
 
         suck(False)

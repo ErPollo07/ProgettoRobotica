@@ -24,7 +24,15 @@ def get_color() -> str | None:
 
     cap = cv2.VideoCapture(0) # Get the first camere available
 
-    _, frame = cap.read()
+    cap = cv2.VideoCapture(0)
+
+    # aspetta qualche frame
+    for _ in range(10):
+        ret, frame = cap.read()
+
+    if not ret:
+        cap.release()
+        return None
 
     # Define the roi (region of interest)
     h, w = frame.shape[:2]
