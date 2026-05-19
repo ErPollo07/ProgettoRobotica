@@ -122,6 +122,80 @@ def suck(state: bool):
   m_lite.set_endeffector_suctioncup(enable=state, on=state) # type: ignore
 ```
 
+## Camera Code
+
+## Camera-Based Color Detection System
+
+In addition to infrared sensing, the system integrates a vision-based color detection module implemented using a standard USB camera. This component enables the robot system to identify the dominant color of objects within a defined region of interest (ROI), supporting higher-level decision-making in the production pipeline.
+
+The implementation is based on OpenCV and processes real-time video frames to extract color information in the HSV color space.
+
+### Color Detection Logic
+
+The camera captures frames from the available video device and isolates a central Region of Interest (ROI). Within this area, pixel values are converted from BGR to HSV and compared against predefined color masks:
+
+- Blue  
+- Red  
+- Green  
+
+Each color is defined by multiple HSV ranges to improve robustness under varying lighting conditions.
+
+The algorithm computes the percentage of pixels matching each color and selects the most dominant one. A confidence threshold is applied to validate the detection.
+
+```python
+def get_color() -> str | None:
+    colors_percentage = {}
+
+    cap = cv2.VideoCapture(0)
+
+    for _ in range(10):
+        ret, frame = cap.read()
+
+    if not ret:
+        cap.release()
+        return None
+
+    h, w = frame.shape[:2]
+    cx, cy = w // 2, h // 2
+
+    size = roi_length // 2
+
+    x1, y1 = cx - size, cy - size
+    x2, y2 = cx + size, cy + size
+
+    roi = frame[y1:y2, x1:x2]
+
+    total = roi.shape[0] * roi.shape[1]
+
+    hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+
+    for color, ranges in masks.items():
+        m = np.zeros(hsv.shape[:2], dtype=np.uint8)
+
+        for (lo, hi) in ranges:
+            current_mask = cv2.inRange(hsv, lo, hi)
+            m = cv2.bitwise_or(m, current_mask)
+
+        count = cv2.countNonZero(m)
+        percentage = count / total
+
+        colors_percentage[color] = percentage
+
+    colors_percentage = dict(
+        sorted(colors_percentage.items(), key=lambda item: item[1], reverse=True)
+    )
+
+    first_key, first_value = next(iter(colors_percentage.items()))
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+    if first_value > 0.70:
+        return first_key
+
+    return None
+```
+
 ## Server Code
 
 The server is implemented as a local web server within the network.  
