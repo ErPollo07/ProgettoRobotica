@@ -3,7 +3,6 @@ import requests
 from src.shared.server_log import _log
 import src.shared.util as util
 
-from src.camera.camera import get_color
 
 bp = Blueprint('robot3', __name__, url_prefix='/robot3')
 
@@ -13,7 +12,9 @@ def detect_color():
     try:
         _log("[detect_color] Called camera.get_color()")
 
-        color = get_color()
+        res = requests.get("http://127.0.0.1:5001/get_color")
+
+        color = res.json()["color"]
 
         _log(f"[detect_color] {color=}")
 
