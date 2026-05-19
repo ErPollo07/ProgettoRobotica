@@ -14,17 +14,5 @@ insert_final_newline = true
 [src/dobot/**.py]
 indent_size = 2
 
-[**/*.md]
+[**/*.{md, yaml, html, php, json}]
 indent_size = 2
-
-[*.yaml]
-indent_size = 2
-
-[*.html]
-indent_size = 2
-
-[*.php]
-indent_size = 2
-
-[code/flask_server/**.py]
-indent_size = 4

@@ -1,5 +1,5 @@
-from flask import Blueprint, request, jsonify
-import os, requests
+from flask import Blueprint, jsonify
+import requests, time
 from src.shared.server_log import _log
 import src.shared.util as util
 
@@ -33,7 +33,13 @@ def detect_color():
     """
     global can_drop_var
 
-    color = requests.get(f"http://{server_ips["3"]}:{port}/robot3/detect_color")
+    color = "none"
+    i = 0
+
+    while color == "none" and i < 3:
+        color = requests.get(f"http://{server_ips["3"]}:{port}/robot3/detect_color")
+        i += 1
+        time.sleep(1)
 
     can_drop_var = True
 
