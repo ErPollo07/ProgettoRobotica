@@ -85,20 +85,37 @@ Validation methods:
 - Dashboard consistency checks
 - Manual anomaly injection tests
 
-## Design risks
+## Design Risks
 
-- Availability of a backup robot for use in the event of malfunctions, maintenance requirements,
-or unexpected changes to the execution program.
-- Use of dedicated laptops, pre-configured with the necessary software environment,
-to reduce setup times and ensure operational continuity.
-- Provision of alternative connections via mobile hotspots to ensure business
-continuity in the event of internet failure or instability.
+ - Availability of a backup robot for use in the event of malfunctions, maintenance requirements,
+ or unexpected changes to the execution program. Use of dedicated laptops, pre-configured with the necessary software environment, to reduce setup times and ensure operational continuity. 
+ Provision of alternative connections via mobile hotspots to ensure business continuity
+ in the event of internet failure or instability.  
 
-### Mitigation Strategies
+ - Unreliable behavior of the camera-based color detection system due to environmental conditions (lighting variations, shadows, reflections) or hardware limitations, leading to incorrect or unstable color classification.  
 
-- Availability of a backup robot for use in the event of malfunctions, maintenance requirements,
-or unexpected changes to the execution program.
-- Use of dedicated laptops, pre-configured with the necessary software environment,
-to reduce setup times and ensure operational continuity.
-- Provision of alternative connections via mobile hotspots to ensure business continuity
-in the event of internet failure or instability.
+ - Concurrent access issues between multiple hardware components (camera, robot controller, and auxiliary processes), potentially causing resource conflicts, blocking behavior, or device access failures.  
+
+ - Latency and overload risks in the local Flask server, especially when handling computationally expensive operations such as real-time color detection requests, which may affect system responsiveness.  
+
+ - Inconsistencies between different sensing modalities (infrared sensor and camera system), which may lead to conflicting interpretations of the same physical state and ambiguous decision-making in the control logic.  
+
+ - Instability caused by fixed threshold-based classification in the vision system, which may lead to oscillating or unreliable detections under borderline conditions.  
+
+ - Failures or resource leaks in OpenCV video capture due to driver issues, device disconnection, or improper release of camera resources, potentially causing frozen processes or memory leaks.  
+
+ - Incompatibilities across different software environments (Python, OpenCV versions, system drivers), which may lead to inconsistent execution behavior between development and deployment systems.  
+
+## Mitigation Strategies
+
+ - Availability of a backup robot for use in the event of malfunctions, maintenance requirements, or unexpected changes to the execution program.
+ Use of dedicated laptops, pre-configured with the necessary software environment, to reduce setup times and ensure operational continuity.
+ Provision of alternative connections via mobile hotspots to ensure business continuity in the event of internet failure or instability.  
+
+ - Application of HSV-based color segmentation techniques to improve robustness of the vision system against lighting variations, combined with confidence thresholds to filter unreliable detections and a fallback state when detection is not confident.  
+
+ - Use of a singleton pattern and synchronization mechanisms (locks/mutexes) to prevent concurrent access conflicts to shared hardware resources such as the camera and robot interfaces.
+
+ - Definition of a hierarchical sensor fusion strategy, prioritizing infrared sensor readings for triggering actions while using camera-based detection as secondary enrichment, combined with timestamp-based correlation of events.  
+
+ - Introduction of hysteresis thresholds and temporal smoothing (e.g., multi-frame averaging or sliding window majority voting) to stabilize vision-based classification and reduce oscillations.
