@@ -124,7 +124,7 @@ def suck(state: bool):
 
 ## Camera Code
 
-## Camera-Based Color Detection System
+### Camera-Based Color Detection System
 
 In addition to infrared sensing, the system integrates a vision-based color detection module implemented using a standard USB camera. This component enables the robot system to identify the dominant color of objects within a defined region of interest (ROI), supporting higher-level decision-making in the production pipeline.
 
