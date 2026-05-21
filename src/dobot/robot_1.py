@@ -1,7 +1,7 @@
 from DobotEDU import * # type: ignore
 import time, datetime, requests
 
-magician.motion_params(100, 100) # vel, acc
+magician.motion_params(100, 100) # vel, acc # type: ignore
 
 class Point():
   """Represents a point in the system of the robot"""
@@ -131,6 +131,8 @@ def main():
 
   while True:
     _log("\n [INFO] - starting new cycle")
+
+    # TODO measure the movement_executed
 
     # Move down to reach the block
     move_to_point(collection_point)

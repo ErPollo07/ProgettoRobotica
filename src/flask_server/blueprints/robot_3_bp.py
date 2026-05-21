@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-import requests
+import requests, time
 from src.shared.server_log import _log
 import src.shared.util as util
 
@@ -18,10 +18,16 @@ def detect_color():
 
         _log(f"[detect_color] {color=}")
 
-        if color == None:
-            return jsonify({"status": "ok", "message": "none"}), 200
+        message = {
+            "ts": time.time() * 1000,
+            "values": {
+                "color": str(color)
+            }
+        }
 
-        return jsonify({"status": "ok", "message": color}), 200
+        requests.post(util.retriveTelemetryLink("3"), json=message)
+
+        return jsonify({"status": "ok", "message": str(color)}), 200
     except Exception as e:
         _log(f"[robot3/detect_color] Error: {e}")
         return jsonify({"status": "error", "message": "Something is not working"}), 500

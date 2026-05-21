@@ -160,7 +160,7 @@ def test():
   move_to_point(dropPoint)
 
 
-def detect():
+def detect_color():
   l = LINK.format("/robot2/detect_color")
   res = requests.get(l)
   _log(f"{res.status_code=}")
@@ -229,7 +229,7 @@ def main():
         timeOfExecution = timeEnd - timeStart
         _log(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
 
-        detect()
+        detect_color()
 
         # Poll the server until it allows the robot to continue
         wait_for_is_triggered()
@@ -249,8 +249,7 @@ def main():
         send_movement_executed(timeOfExecution)
 
         # Send the last time the robot put down a block
-        lastCheck = time.time()
-        send_ir_event(lastCheck)
+        send_ir_event()
 
         # If the sensor doesn't get triggered, check how much time has passed between now and the last block.
         # If the time is less than 20, send a infrared sensor error to the local server

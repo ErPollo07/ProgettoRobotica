@@ -56,18 +56,17 @@ def movement_executed():
     _log(f"[movement_executed] {request_json=}")
 
     try:
-        message = [
-            {
-                "ts": float(request_json["ts"]),
-                "values": {
-                    "time": request_json["time"]
-                }
+        message = {
+            "ts": float(request_json["ts"]),
+            "values": {
+                "time": request_json["time"]
             }
-        ]
+        }
 
         _log(f"[movement_executed] {message=}")
 
         response = requests.post(util.retriveTelemetryLink(request_json["robot_id"]), json=message)
+
         _log(f"[movement_executed] {response.text=}")
         _log(f"[movement_executed] {response.status_code=}")
 
@@ -95,18 +94,17 @@ def infrared_sensor_event():
     _log(f"[infrared_sensor_event] {request_json=}")
 
     try:
-        message = [
-            {
-                "ts": float(request_json["ts"]),
-                "values": {
-                    "infrared_sensor_status": request_json["status"]
-                }
+        message = {
+            "ts": float(request_json["ts"]),
+            "values": {
+                "infrared_sensor_status": request_json["status"]
             }
-        ]
+        }
 
         _log(f"[infrared_sensor_event] {message=}")
 
         response = requests.post(util.retriveTelemetryLink(request_json["robot_id"]), json=message)
+
         _log(f"[infrared_sensor_event] {response.text=}")
         _log(f"[infrared_sensor_event] {response.status_code=}")
 
@@ -115,48 +113,4 @@ def infrared_sensor_event():
         m = "Bad json format\nAccepted format: {'ts': <timestamp>,'robot_id': <robot_identifier>, 'infrared_sensor_status': <'success'|'error'>}"
         return jsonify({"status": "error", "message": m})
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
-
-
-@bp.route("/color_sensor_event", methods=['POST'])
-def color_sensor_event():
-    """
-    Handle color sensor event notifications from the robot.
-
-    The payload:
-    {
-        "ts": <timestamp>,
-        "robot_id": <1|2|3>,
-        "color": <"red"|"blue"|"green"|"error">
-    }
-    """
-    request_json = request.get_json()
-    _log(f"[color_sensor_event] {request_json=}")
-
-    try:
-        message = [
-            {
-                "ts": float(request_json["ts"]),
-                "values": {
-                    "color": request_json["color"]
-                }
-            }
-        ]
-
-        _log(f"[color_sensor_event] {message=}")
-
-        # Send request
-        response = requests.post(util.retriveTelemetryLink(request_json["robot_id"]), json=message)
-        _log(f"[color_sensor_event] {response.text=}")
-        _log(f"[color_sensor_event] {response.status_code=}")
-
-        # Send a get request to the trigger endpoint of the robot 2 server
-        requests.get(server_ips["2"] + "robot_2/trigger")
-
-        return jsonify({"status": "success"}), 200
-    except KeyError:
-        m = "Bad json format\nAccepted format: { 'ts': <timestamp>, 'robot_id': <1|2|3>, 'color': <'red'|'blue'|'green'|'error'> }"
-        return jsonify({"status": "error", "message": m})
-    except Exception as e:
-        _log(f"[color_sensor_event] {e=}")
         return jsonify({"status": "error", "message": str(e)})

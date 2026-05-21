@@ -12,7 +12,7 @@ def color_endpoint():
 
 roi_length = 200
 
-color_detected = "none"
+color_detected = None
 
 ranges_dict = {
     "blue": [
@@ -33,7 +33,7 @@ def main():
     masks = {}
     global color_detected
 
-    cap = cv2.VideoCapture(0) # Get the first camere available
+    cap = cv2.VideoCapture(1) # Get the first camere available
 
     while True:
         ret, frame = cap.read()
@@ -91,7 +91,7 @@ def main():
             color_detected = first_key
         else:
             cv2.putText(frame, f"Color: none", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            color_detected = "none"
+            color_detected = None
 
         cv2.imshow("Frame", frame)
         cv2.imshow("Red mask", masks["red"])
