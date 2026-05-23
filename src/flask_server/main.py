@@ -3,7 +3,7 @@ from src.shared.server_log import _log
 import src.shared.util as util
 
 # Import blueprints
-from src.flask_server.blueprints import robot_bp, robot_1_bp, robot_2_bp, robot_3_bp
+from src.flask_server.blueprints import robot_bp, robot_1_bp, robot_2_bp, camera_bp
 
 
 app = Flask(__name__)
@@ -17,11 +17,11 @@ match (util.server_number):
     case "2":
         app.register_blueprint(robot_2_bp.bp)
     case "3":
-        app.register_blueprint(robot_3_bp.bp)
+        app.register_blueprint(camera_bp.bp)
     case "100":
         app.register_blueprint(robot_1_bp.bp)
         app.register_blueprint(robot_2_bp.bp)
-        app.register_blueprint(robot_3_bp.bp)
+        app.register_blueprint(camera_bp.bp)
     case _:
         raise Exception("Missing or wrong SERVER_NUMBER in .env file")
 

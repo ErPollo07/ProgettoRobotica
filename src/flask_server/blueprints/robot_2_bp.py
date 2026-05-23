@@ -28,7 +28,7 @@ def block_dropped():
 def detect_color():
     """
     This endpoint has to be called from the robot 2 when it's above the sensor
-    this will call the endpoint robot3/detect_color that has to response with the color.
+    this will call the endpoint camera/detect_color that has to response with the color.
     When it respond the variable can_drop_var has to be set to True.
     """
     global can_drop_var
@@ -37,7 +37,7 @@ def detect_color():
     i = 0
 
     while color == "none" and i < 3:
-        color = requests.get(f"http://{server_ips["3"]}:{port}/robot3/detect_color")
+        color = requests.get(f"http://{server_ips["3"]}:{port}/camera/detect_color")
         i += 1
         time.sleep(1)
 

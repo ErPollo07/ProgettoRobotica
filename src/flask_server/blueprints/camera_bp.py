@@ -4,7 +4,7 @@ from src.shared.server_log import _log
 import src.shared.util as util
 
 
-bp = Blueprint('robot3', __name__, url_prefix='/robot3')
+bp = Blueprint('camera', __name__, url_prefix='/camera')
 
 
 @bp.route("/detect_color", methods=["GET"])
@@ -12,7 +12,7 @@ def detect_color():
     try:
         _log("[detect_color] Called camera.get_color()")
 
-        res = requests.get("http://127.0.0.1:5001/get_color")
+        res = requests.get("http://127.0.0.1:15001/get_color")
 
         color = res.json()["color"]
 
@@ -29,5 +29,5 @@ def detect_color():
 
         return jsonify({"status": "ok", "message": str(color)}), 200
     except Exception as e:
-        _log(f"[robot3/detect_color] Error: {e}")
+        _log(f"[camera/detect_color] Error: {e}")
         return jsonify({"status": "error", "message": "Something is not working"}), 500

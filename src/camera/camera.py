@@ -107,7 +107,7 @@ def main():
 
 if __name__ == "__main__":
     # Avvia Flask in un thread separato
-    threading.Thread(target=lambda: app.run(host="127.0.0.1", port=5001), daemon=True).start()
+    threading.Thread(target=lambda: app.run(host="127.0.0.1", port=15001), daemon=True).start()
 
     # Poi lancia il loop normalmente
     main()
