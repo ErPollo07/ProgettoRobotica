@@ -79,7 +79,7 @@ def send_ir_event(t = time.time()):
 
 def send_ir_error():
   message = {
-    "ts": str(time.time()),
+    "ts": str(time.time() * 1000),
     "robot_id": ROBOT_ID,
     "status": "error"
   }
@@ -90,7 +90,7 @@ def send_ir_error():
 
 def send_movement_executed(timeOfExecution: float):
   message = {
-    "ts": str(time.time()),
+    "ts": str(time.time() * 1000),
     "robot_id": ROBOT_ID,
     "time": timeOfExecution
   }
@@ -144,10 +144,7 @@ def wait_for_is_triggered(poll_interval: float = 1.0):
 
 def send_block_dropped():
   link = LINK.format("robot2/block_dropped")
-  _log(f"[sed_block_dropped] link={link}")
   ret = requests.post(url=link)
-  _log(f"[sed_block_dropped] {ret.status_code=}")
-  _log(f"[sed_block_dropped] {ret.status_code=}")
 
 
 def reset():
@@ -183,7 +180,7 @@ def main():
 
   timeOfExecution: float = 0 # seconds
   timeStart: float ; timeEnd: float
-  lastCheck = time.time()
+  lastCheck: float = time.time()
 
   # Define the collection point and the drop point
   # If the drop point is not perfectly alined the block will move farther way every iteration
@@ -201,15 +198,13 @@ def main():
     _log("[INFO] - Take the conveyor up to speed")
     set_conv_speed(CONV_SPEED) # Comment this line is in debug
 
-    # Take the block while the conveyor is moving
-    # When the infrared sensor detect something the robot:
-    # - start the suctioncup
-    # - go to the collectionPoint
-    # - take the block
-    # - go to dropPoint
-    # - release the block
-    # - return above the collectionPoint
+    # Reset lastCheck before starting the cycle
+    lastCheck = time.time()
+
     _log("[INFO] - Enter main cycle")
+
+    # In documentation there is a complete documentation of this cycle
+    # If you change the cycle update the documentation
     while True:
       sensor = get_ir_sensor_status()
       if sensor:
@@ -229,6 +224,9 @@ def main():
         timeOfExecution = timeEnd - timeStart
         _log(f"[INFO] - Cycle executed in {timeOfExecution} seconds")
 
+        # Send the time of execution to the server
+        send_movement_executed(timeOfExecution)
+
         detect_color()
 
         # Poll the server until it allows the robot to continue
@@ -245,14 +243,13 @@ def main():
 
         send_block_dropped()
 
-        # Send the time of execution to the server
-        send_movement_executed(timeOfExecution)
-
         # Send the last time the robot put down a block
         send_ir_event()
 
-        # If the sensor doesn't get triggered, check how much time has passed between now and the last block.
-        # If the time is less than 20, send a infrared sensor error to the local server
+        lastCheck = time.time()
+
+      # If the sensor doesn't get triggered, check how much time has passed between now and the last block.
+      # If the time is less than 20, send a infrared sensor error to the local server
       else:
         # Check how long the sensor is idle
         # If more than 20 seconds, send a infrared_sensor_error
