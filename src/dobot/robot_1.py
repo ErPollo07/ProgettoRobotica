@@ -57,7 +57,7 @@ def send_movement_executed(timeOfExecution: float):
   Docstring for send_movement_executed
   """
   message = {
-    "ts": str(time.time()),
+    "ts": str(time.time() * 1000),
     "robot_id": ROBOT_ID,
     "time": timeOfExecution
   }
@@ -132,8 +132,7 @@ def main():
   while True:
     _log("\n [INFO] - starting new cycle")
 
-    # TODO measure the movement_executed
-
+    timeStart = time.time()
     # Move down to reach the block
     move_to_point(collection_point)
     suck(True)
@@ -143,6 +142,13 @@ def main():
     suck(False)
 
     move_to_offpoint(conveyor_point, 0, 0, 30, 1)
+    timeEnd = time.time()
+
+    timeTotal = timeEnd - timeStart
+
+    _log(f"Cycle executed in {timeTotal} seconds")
+
+    send_movement_executed(timeTotal)
 
     # Wait for server to allow next cycle
     wait_for_is_triggered()
