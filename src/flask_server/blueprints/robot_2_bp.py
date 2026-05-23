@@ -43,7 +43,7 @@ def detect_color():
 
     can_drop_var = True
 
-    return jsonify({"status": "ok", "message": "success"}), 200
+    return jsonify({"status": "ok", "message": color}), 200
 
 
 @bp.route("/can_drop", methods=["GET"])

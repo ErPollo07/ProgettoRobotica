@@ -15,6 +15,9 @@ class Point():
     self.y = y
     self.z = z
 
+  def plus(self, x, y, z) -> Point:
+    return Point(x=self.x + x, y=self.y + y, z=self.z + z)
+
 #https://www.dobot-robots.com/service/download-center
 
 LINK: str = "http://10.33.77.2:8080/{}"
@@ -157,10 +160,11 @@ def test():
   move_to_point(dropPoint)
 
 
-def detect_color():
+def detect_color() -> str:
   l = LINK.format("/robot2/detect_color")
   res = requests.get(l)
-  _log(f"{res.status_code=}")
+  color = res.json()["color"]
+  _log(f"[detect_color] Color detected = {color}")
 
 
 def main():
@@ -187,7 +191,10 @@ def main():
   # so adjust the x coordinate of the drop point to be more precise
   collectionPoint: Point = Point(174.99, -169.83, -35.5)
   sensorPoint: Point = Point(100.22, -220.38, -17.4)
-  dropPoint: Point = Point(16.77, 248.73, -93.05)
+  dropPointRed: Point = Point(16.77, 248.73, -93.05)
+  dropPointGreen: Point = dropPointRed.plus(-30, 0, 0)
+  dropPointBlue: Point = dropPointRed.plus(-60, 0, 0)
+  dropPointNone: Point = dropPointRed.plus(-90, 0, 0)
 
   try:
     # Go above the collection point
@@ -227,14 +234,27 @@ def main():
         # Send the time of execution to the server
         send_movement_executed(timeOfExecution)
 
-        detect_color()
+        color = detect_color()
 
         # Poll the server until it allows the robot to continue
         wait_for_is_triggered()
 
         # Move to the dropPoint
         move_to_offpoint(sensorPoint, 0, 0, 50)
-        move_to_offpoint(dropPoint, 0, 0, 5)
+
+        match color:
+          case "red":
+            move_to_offpoint(dropPointRed, 0, 0, 5)
+            break
+          case "green":
+            move_to_offpoint(dropPointGreen, 0, 0, 5)
+            break
+          case "blue":
+            move_to_offpoint(dropPointBlue, 0, 0, 5)
+            break
+          case "none":
+            move_to_offpoint(dropPointNone, 0, 0, 5)
+            break
 
         suck(False)
 
