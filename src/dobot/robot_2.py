@@ -165,6 +165,7 @@ def detect_color() -> str:
   res = requests.get(l)
   color = res.json()["color"]
   _log(f"[detect_color] Color detected = {color}")
+  return color
 
 
 def main():
