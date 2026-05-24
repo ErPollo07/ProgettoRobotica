@@ -11,6 +11,9 @@ class Point():
     self.y = y
     self.z = z
 
+  def plus(self, x, y, z) -> Point:
+    return Point(x=self.x + x, y=self.y + y, z=self.z + z)
+
 LINK: str = "http://10.33.77.10:8080/{}"
 ROBOT_ID: int = 1
 
@@ -51,6 +54,7 @@ def test_connectivity():
   except Exception as e:
     _log(f"[ERROR] {e=}")
     return False, 404
+
 
 def send_movement_executed(timeOfExecution: float):
   """
@@ -119,14 +123,18 @@ def main():
     _log(f"[ERROR] {code=}")
     return
 
-  collection_point = Point(225.58, 0, -40.97)
+  collectionPointRed = Point(225.58, 0, -40.97)
+  collectionPointGreen = Point(0, 0, 0)
+  collectionPointBlue = Point(0, 0, 0)
+  collectionPoints = [collectionPointRed, collectionPointGreen, collectionPointBlue]
+  index = 0
   conveyor_point = Point(236.79, 136.17, 26.16)
 
   safe_height = 20
 
   _log("[INFO] Showing the collection point")
   # Move above the collection point to show it
-  move_to_offpoint(collection_point, 0, 0, safe_height)
+  move_to_offpoint(collectionPointRed, 0, 0, safe_height)
   time.sleep(5)
 
   while True:
@@ -134,7 +142,7 @@ def main():
 
     timeStart = time.time()
     # Move down to reach the block
-    move_to_point(collection_point)
+    move_to_point(collectionPoints[index])
     suck(True)
 
     move_to_point(conveyor_point)
@@ -149,6 +157,11 @@ def main():
     _log(f"Cycle executed in {timeTotal} seconds")
 
     send_movement_executed(timeTotal)
+
+    if (index >= 2):
+      index = 0
+    else:
+      index += 1
 
     # Wait for server to allow next cycle
     wait_for_is_triggered()
