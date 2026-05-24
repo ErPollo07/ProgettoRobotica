@@ -253,7 +253,7 @@ def main():
           case "blue":
             move_to_offpoint(dropPointBlue, 0, 0, 5)
             break
-          case "none":
+          case _:
             move_to_offpoint(dropPointNone, 0, 0, 5)
             break
 
