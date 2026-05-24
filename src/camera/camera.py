@@ -14,6 +14,8 @@ roi_length = 200
 
 color_detected = None
 
+CAMERA_TO_CAPTURE = 0
+
 ranges_dict = {
     "blue": [
         (np.array([90,   50,  50]), np.array([130, 255, 255]))
@@ -24,6 +26,9 @@ ranges_dict = {
     ],
     "green": [
         (np.array([40,   90,  0]), np.array([100, 255, 255])),
+    ],
+    "yellow": [
+        (np.array([22,   50,  50]), np.array([35, 255, 255]))
     ]
 }
 
@@ -33,76 +38,80 @@ def main():
     masks = {}
     global color_detected
 
-    cap = cv2.VideoCapture(1) # Get the first camere available
+    cap = cv2.VideoCapture(CAMERA_TO_CAPTURE) # Get the first camere available
 
-    while True:
-        ret, frame = cap.read()
+    try:
+        while True:
+            ret, frame = cap.read()
 
-        if not ret:
-            cap.release()
-            return None
+            if not ret:
+                cap.release()
+                return None
 
-        # Define the roi (region of interest)
-        h, w = frame.shape[:2]
-        cx, cy = w // 2, h // 2
+            # Define the roi (region of interest)
+            h, w = frame.shape[:2]
+            cx, cy = w // 2, h // 2
 
-        size = roi_length // 2
+            size = roi_length // 2
 
-        x1, y1 = cx - size, cy - size
-        x2, y2 = cx + size, cy + size
+            x1, y1 = cx - size, cy - size
+            x2, y2 = cx + size, cy + size
 
-        # Slice the frame between the two point
-        roi = frame[y1:y2, x1:x2]
+            # Slice the frame between the two point
+            roi = frame[y1:y2, x1:x2]
 
-        # Calculate the total number of the pixel in the roi
-        total = roi.shape[0] * roi.shape[1]
+            # Calculate the total number of the pixel in the roi
+            total = roi.shape[0] * roi.shape[1]
 
-        # Draw the rectangle wit the coordinates of the roi
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 255, 255), 1)
+            # Draw the rectangle wit the coordinates of the roi
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 255, 255), 1)
 
-        # Calculate the color only when "g" is pressed
+            # Calculate the color only when "g" is pressed
 
-        # Transform the roi colors from bgr to hsv
-        hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+            # Transform the roi colors from bgr to hsv
+            hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 
-        # Cycle through every color that we have to detect
-        # Calculate the mask with lower and upper values
-        # Calculate the percentage cover by every color
-        for color, ranges in ranges_dict.items():
-            m = np.zeros(hsv.shape[:2], dtype=np.uint8)
-            for (lo, hi) in ranges:
-                current_mask = cv2.inRange(hsv, lo, hi)
-                m = cv2.bitwise_or(m, current_mask)
+            # Cycle through every color that we have to detect
+            # Calculate the mask with lower and upper values
+            # Calculate the percentage cover by every color
+            for color, ranges in ranges_dict.items():
+                m = np.zeros(hsv.shape[:2], dtype=np.uint8)
+                for (lo, hi) in ranges:
+                    current_mask = cv2.inRange(hsv, lo, hi)
+                    m = cv2.bitwise_or(m, current_mask)
 
-            masks[color] = m
+                masks[color] = m
 
-            count = cv2.countNonZero(m)
-            percentage = count / total
+                count = cv2.countNonZero(m)
+                percentage = count / total
 
-            colors_percentage[color] = percentage
+                colors_percentage[color] = percentage
 
-        # Sort the percentage to get the most present color
-        colors_percentage = dict(sorted(colors_percentage.items(), key=lambda item: item[1], reverse=True))
-        first_key, first_value = next(iter(colors_percentage.items()))
+            # Sort the percentage to get the most present color
+            colors_percentage = dict(sorted(colors_percentage.items(), key=lambda item: item[1], reverse=True))
+            first_key, first_value = next(iter(colors_percentage.items()))
 
 
-        if (first_value > 0.750):
-            cv2.putText(frame, f"Color: {first_key}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            color_detected = first_key
-        else:
-            cv2.putText(frame, f"Color: none", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            color_detected = None
+            if (first_value > 0.750):
+                cv2.putText(frame, f"Color: {first_key}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                color_detected = first_key
+            else:
+                cv2.putText(frame, f"Color: none", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                color_detected = None
 
-        cv2.imshow("Frame", frame)
-        cv2.imshow("Red mask", masks["red"])
-        cv2.imshow("Blue mask", masks["blue"])
-        cv2.imshow("Green mask", masks["green"])
+            cv2.imshow("Frame", frame)
+            for k, v in masks.items():
+                cv2.imshow(k, v)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    except Exception as e:
+        print(f"Code finished with error: {e}")
+        cap.release()
+        cv2.destroyAllWindows()
+    finally:
+        cap.release()
+        cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
