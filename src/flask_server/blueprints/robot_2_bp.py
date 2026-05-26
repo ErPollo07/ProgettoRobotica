@@ -36,14 +36,17 @@ def detect_color():
     color = "none"
     i = 0
 
+    message = {"color": "none"}
+
     while color == "none" and i < 3:
-        color = requests.get(f"http://{server_ips["3"]}:{port}/camera/detect_color")
+        res = requests.get(f"http://{server_ips["3"]}:{port}/camera/detect_color")
+        message = res.json()
         i += 1
         time.sleep(1)
 
     can_drop_var = True
 
-    return jsonify({"status": "ok", "message": color}), 200
+    return jsonify({"status": "ok", "message": message["message"]}), 200
 
 
 @bp.route("/can_drop", methods=["GET"])

@@ -21,7 +21,7 @@ def detect_color():
         message = {
             "ts": time.time() * 1000,
             "values": {
-                "color": str(color)
+                "color_sensor_event": str(color)
             }
         }
 

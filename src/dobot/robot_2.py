@@ -15,7 +15,7 @@ class Point():
     self.y = y
     self.z = z
 
-  def plus(self, x, y, z) -> Point:
+  def plus(self, x, y, z):
     return Point(x=self.x + x, y=self.y + y, z=self.z + z)
 
 #https://www.dobot-robots.com/service/download-center
@@ -156,14 +156,23 @@ def reset():
   suck(False)
 
 def test():
-  dropPoint: Point = Point(16.77, 248.73, -93.05)
-  move_to_point(dropPoint)
+  dropPointRed: Point = Point(65.94, 251.38, -91.17)
+  dropPointGreen: Point = Point(-80.08, 271.15, -91.08)
+  dropPointBlue: Point = Point(-18.76, 273.4, -90.88)
+  dropPointNone: Point = Point(-39.6, -237.95, 97.63)
+
+  move_to_point(dropPointRed)
+  time.sleep(5)
+  move_to_point(dropPointGreen)
+  time.sleep(5)
+  move_to_point(dropPointBlue)
+
 
 
 def detect_color() -> str:
   l = LINK.format("/robot2/detect_color")
   res = requests.get(l)
-  color = res.json()["color"]
+  color = res.json()["message"]
   _log(f"[detect_color] Color detected = {color}")
   return color
 
@@ -190,12 +199,12 @@ def main():
   # Define the collection point and the drop point
   # If the drop point is not perfectly alined the block will move farther way every iteration
   # so adjust the x coordinate of the drop point to be more precise
-  collectionPoint: Point = Point(174.99, -169.83, -35.5)
-  sensorPoint: Point = Point(100.22, -220.38, -17.4)
-  dropPointRed: Point = Point(16.77, 248.73, -93.05)
-  dropPointGreen: Point = dropPointRed.plus(-30, 0, 0)
-  dropPointBlue: Point = dropPointRed.plus(-60, 0, 0)
-  dropPointNone: Point = dropPointRed.plus(-90, 0, 0)
+  collectionPoint: Point = Point(211.62, -132.87, -35.37)
+  sensorPoint: Point = Point(145.85, -192.13, -16.92)
+  dropPointRed: Point = Point(65.94, 251.38, -91.17)
+  dropPointGreen: Point = Point(-80.08, 271.15, -91.08)
+  dropPointBlue: Point = Point(-18.76, 273.4, -90.88)
+  dropPointNone: Point = Point(-39.6, -237.95, 97.63)
 
   try:
     # Go above the collection point
@@ -243,19 +252,14 @@ def main():
         # Move to the dropPoint
         move_to_offpoint(sensorPoint, 0, 0, 50)
 
-        match color:
-          case "red":
-            move_to_offpoint(dropPointRed, 0, 0, 5)
-            break
-          case "green":
-            move_to_offpoint(dropPointGreen, 0, 0, 5)
-            break
-          case "blue":
-            move_to_offpoint(dropPointBlue, 0, 0, 5)
-            break
-          case _:
-            move_to_offpoint(dropPointNone, 0, 0, 5)
-            break
+        if color == "red":
+          move_to_point(dropPointRed)
+        elif color == "green":
+          move_to_point(dropPointGreen)
+        elif color == "blue":
+          move_to_point(dropPointBlue)
+        else:
+          move_to_point(dropPointNone)
 
         suck(False)
 
