@@ -1,15 +1,15 @@
 from flask import Blueprint, jsonify
 import requests, time
 from src.shared.server_log import _log
-import src.shared.util as util
+import src.shared.conf as conf
 
 bp = Blueprint('robot2', __name__, url_prefix='/robot2')
 
 global can_drop_var
 can_drop_var = False
 
-server_ips = util.server_ips
-port = util.port
+server_ips = conf.server_ips
+port = conf.port
 
 
 @bp.route("/block_dropped", methods=["POST"])

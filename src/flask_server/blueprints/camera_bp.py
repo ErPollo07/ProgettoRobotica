@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import requests, time
 from src.shared.server_log import _log
-import src.shared.util as util
+import src.shared.conf as conf
 
 
 bp = Blueprint('camera', __name__, url_prefix='/camera')
@@ -25,7 +25,7 @@ def detect_color():
             }
         }
 
-        requests.post(util.retriveTelemetryLink("3"), json=message)
+        requests.post(conf.retriveTelemetryLink("3"), json=message)
 
         return jsonify({"status": "ok", "message": str(color)}), 200
     except Exception as e:

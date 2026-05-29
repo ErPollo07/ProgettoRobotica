@@ -2,13 +2,13 @@ from flask import Blueprint, request, jsonify
 from dotenv import load_dotenv
 import os, requests
 from src.shared.server_log import _log
-import src.shared.util as util
+import src.shared.conf as conf
 
 bp = Blueprint('robot', __name__, url_prefix='/robot')
 
-access_token_dict = util.access_token_dict
+access_token_dict = conf.access_token_dict
 
-server_ips = util.server_ips
+server_ips = conf.server_ips
 
 
 @bp.route("/test", methods=['POST'])
@@ -65,7 +65,7 @@ def movement_executed():
 
         _log(f"[movement_executed] {message=}")
 
-        response = requests.post(util.retriveTelemetryLink(request_json["robot_id"]), json=message)
+        response = requests.post(conf.retriveTelemetryLink(request_json["robot_id"]), json=message)
 
         _log(f"[movement_executed] {response.text=}")
         _log(f"[movement_executed] {response.status_code=}")
@@ -103,7 +103,7 @@ def infrared_sensor_event():
 
         _log(f"[infrared_sensor_event] {message=}")
 
-        response = requests.post(util.retriveTelemetryLink(request_json["robot_id"]), json=message)
+        response = requests.post(conf.retriveTelemetryLink(request_json["robot_id"]), json=message)
 
         _log(f"[infrared_sensor_event] {response.text=}")
         _log(f"[infrared_sensor_event] {response.status_code=}")

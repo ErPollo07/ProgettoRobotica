@@ -6,8 +6,11 @@ Between the communication of the data from the robots to Thingsboard, a Flask se
 
 The code is split between two main files:
 
-- `main.py`: This file create the flask server at 127.0.0.10:8080 and register the endpoints to handle the requests from the robots.
-- `robot_bp.py`: This file contains the route to send data to the Thingsboard server.
+- `main.py`: This file create the flask server at ZeroTier's interface ip and register the endpoints to handle the requests from the robots.
+- `robot_bp.py`: This file contains the endpoints to send data to the Thingsboard server.
+- `robot_1_bp.py`: This file contains the endpoints related to Robot 1.
+- `robot_2_bp.py`: This file contains the endpoints related to Robot 2.
+- `camera_bp.py`: This file contains the endpoints related to the camera.
 
 ## Directory Structure
 
