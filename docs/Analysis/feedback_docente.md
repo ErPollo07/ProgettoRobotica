@@ -107,3 +107,33 @@ La documentazione di project management risulta presente solo parzialmente rispe
   - dipendenze principali;
   - assorbimento delle risorse nel tempo.
 - L’assenza del Gantt rende incompleta la parte di pianificazione e monitoraggio del progetto richiesta per la milestone.
+
+# Feedback finale – Robot Backend
+
+Il progetto ha raggiunto un buon livello di completezza e maturità rispetto alle revisioni precedenti.  
+I feedback relativi ad analisi dei requisiti, analisi funzionale e analisi tecnica sono stati recepiti in modo concreto e coerente, con un evidente miglioramento della qualità documentale e della consapevolezza progettuale.
+
+La documentazione tecnica risulta ora molto più strutturata: sono stati chiariti il ruolo del backend, la gestione degli eventi, la separazione delle responsabilità tra robot e sistema informativo, la struttura della telemetria e i limiti architetturali del sistema.  
+Particolarmente positiva l’introduzione di aspetti normalmente trascurati nei progetti didattici, come:
+- semantica di consegna degli eventi;
+- gestione dei duplicati;
+- ordering temporale;
+- modello dati logico;
+- distinzione tra telemetry, attributes ed events all’interno di ThingsBoard;
+- esplicitazione dei limiti della simulazione.
+
+Anche l’analisi funzionale è stata migliorata in modo significativo, soprattutto nella gestione delle anomalie, nella descrizione delle tipologie di dati trattati e nella chiarificazione delle responsabilità decisionali tra backend e robot.
+
+La struttura generale del repository e della documentazione risulta ordinata e coerente con un progetto reale di integrazione robotica e monitoraggio IoT.
+
+Il Project Plan è presente ed è coerente con l’impostazione richiesta dalla consegna: contiene obiettivi, suddivisione dei compiti, milestone e criteri di verifica. Rimangono tuttavia limitati gli aspetti di gestione progettuale avanzata (gestione rischi, tracciamento modifiche, monitoraggio avanzamento).
+
+L’unica mancanza rilevante resta l’assenza di un diagramma di Gantt conforme alla consegna. La documentazione attuale elenca milestone e attività, ma non rappresenta in forma temporale:
+- distribuzione delle attività nel tempo;
+- parallelismo tra task;
+- dipendenze principali;
+- assorbimento delle risorse.
+
+Nel complesso il progetto risulta tecnicamente solido, ben documentato e coerente con gli obiettivi prefissati. Il lavoro svolto mostra una buona capacità di recepire i feedback e migliorare progressivamente sia la qualità dell’analisi sia la struttura complessiva della documentazione.
+
+
